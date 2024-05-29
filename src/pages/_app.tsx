@@ -20,7 +20,6 @@ export default function App({ Component, pageProps }: AppPropsWithLayout) {
 	return (
 		<ChakraProvider
 			toastOptions={{ defaultOptions: { position: "bottom-right" } }}>
-			{" "}
 			{getLayout(<Component {...pageProps} />)}
 		</ChakraProvider>
 	)

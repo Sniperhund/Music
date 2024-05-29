@@ -106,5 +106,5 @@ export default function Signup() {
 }
 
 Signup.getLayout = function getLayout(page: ReactElement) {
-	return { page }
+	return page
 }

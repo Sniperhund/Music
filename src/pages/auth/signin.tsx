@@ -91,5 +91,5 @@ export default function Signin() {
 }
 
 Signin.getLayout = function getLayout(page: ReactElement) {
-	return { page }
+	return page
 }
