@@ -28,7 +28,7 @@ export default function Signin() {
 			email: "",
 			password: "",
 		},
-		onSubmit: async (values) => {
+		onSubmit: async (values: { email: string; password: string }) => {
 			const result = await signin(values.email, values.password)
 
 			if (result?.error) {

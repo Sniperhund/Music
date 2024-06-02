@@ -29,7 +29,11 @@ export default function Signup() {
 			email: "",
 			password: "",
 		},
-		onSubmit: async (values) => {
+		onSubmit: async (values: {
+			email: string
+			password: string
+			name: string
+		}) => {
 			const result = await signup(
 				values.email,
 				values.password,
