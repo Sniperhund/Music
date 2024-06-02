@@ -1,5 +1,6 @@
 import DefaultLayout from "@/components/layouts/Default"
 import "@/styles/globals.css"
+import theme from "@/util/theme"
 import { ChakraProvider } from "@chakra-ui/react"
 import { NextPage } from "next"
 import type { AppProps } from "next/app"
@@ -19,7 +20,8 @@ export default function App({ Component, pageProps }: AppPropsWithLayout) {
 
 	return (
 		<ChakraProvider
-			toastOptions={{ defaultOptions: { position: "bottom-right" } }}>
+			toastOptions={{ defaultOptions: { position: "bottom-right" } }}
+			theme={theme}>
 			{getLayout(<Component {...pageProps} />)}
 		</ChakraProvider>
 	)
