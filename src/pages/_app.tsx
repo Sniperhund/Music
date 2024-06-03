@@ -1,4 +1,5 @@
 import DefaultLayout from "@/components/layouts/Default"
+import { MusicPlayerProvider } from "@/contexts/MusicPlayerContext"
 import "@/styles/globals.css"
 import theme from "@/util/theme"
 import { ChakraProvider } from "@chakra-ui/react"
@@ -19,10 +20,12 @@ export default function App({ Component, pageProps }: AppPropsWithLayout) {
 		Component.getLayout ?? ((page) => <DefaultLayout>{page}</DefaultLayout>)
 
 	return (
-		<ChakraProvider
-			toastOptions={{ defaultOptions: { position: "bottom-right" } }}
-			theme={theme}>
-			{getLayout(<Component {...pageProps} />)}
-		</ChakraProvider>
+		<MusicPlayerProvider>
+			<ChakraProvider
+				toastOptions={{ defaultOptions: { position: "bottom-right" } }}
+				theme={theme}>
+				{getLayout(<Component {...pageProps} />)}
+			</ChakraProvider>
+		</MusicPlayerProvider>
 	)
 }

@@ -1,6 +1,33 @@
 import DefaultLayout from "@/components/layouts/Default"
-import { ReactElement } from "react"
+import { useMusicPlayer } from "@/contexts/MusicPlayerContext"
+import useAPI from "@/util/useAPI"
+import { ReactElement, useEffect } from "react"
 
 export default function Home() {
-	return <h1>Missing you only ever since we fell in love</h1>
+	const { isPlaying, play, pause, next, prev, getCurrentSong, addQueueItem } =
+		useMusicPlayer()
+
+	useEffect(() => {
+		async function fetchData() {
+			const result = await useAPI("/all/tracks")
+
+			console.log(result[0])
+			addQueueItem(result[0])
+		}
+
+		fetchData()
+	}, [])
+
+	return (
+		<div>
+			<button onClick={play}>Play</button>
+			<button onClick={pause}>Pause</button>
+			<button onClick={next}>Next</button>
+			<button onClick={prev}>Previous</button>
+			<div>
+				Current Song:{" "}
+				{getCurrentSong() ? getCurrentSong().title : "None"}
+			</div>
+		</div>
+	)
 }

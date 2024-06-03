@@ -18,12 +18,14 @@
     "defu": "^6.1.4",
     "formik": "^2.4.6",
     "framer-motion": "^11.2.6",
+    "howler": "^2.2.4",
     "lucide-react": "^0.383.0",
     "next": "14.2.3",
     "react": "^18",
     "react-dom": "^18"
   },
   "devDependencies": {
+    "@types/howler": "^2.2.11",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
