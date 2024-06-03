@@ -1,5 +1,5 @@
 import axios from "axios"
-import cookie from "@boiseitguru/cookie-cutter"
+import { setCookie } from "cookies-next"
 
 export default async function signin(email: string, password: string) {
 	try {
@@ -15,8 +15,16 @@ export default async function signin(email: string, password: string) {
 			}
 		}
 
-		cookie.set("access_token", result.data.accessToken, { path: "/" })
-		cookie.set("refresh_token", result.data.refreshToken, { path: "/" })
+		const expireTime = new Date().getTime() + 1000 * 3600 * 60
+
+		setCookie("access_token", result.data.accessToken, {
+			path: "/",
+			expires: new Date(expireTime),
+		})
+		setCookie("refresh_token", result.data.refreshToken, {
+			path: "/",
+			expires: new Date(expireTime),
+		})
 	} catch (error: any) {
 		console.error(error)
 		return {

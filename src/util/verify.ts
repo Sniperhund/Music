@@ -1,5 +1,6 @@
 import cookie from "@boiseitguru/cookie-cutter"
 import axios, { AxiosError, AxiosResponse } from "axios"
+import { setCookie } from "cookies-next"
 
 export default async function (verifyToken: string) {
 	let result: AxiosResponse
@@ -9,11 +10,19 @@ export default async function (verifyToken: string) {
 			`https://api.lucasskt.dk/auth/verify?q=${verifyToken}`
 		)
 	} catch (error: unknown) {
-		return error.response.data
+		return error
 	}
 
-	cookie.set("access_token", result.response.data.accessToken)
-	cookie.set("refresh_token", result.response.data.refreshToken)
+	const expireTime = new Date().getTime() + 1000 * 3600 * 60
+
+	setCookie("access_token", result.data.accessToken, {
+		path: "/",
+		expires: new Date(expireTime),
+	})
+	setCookie("refresh_token", result.data.refreshToken, {
+		path: "/",
+		expires: new Date(expireTime),
+	})
 
 	return true
 }

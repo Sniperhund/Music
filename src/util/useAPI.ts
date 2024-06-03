@@ -2,12 +2,13 @@ import axios, { AxiosRequestConfig } from "axios"
 import refreshToken from "./refreshToken"
 import cookie from "@boiseitguru/cookie-cutter"
 import defu from "defu"
+import { getCookie } from "cookies-next"
 
 async function useAPI<T>(
 	url: string,
 	options: AxiosRequestConfig = {}
 ): Promise<T> {
-	let accessToken = cookie.get("access_token")
+	let accessToken = getCookie("access_token")
 
 	const defaults: AxiosRequestConfig = {
 		baseURL: "https://api.lucasskt.dk/",
@@ -28,7 +29,7 @@ async function useAPI<T>(
 		) {
 			try {
 				await refreshToken()
-				accessToken = cookie.get("access_token")
+				accessToken = getCookie("access_token")
 
 				const newDefaults: AxiosRequestConfig = {
 					baseURL: "https://api.lucasskt.dk/",
