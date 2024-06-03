@@ -1,9 +1,16 @@
+import signout from "@/util/signout"
 import useAPI from "@/util/useAPI"
 import {
+	Avatar,
 	Button,
+	Flex,
 	Input,
 	InputGroup,
 	InputLeftElement,
+	Menu,
+	MenuButton,
+	MenuItem,
+	MenuList,
 	Text,
 } from "@chakra-ui/react"
 import {
@@ -13,13 +20,17 @@ import {
 	Grid2X2,
 	Home,
 	ListMusic,
+	LogOut,
 	MicVocal,
 	Music,
 	Search,
 } from "lucide-react"
+import { useRouter } from "next/router"
 import { useEffect, useState } from "react"
 
 export default function Sidebar() {
+	const router = useRouter()
+
 	const [user, setUser] = useState<any>(null)
 
 	useEffect(() => {
@@ -118,6 +129,28 @@ export default function Sidebar() {
 						Switch to admin panel
 					</Button>
 				</section>
+			) : (
+				""
+			)}
+
+			{user ? (
+				<Menu>
+					<MenuButton mt="auto">
+						<Flex alignItems="center" gap="4">
+							<Avatar name={user.name} />
+							<Text fontSize="lg">{user.name}</Text>
+						</Flex>
+					</MenuButton>
+					<MenuList>
+						<MenuItem
+							icon={<LogOut />}
+							onClick={(e) => {
+								if (signout()) router.push("/auth/signin")
+							}}>
+							Sign out
+						</MenuItem>
+					</MenuList>
+				</Menu>
 			) : (
 				""
 			)}
