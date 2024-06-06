@@ -16,15 +16,22 @@ class MusicPlayerProvider extends React.Component {
 			currentQueue: [],
 			currentSong: null,
 			repeat: false,
+			isPlaying: false,
 		}
 	}
 
 	internalPlay = (soundInstance) => {
-		if (soundInstance && !soundInstance.playing()) soundInstance.play()
+		if (soundInstance && !soundInstance.playing()) {
+			soundInstance.play()
+			this.setState({ isPlaying: true })
+		}
 	}
 
 	internalPause = (soundInstance) => {
-		if (soundInstance) soundInstance.pause()
+		if (soundInstance) {
+			soundInstance.pause()
+			this.setState({ isPlaying: false })
+		}
 	}
 
 	createHowl = async (song) => {
@@ -37,6 +44,15 @@ class MusicPlayerProvider extends React.Component {
 			onend: () => {
 				this.next()
 			},
+			onstop: () => {
+				this.setState({ isPlaying: false })
+			},
+			onplay: () => {
+				this.setState({ isPlaying: true })
+			},
+			onpause: () => {
+				this.setState({ isPlaying: false })
+			},
 			html5PoolSize: 1,
 		})
 
@@ -45,8 +61,10 @@ class MusicPlayerProvider extends React.Component {
 	}
 
 	isPlaying = () => {
-		if (this.state.sound) return this.state.sound.playing()
-		return false
+		/*if (this.state.sound) return this.state.sound.playing()
+		return false*/
+
+		return this.state.isPlaying
 	}
 
 	play = async () => {
@@ -75,24 +93,20 @@ class MusicPlayerProvider extends React.Component {
 		}
 
 		const nextSong = this.state.queue[0]
+
 		this.setState((prevState) => ({
 			currentSong: nextSong,
 			queue: prevState.queue.slice(1),
 		}))
 
-		if (!nextSong && !this.state.repeat) return
-
-		if (this.state.repeat && !nextSong) {
-			this.setState((prevState) => ({
-				currentQueue: [...prevState.currentQueue],
-				currentSong: prevState.queue[0],
-				queue: prevState.queue.slice(1),
-			}))
-		}
-
 		if (this.state.sound) {
 			this.state.sound.stop()
 			this.setState({ sound: null })
+		}
+
+		if (nextSong) {
+			const newSound = await this.createHowl(nextSong)
+			this.internalPlay(newSound)
 		}
 
 		return nextSong
@@ -122,11 +136,6 @@ class MusicPlayerProvider extends React.Component {
 		}
 	}
 
-	getCurrentSong = () => {
-		if (this.state.currentSong) return this.state.currentSong
-		return false
-	}
-
 	clear = () => {
 		this.setState({
 			queue: [],
@@ -145,6 +154,85 @@ class MusicPlayerProvider extends React.Component {
 		}))
 	}
 
+	addQueueItemNext = (queueItem) => {
+		this.setState((prevState) => ({
+			queue: [queueItem, ...prevState.queue],
+			currentQueue: [...prevState.currentQueue, queueItem],
+		}))
+	}
+
+	removeQueueItem = (queueItem) => {
+		const index = this.state.queue.indexOf(queueItem)
+		if (index > -1) {
+			this.setState((prevState) => ({
+				queue: [
+					...prevState.queue.slice(0, index),
+					...prevState.queue.slice(index + 1),
+				],
+				currentQueue: [
+					...prevState.currentQueue.slice(0, index),
+					...prevState.currentQueue.slice(index + 1),
+				],
+			}))
+		}
+	}
+
+	playAlbum = (album) => {
+		this.clear()
+		album.forEach((queueItem) => this.addQueueItem(queueItem))
+		this.next()
+	}
+
+	playAlbumAtIndex = (album, index) => {
+		this.clear()
+		album.forEach((queueItem) => this.addQueueItem(queueItem))
+
+		for (let i = 0; i <= index; i++) {
+			this.next()
+		}
+	}
+
+	shuffle = () => {
+		const shuffledQueue = this.state.queue.sort(() => Math.random() - 0.5)
+		this.setState({ queue: shuffledQueue })
+	}
+
+	toggleRepeat = () => {
+		this.setState((prevState) => ({
+			repeat: !prevState.repeat,
+		}))
+	}
+
+	getCurrentSong = () => {
+		if (this.state.currentSong) return this.state.currentSong
+		return false
+	}
+
+	getDuration = () => {
+		return new Promise((resolve) => {
+			if (this.state.sound) {
+				if (this.state.sound.state() === "loaded") {
+					resolve(this.state.sound.duration())
+				} else {
+					this.state.sound.once("load", () => {
+						resolve(this.state.sound.duration())
+					})
+				}
+			} else {
+				resolve(0)
+			}
+		})
+	}
+
+	getSecondsPlayed = () => {
+		if (this.state.sound) return this.state.sound.seek()
+		return 0
+	}
+
+	setSecondsPlayed = (seconds) => {
+		if (this.state.sound) this.state.sound.seek(seconds)
+	}
+
 	render() {
 		const { children } = this.props
 		return (
@@ -155,8 +243,18 @@ class MusicPlayerProvider extends React.Component {
 					pause: this.pause,
 					next: this.next,
 					prev: this.prev,
-					getCurrentSong: this.getCurrentSong,
+					clear: this.clear,
 					addQueueItem: this.addQueueItem,
+					addQueueItemNext: this.addQueueItemNext,
+					removeQueueItem: this.removeQueueItem,
+					playAlbum: this.playAlbum,
+					playAlbumAtIndex: this.playAlbumAtIndex,
+					shuffle: this.shuffle,
+					toggleRepeat: this.toggleRepeat,
+					getCurrentSong: this.getCurrentSong,
+					getDuration: this.getDuration,
+					getSecondsPlayed: this.getSecondsPlayed,
+					setSecondsPlayed: this.setSecondsPlayed,
 				}}>
 				{children}
 			</MusicPlayerContext.Provider>

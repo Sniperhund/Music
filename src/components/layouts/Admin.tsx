@@ -1,5 +1,5 @@
 import { MutableRefObject, useRef } from "react"
-import Player from "../common/Player"
+import Player from "../common/Player.2"
 import Sidebar from "../common/Sidebar"
 import useResizeObserver from "use-resize-observer"
 

@@ -1,11 +1,20 @@
 import DefaultLayout from "@/components/layouts/Default"
 import { useMusicPlayer } from "@/contexts/MusicPlayerContext"
 import useAPI from "@/util/useAPI"
-import { ReactElement, useEffect } from "react"
+import { ReactElement, useEffect, useState } from "react"
 
 export default function Home() {
-	const { isPlaying, play, pause, next, prev, getCurrentSong, addQueueItem } =
-		useMusicPlayer()
+	const {
+		isPlaying,
+		play,
+		pause,
+		next,
+		prev,
+		getCurrentSong,
+		addQueueItem,
+		getDuration,
+		getSecondsPlayed,
+	} = useMusicPlayer()
 
 	useEffect(() => {
 		async function fetchData() {
@@ -17,7 +26,13 @@ export default function Home() {
 		fetchData()
 	}, [])
 
-	useEffect(() => {}, [getCurrentSong()])
+	useEffect(() => {
+		async function fetchDuration() {
+			console.log(await getDuration())
+		}
+
+		fetchDuration()
+	}, [getCurrentSong()])
 
 	return (
 		<div>

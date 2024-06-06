@@ -2,6 +2,8 @@ import { MutableRefObject, useRef } from "react"
 import Player from "../common/Player"
 import Sidebar from "../common/Sidebar"
 import useResizeObserver from "use-resize-observer"
+import styles from "@/styles/layout.module.css"
+import { useMusicPlayer } from "@/contexts/MusicPlayerContext"
 
 export default function DefaultLayout({ children }: any) {
 	let playerContainer = useRef<HTMLDivElement>(null)
@@ -16,6 +18,8 @@ export default function DefaultLayout({ children }: any) {
 		},
 	})
 
+	const { getCurrentSong } = useMusicPlayer()
+
 	return (
 		<section className="w-screen h-screen flex">
 			<article
@@ -27,7 +31,10 @@ export default function DefaultLayout({ children }: any) {
 			<div
 				className="p-2.5 h-24 fixed right-0 bottom-0"
 				ref={playerContainer}>
-				<article className="border border-[var(--chakra-colors-chakra-border-color)] rounded-2xl w-full h-full">
+				<article
+					className={`${styles.playerContainer} ${
+						getCurrentSong() ? styles.active : ""
+					}`}>
 					<Player />
 				</article>
 			</div>
