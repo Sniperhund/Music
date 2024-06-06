@@ -11,12 +11,13 @@ export default function Home() {
 		async function fetchData() {
 			const result = await useAPI("/all/tracks")
 
-			console.log(result[0])
 			addQueueItem(result[0])
 		}
 
 		fetchData()
 	}, [])
+
+	useEffect(() => {}, [getCurrentSong()])
 
 	return (
 		<div>
@@ -26,7 +27,7 @@ export default function Home() {
 			<button onClick={prev}>Previous</button>
 			<div>
 				Current Song:{" "}
-				{getCurrentSong() ? getCurrentSong().title : "None"}
+				{getCurrentSong() ? getCurrentSong().name : "None"}
 			</div>
 		</div>
 	)

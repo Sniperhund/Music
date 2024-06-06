@@ -123,7 +123,7 @@ class MusicPlayerProvider extends React.Component {
 	}
 
 	getCurrentSong = () => {
-		if (this.isPlaying()) return this.state.currentSong
+		if (this.state.currentSong) return this.state.currentSong
 		return false
 	}
 
