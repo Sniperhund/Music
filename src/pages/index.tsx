@@ -1,49 +1,15 @@
 import DefaultLayout from "@/components/layouts/Default"
+import Slider from "@/components/common/Slider"
 import { useMusicPlayer } from "@/contexts/MusicPlayerContext"
 import useAPI from "@/util/useAPI"
 import { ReactElement, useEffect, useState } from "react"
+import Card from "@/components/album/Card"
+import AutomaticSlider from "@/components/common/AutomaticSlider"
 
 export default function Home() {
-	const {
-		isPlaying,
-		play,
-		pause,
-		next,
-		prev,
-		getCurrentSong,
-		addQueueItem,
-		getDuration,
-		getSecondsPlayed,
-	} = useMusicPlayer()
-
-	useEffect(() => {
-		async function fetchData() {
-			const result = await useAPI("/all/tracks")
-
-			addQueueItem(result[0])
-		}
-
-		fetchData()
-	}, [])
-
-	useEffect(() => {
-		async function fetchDuration() {
-			console.log(await getDuration())
-		}
-
-		fetchDuration()
-	}, [getCurrentSong()])
-
 	return (
-		<div>
-			<button onClick={play}>Play</button>
-			<button onClick={pause}>Pause</button>
-			<button onClick={next}>Next</button>
-			<button onClick={prev}>Previous</button>
-			<div>
-				Current Song:{" "}
-				{getCurrentSong() ? getCurrentSong().name : "None"}
-			</div>
-		</div>
+		<>
+			<AutomaticSlider amount={2} />
+		</>
 	)
 }

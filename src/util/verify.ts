@@ -1,8 +1,7 @@
-import cookie from "@boiseitguru/cookie-cutter"
 import axios, { AxiosError, AxiosResponse } from "axios"
 import { setCookie } from "cookies-next"
 
-export default async function (verifyToken: string) {
+export default async function verify(verifyToken: string) {
 	let result: AxiosResponse
 
 	try {

@@ -26,6 +26,7 @@ import {
 	SkipBack,
 	SkipForward,
 } from "lucide-react"
+import Image from "next/image"
 import { useEffect, useState } from "react"
 
 export default function Player() {
@@ -52,7 +53,7 @@ export default function Player() {
 		}
 
 		fetchDuration()
-	}, [getCurrentSong(), getDuration()])
+	}, [getCurrentSong, getDuration])
 
 	const [secondsPlayed, setSecondsPlayedValue] = useState(0)
 	const [movingSlider, setMovingSlider] = useState(false)
@@ -82,7 +83,10 @@ export default function Player() {
 		<>
 			<section className={styles.player}>
 				<article className={styles.trackInfo}>
-					<img src={getFilePath("Album", getSong().album.cover)} />
+					<img
+						src={getFilePath("Album", getSong().album.cover)}
+						alt="Album cover image"
+					/>
 					<div>
 						<p>{getSong().name}</p>
 						<p>

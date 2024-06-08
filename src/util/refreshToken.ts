@@ -1,7 +1,7 @@
 import axios from "axios"
 import { getCookie, setCookie } from "cookies-next"
 
-export default async function () {
+export default async function refreshToken() {
 	const refreshToken = getCookie("refresh_token")
 
 	const result = await axios.post("https://api.lucasskt.dk/auth/refresh", {

@@ -1,5 +1,4 @@
 import axios from "axios"
-import cookie from "@boiseitguru/cookie-cutter"
 
 export default async function signup(
 	email: string,

@@ -9,7 +9,7 @@ export default function Verify() {
 
 	useEffect(() => {
 		async function verifyUser() {
-			let response
+			let response: any
 			if (router.query.q)
 				response = await verify(router.query.q as string)
 
@@ -17,7 +17,7 @@ export default function Verify() {
 		}
 
 		verifyUser()
-	}, [])
+	}, [router.query.q])
 
 	if (responseMessage)
 		return (

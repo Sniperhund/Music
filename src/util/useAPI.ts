@@ -1,6 +1,5 @@
 import axios, { AxiosRequestConfig } from "axios"
 import refreshToken from "./refreshToken"
-import cookie from "@boiseitguru/cookie-cutter"
 import defu from "defu"
 import { getCookie } from "cookies-next"
 
@@ -50,6 +49,7 @@ async function useAPI<T>(
 				throw retryError
 			}
 		} else {
+			console.log(error)
 			throw error
 		}
 	}

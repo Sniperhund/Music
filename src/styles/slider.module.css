@@ -1,0 +1,44 @@
+.categoryLink {
+	display: flex;
+	align-items: center;
+
+	font-size: 1.25rem;
+	font-weight: 500;
+}
+
+.slider {
+	& section {
+		margin-top: 0.25rem;
+		position: relative;
+	}
+
+	& div {
+		display: flex;
+		gap: 10px;
+		overflow-x: auto;
+		-ms-overflow-style: none;
+		scrollbar-width: none;
+		scroll-behavior: smooth;
+	}
+
+	& div::-webkit-scrollbar {
+		display: none;
+	}
+}
+
+.left,
+.right {
+	position: absolute;
+	top: 50%;
+	transform: translateY(-50%);
+	z-index: 10;
+	cursor: pointer;
+}
+
+.left {
+	left: -46px;
+}
+
+.right {
+	right: -46px;
+}

@@ -27,7 +27,9 @@ export default function DefaultLayout({ children }: any) {
 				ref={sidebar}>
 				<Sidebar />
 			</article>
-			<article className="py-14 px-12">{children}</article>
+			<article className="py-14 px-12 w-full overflow-y-auto mb-20">
+				{children}
+			</article>
 			<div
 				className="p-2.5 h-24 fixed right-0 bottom-0"
 				ref={playerContainer}>

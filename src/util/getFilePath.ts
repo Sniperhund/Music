@@ -1,6 +1,6 @@
 const backendUrl = "https://api.lucasskt.dk/"
 
-export default function (type: String, path: String) {
+export default function getFilePath(type: String, path: String) {
 	switch (type) {
 		case "album":
 		case "Album":
