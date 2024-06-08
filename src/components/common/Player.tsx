@@ -41,6 +41,7 @@ export default function Player() {
 		getDuration,
 		getSecondsPlayed,
 		setSecondsPlayed,
+		getQueue,
 	} = useMusicPlayer()
 
 	const [duration, setDuration] = useState(0)
@@ -66,24 +67,26 @@ export default function Player() {
 
 	const { isOpen, onOpen, onClose } = useDisclosure()
 
-	if (!getCurrentSong()) {
+	if (getQueue().length === 0) {
 		if (isOpen) onClose()
 
 		return <></>
+	}
+
+	function getSong() {
+		if (getCurrentSong()) return getCurrentSong()
+		return getQueue()[0]
 	}
 
 	return (
 		<>
 			<section className={styles.player}>
 				<article className={styles.trackInfo}>
-					<img
-						src={getFilePath("Album", getCurrentSong().album.cover)}
-					/>
+					<img src={getFilePath("Album", getSong().album.cover)} />
 					<div>
-						<p>{getCurrentSong().name}</p>
+						<p>{getSong().name}</p>
 						<p>
-							{getCurrentSong().album.name} -{" "}
-							{getCurrentSong().album.name}
+							{getSong().album.name} - {getSong().album.name}
 						</p>
 					</div>
 				</article>
@@ -153,7 +156,11 @@ export default function Player() {
 					<DrawerHeader>Up Next</DrawerHeader>
 
 					<DrawerBody className="flex flex-col">
-						<p>No upcoming songs.</p>
+						{getQueue().length === 0 ? (
+							<p>No upcoming songs.</p>
+						) : (
+							<p>Yes</p>
+						)}
 					</DrawerBody>
 				</DrawerContent>
 			</Drawer>

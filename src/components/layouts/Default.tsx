@@ -18,7 +18,7 @@ export default function DefaultLayout({ children }: any) {
 		},
 	})
 
-	const { getCurrentSong } = useMusicPlayer()
+	const { getQueue } = useMusicPlayer()
 
 	return (
 		<section className="w-screen h-screen flex">
@@ -33,7 +33,7 @@ export default function DefaultLayout({ children }: any) {
 				ref={playerContainer}>
 				<article
 					className={`${styles.playerContainer} ${
-						getCurrentSong() ? styles.active : ""
+						getQueue().length !== 0 ? styles.active : ""
 					}`}>
 					<Player />
 				</article>

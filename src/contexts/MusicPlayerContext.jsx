@@ -233,6 +233,10 @@ class MusicPlayerProvider extends React.Component {
 		if (this.state.sound) this.state.sound.seek(seconds)
 	}
 
+	getQueue = () => {
+		return this.state.queue
+	}
+
 	render() {
 		const { children } = this.props
 		return (
@@ -255,6 +259,7 @@ class MusicPlayerProvider extends React.Component {
 					getDuration: this.getDuration,
 					getSecondsPlayed: this.getSecondsPlayed,
 					setSecondsPlayed: this.setSecondsPlayed,
+					getQueue: this.getQueue,
 				}}>
 				{children}
 			</MusicPlayerContext.Provider>
