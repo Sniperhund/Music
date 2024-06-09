@@ -1,0 +1,39 @@
+.info {
+	display: flex;
+	gap: 16px;
+
+	& img {
+		aspect-ratio: 1 / 1;
+		max-width: 300px;
+		border-radius: 10px;
+	}
+
+	& div {
+		padding-top: 70px;
+		display: flex;
+		flex-direction: column;
+	}
+
+	& h1 {
+		letter-spacing: 2px;
+		line-height: 2.4rem;
+		font-size: 2rem;
+	}
+
+	& h2 {
+		font-weight: 400;
+		font-size: 1.4rem;
+	}
+
+	.play {
+		margin-top: auto;
+	}
+}
+
+.tracks {
+	margin-top: 50px;
+
+	& article:nth-child(odd) {
+		background-color: rgb(255, 255, 255, 0.1);
+	}
+}

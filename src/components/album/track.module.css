@@ -1,0 +1,17 @@
+.track {
+	display: grid;
+	grid-template-columns: 30px 1fr 50px 30px;
+	align-items: center;
+	padding: 8px 15px;
+	border-radius: 10px;
+}
+
+.index {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.more {
+	margin-left: auto;
+}

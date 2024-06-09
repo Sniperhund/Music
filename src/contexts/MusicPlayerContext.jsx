@@ -35,8 +35,6 @@ class MusicPlayerProvider extends React.Component {
 	}
 
 	createHowl = async (song) => {
-		const { Howl } = await import("howler")
-
 		const newSound = new Howl({
 			src: [getFilePath("Track", song.audioFile)],
 			html5: true,
@@ -73,6 +71,10 @@ class MusicPlayerProvider extends React.Component {
 			newCurrentSong = await this.next()
 		}
 
+		this.play(newCurrentSong)
+	}
+
+	play = async (newCurrentSong) => {
 		if (this.state.sound) {
 			this.internalPlay(this.state.sound)
 		} else if (newCurrentSong) {
@@ -177,19 +179,27 @@ class MusicPlayerProvider extends React.Component {
 		}
 	}
 
-	playAlbum = (album) => {
+	// BUG: These two functions is not working for some reason :(
+	playAlbum = async (album) => {
 		this.clear()
 		album.forEach((queueItem) => this.addQueueItem(queueItem))
-		this.next()
+
+		let newCurrentSong = await this.next()
+
+		this.play(newCurrentSong)
 	}
 
-	playAlbumAtIndex = (album, index) => {
+	playAlbumAtIndex = async (album, index) => {
 		this.clear()
 		album.forEach((queueItem) => this.addQueueItem(queueItem))
 
-		for (let i = 0; i <= index; i++) {
-			this.next()
+		let newCurrentSong = album[index]
+
+		for (let i = 0; i < index; i++) {
+			await this.next()
 		}
+
+		this.play(newCurrentSong)
 	}
 
 	shuffle = () => {
