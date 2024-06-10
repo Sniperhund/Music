@@ -25,6 +25,7 @@ import {
 	Music,
 	Search,
 } from "lucide-react"
+import Link from "next/link"
 import { useRouter } from "next/router"
 import { useEffect, useState } from "react"
 
@@ -54,80 +55,88 @@ export default function Sidebar() {
 				<Input placeholder="Search..." />
 			</InputGroup>
 			<section className="flex flex-col">
-				<Button
-					variant="ghost"
-					justifyContent="left"
-					as="a"
-					href="/"
-					leftIcon={<Home />}>
-					Home
-				</Button>
-				<Button
-					variant="ghost"
-					justifyContent="left"
-					as="a"
-					href="/browse"
-					leftIcon={<Grid2X2 />}>
-					Browse
-				</Button>
+				<Link href="/">
+					<Button
+						variant="ghost"
+						justifyContent="left"
+						w="full"
+						leftIcon={<Home />}>
+						Home
+					</Button>
+				</Link>
+				<Link href="/browse">
+					<Button
+						variant="ghost"
+						justifyContent="left"
+						w="full"
+						leftIcon={<Grid2X2 />}>
+						Browse
+					</Button>
+				</Link>
 			</section>
 			<section className="flex flex-col">
 				<span className="text-xs font-semibold">Library</span>
-				<Button
-					variant="ghost"
-					justifyContent="left"
-					as="a"
-					href="/library/recently-added"
-					leftIcon={<Clock />}>
-					Recently Added
-				</Button>
-				<Button
-					variant="ghost"
-					justifyContent="left"
-					as="a"
-					href="/library/artists"
-					leftIcon={<MicVocal />}>
-					Artists
-				</Button>
-				<Button
-					variant="ghost"
-					justifyContent="left"
-					as="a"
-					href="/library/albums"
-					leftIcon={<GalleryVerticalEnd />}>
-					Albums
-				</Button>
-				<Button
-					variant="ghost"
-					justifyContent="left"
-					as="a"
-					href="/library/songs"
-					leftIcon={<Music />}>
-					Songs
-				</Button>
+				<Link href="/library/recently-added">
+					<Button
+						variant="ghost"
+						justifyContent="left"
+						w="full"
+						leftIcon={<Clock />}>
+						Recently Added
+					</Button>
+				</Link>
+				<Link href="/library/artists">
+					<Button
+						variant="ghost"
+						justifyContent="left"
+						w="full"
+						leftIcon={<MicVocal />}>
+						Artists
+					</Button>
+				</Link>
+				<Link href="/library/albums">
+					<Button
+						variant="ghost"
+						justifyContent="left"
+						w="full"
+						leftIcon={<GalleryVerticalEnd />}>
+						Albums
+					</Button>
+				</Link>
+				<Link href="/library/songs">
+					<Button
+						variant="ghost"
+						justifyContent="left"
+						w="full"
+						leftIcon={<Music />}>
+						Songs
+					</Button>
+				</Link>
 			</section>
 			<section className="flex flex-col">
 				<span className="text-xs font-semibold">Playlists</span>
-				<Button
-					variant="ghost"
-					justifyContent="left"
-					as="a"
-					href="#"
-					leftIcon={<ListMusic />}>
-					WIP
-				</Button>
+				<Link href="#">
+					<Button
+						variant="ghost"
+						justifyContent="left"
+						w="full"
+						leftIcon={<ListMusic />}>
+						WIP
+					</Button>
+				</Link>
 			</section>
 			{user && user.role == "admin" ? (
 				<section className="flex flex-col">
 					<span className="text-xs font-semibold">Secrets</span>
-					<Button
-						variant="ghost"
-						justifyContent="left"
-						as="a"
-						href="/admin/dashboard"
-						leftIcon={<FileSliders />}>
-						Switch to admin panel
-					</Button>
+					<Link href="/admin/dashboard">
+						<Button
+							variant="ghost"
+							justifyContent="left"
+							w="full"
+							leftIcon={<FileSliders />}>
+							Switch to admin panel
+						</Button>
+					</Link>
 				</section>
 			) : (
 				""

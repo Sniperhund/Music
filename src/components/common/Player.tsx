@@ -53,7 +53,7 @@ export default function Player() {
 		}
 
 		fetchDuration()
-	}, [getCurrentSong, getDuration])
+	}, [getCurrentSong(), getDuration()])
 
 	const [secondsPlayed, setSecondsPlayedValue] = useState(0)
 	const [movingSlider, setMovingSlider] = useState(false)
@@ -68,7 +68,7 @@ export default function Player() {
 
 	const { isOpen, onOpen, onClose } = useDisclosure()
 
-	if (getQueue().length === 0) {
+	if (!getCurrentSong() && getQueue().length === 0) {
 		if (isOpen) onClose()
 
 		return <></>
@@ -99,7 +99,7 @@ export default function Player() {
 					<article>
 						<Shuffle onClick={() => shuffle()} />
 						<SkipBack onClick={() => prev()} />
-						{isPlaying() ? (
+						{isPlaying ? (
 							<Pause
 								onClick={() => {
 									pause()

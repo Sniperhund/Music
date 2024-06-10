@@ -9,6 +9,8 @@ class MusicPlayerProvider extends React.Component {
 	constructor(props) {
 		super(props)
 
+		this.internalState = {}
+
 		this.state = {
 			sound: null,
 			queue: [],
@@ -20,18 +22,27 @@ class MusicPlayerProvider extends React.Component {
 		}
 	}
 
-	internalPlay = (soundInstance) => {
-		if (soundInstance && !soundInstance.playing()) {
-			soundInstance.play()
-			this.setState({ isPlaying: true })
-		}
+	loadInternalState = () => {
+		this.internalState = this.state
 	}
 
-	internalPause = (soundInstance) => {
-		if (soundInstance) {
-			soundInstance.pause()
-			this.setState({ isPlaying: false })
+	saveInternalState = () => {
+		if (this.internalState != {}) this.setState(this.internalState)
+		this.internalState = {}
+	}
+
+	internalNextCurrentSong = () => {
+		if (this.internalState.currentSong) {
+			this.internalState.prevQueue = [
+				this.internalState.currentSong,
+				...this.internalState.prevQueue,
+			]
 		}
+
+		const nextSong = this.internalState.queue[0]
+
+		this.internalState.currentSong = nextSong
+		this.internalState.queue = this.internalState.queue.slice(1)
 	}
 
 	createHowl = async (song) => {
@@ -55,82 +66,94 @@ class MusicPlayerProvider extends React.Component {
 		})
 
 		this.setState({ sound: newSound })
+		this.internalState.sound = newSound
 		return newSound
 	}
 
-	isPlaying = () => {
-		/*if (this.state.sound) return this.state.sound.playing()
-		return false*/
-
-		return this.state.isPlaying
-	}
-
-	play = async () => {
-		let newCurrentSong = this.state.currentSong
-		if (!this.state.currentSong) {
+	internalPlay = async () => {
+		let newCurrentSong = this.internalState.currentSong
+		if (!newCurrentSong) {
 			newCurrentSong = await this.next()
 		}
 
-		this.play(newCurrentSong)
+		if (newCurrentSong && !this.internalState.sound) {
+			let sound = await this.createHowl(newCurrentSong)
+			this.internalState.sound = sound
+		}
+
+		if (this.internalState.sound && !this.internalState.sound.playing()) {
+			this.internalState.sound.play()
+			this.internalState.isPlaying = true
+		}
 	}
 
-	play = async (newCurrentSong) => {
-		if (this.state.sound) {
-			this.internalPlay(this.state.sound)
-		} else if (newCurrentSong) {
-			const newSound = await this.createHowl(newCurrentSong)
-			this.internalPlay(newSound)
-		}
+	play = async () => {
+		this.loadInternalState()
+
+		await this.internalPlay()
+
+		this.saveInternalState()
+	}
+
+	internalPause = () => {
+		this.internalState.sound.pause()
+		this.internalState.isPlaying = false
 	}
 
 	pause = () => {
-		this.internalPause(this.state.sound)
+		this.loadInternalState()
+
+		this.internalPause()
+
+		this.saveInternalState()
+	}
+
+	internalNext = async () => {
+		this.internalNextCurrentSong()
+
+		if (this.internalState.sound) {
+			this.internalState.sound.stop()
+			this.internalState.sound = null
+		}
+
+		if (
+			this.internalState.queue.length === 0 &&
+			this.internalState.repeat &&
+			!this.internalState.currentSong
+		) {
+			this.internalState.queue = [...this.internalState.currentQueue]
+			this.internalNextCurrentSong()
+		}
+
+		if (this.internalState.currentSong) {
+			this.internalPlay()
+		}
 	}
 
 	next = async () => {
-		if (this.state.currentSong) {
-			this.setState((prevState) => ({
-				prevQueue: [prevState.currentSong, ...prevState.prevQueue],
-			}))
-		}
+		this.loadInternalState()
 
-		const nextSong = this.state.queue[0]
+		await this.internalNext()
 
-		this.setState((prevState) => ({
-			currentSong: nextSong,
-			queue: prevState.queue.slice(1),
-		}))
-
-		if (this.state.sound) {
-			this.state.sound.stop()
-			this.setState({ sound: null })
-		}
-
-		if (nextSong) {
-			const newSound = await this.createHowl(nextSong)
-			this.internalPlay(newSound)
-		}
-
-		return nextSong
+		this.saveInternalState()
 	}
 
-	prev = async () => {
-		const prevSong = this.state.prevQueue[0]
-		this.setState((prevState) => ({
-			prevQueue: prevState.prevQueue.slice(1),
-		}))
+	internalPrev = async () => {
+		const prevSong = this.internalState.prevQueue[0]
+		this.internalState.prevQueue = this.internalState.prevQueue.slice(1)
 
 		if (prevSong) {
-			if (this.state.currentSong) {
-				this.setState((prevState) => ({
-					queue: [prevState.currentSong, ...prevState.queue],
-				}))
+			if (this.internalState.currentSong) {
+				this.internalState.queue = [
+					this.internalState.currentSong,
+					...this.internalState.queue,
+				]
 			}
-			this.setState({ currentSong: prevSong })
+			this.internalState.currentSong = prevSong
 
-			if (this.state.sound) {
-				this.state.sound.stop()
-				this.setState({ sound: null })
+			if (this.internalState.sound) {
+				this.internalState.sound.stop()
+				this.internalState.sound = null
 			}
 
 			const newSound = await this.createHowl(prevSong)
@@ -138,68 +161,106 @@ class MusicPlayerProvider extends React.Component {
 		}
 	}
 
-	clear = () => {
-		this.setState({
-			queue: [],
-			currentSong: null,
-		})
-		if (this.state.sound) {
-			this.state.sound.stop()
-			this.setState({ sound: null })
+	prev = async () => {
+		this.loadInternalState()
+		await this.internalPrev()
+		this.saveInternalState()
+	}
+
+	internalClear = () => {
+		this.internalState.queue = []
+		this.internalState.currentQueue = []
+		this.internalState.currentSong = null
+		if (this.internalState.sound) {
+			this.internalState.sound.stop()
+			this.internalState.sound = null
 		}
+	}
+
+	clear = () => {
+		this.loadInternalState()
+		this.internalClear()
+		this.saveInternalState()
+	}
+
+	internalAddQueueItem = (queueItem) => {
+		this.internalState.queue = [...this.internalState.queue, queueItem]
+		this.internalState.currentQueue = [
+			...this.internalState.currentQueue,
+			queueItem,
+		]
 	}
 
 	addQueueItem = (queueItem) => {
-		this.setState((prevState) => ({
-			queue: [...prevState.queue, queueItem],
-			currentQueue: [...prevState.currentQueue, queueItem],
-		}))
+		this.loadInternalState()
+		this.internalAddQueueItem(queueItem)
+		this.saveInternalState()
+	}
+
+	internalAddQueueItemNext = (queueItem) => {
+		this.internalState.queue = [queueItem, ...this.internalState.queue]
+		this.internalState.currentQueue = [
+			queueItem,
+			...this.internalState.currentQueue,
+		]
 	}
 
 	addQueueItemNext = (queueItem) => {
-		this.setState((prevState) => ({
-			queue: [queueItem, ...prevState.queue],
-			currentQueue: [...prevState.currentQueue, queueItem],
-		}))
+		this.loadInternalState()
+		this.internalAddQueueItemNext(queueItem)
+		this.saveInternalState()
+	}
+
+	internalRemoveQueueItem = (queueItem) => {
+		const index = this.internalState.queue.indexOf(queueItem)
+		if (index > -1) {
+			this.internalState.queue = [
+				...this.internalState.queue.slice(0, index),
+				...this.internalState.queue.slice(index + 1),
+			]
+			this.internalState.currentQueue = [
+				...this.internalState.currentQueue.slice(0, index),
+				...this.internalState.currentQueue.slice(index + 1),
+			]
+		}
 	}
 
 	removeQueueItem = (queueItem) => {
-		const index = this.state.queue.indexOf(queueItem)
-		if (index > -1) {
-			this.setState((prevState) => ({
-				queue: [
-					...prevState.queue.slice(0, index),
-					...prevState.queue.slice(index + 1),
-				],
-				currentQueue: [
-					...prevState.currentQueue.slice(0, index),
-					...prevState.currentQueue.slice(index + 1),
-				],
-			}))
-		}
+		this.loadInternalState()
+		this.internalRemoveQueueItem(queueItem)
+		this.saveInternalState()
 	}
 
-	// BUG: These two functions is not working for some reason :(
+	internalPlayAlbum = async (album) => {
+		this.internalClear()
+		album.forEach((queueItem) => this.internalAddQueueItem(queueItem))
+
+		this.internalNextCurrentSong()
+
+		this.internalPlay()
+	}
+
 	playAlbum = async (album) => {
-		this.clear()
-		album.forEach((queueItem) => this.addQueueItem(queueItem))
+		this.loadInternalState()
+		await this.internalPlayAlbum(album)
+		this.saveInternalState()
+	}
 
-		let newCurrentSong = await this.next()
+	internalPlayAlbumAtIndex = async (album, index) => {
+		this.internalClear()
+		album.forEach((queueItem) => this.internalAddQueueItem(queueItem))
 
-		this.play(newCurrentSong)
+		for (let i = 0; i < index + 1; i++) {
+			this.internalNextCurrentSong()
+		}
+
+		this.internalPlay()
 	}
 
 	playAlbumAtIndex = async (album, index) => {
-		this.clear()
-		album.forEach((queueItem) => this.addQueueItem(queueItem))
-
-		let newCurrentSong = album[index]
-
-		for (let i = 0; i < index; i++) {
-			await this.next()
-		}
-
-		this.play(newCurrentSong)
+		this.loadInternalState()
+		await this.internalPlayAlbumAtIndex(album, index)
+		this.saveInternalState()
 	}
 
 	shuffle = () => {
@@ -252,7 +313,7 @@ class MusicPlayerProvider extends React.Component {
 		return (
 			<MusicPlayerContext.Provider
 				value={{
-					isPlaying: this.isPlaying,
+					isPlaying: this.state.isPlaying,
 					play: this.play,
 					pause: this.pause,
 					next: this.next,

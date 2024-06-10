@@ -5,7 +5,7 @@ import { useState } from "react"
 
 interface TrackProps {
 	index: number
-	track: {}
+	track: any
 	album: []
 }
 
@@ -15,7 +15,7 @@ export default function Track(props: TrackProps) {
 	const { playAlbumAtIndex } = useMusicPlayer()
 
 	function play() {
-		console.log(props.index)
+		console.log(props.album[props.index])
 		playAlbumAtIndex(props.album, props.index)
 	}
 

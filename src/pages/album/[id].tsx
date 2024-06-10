@@ -8,6 +8,8 @@ import Image from "next/image"
 import { Button } from "@chakra-ui/react"
 import { Play } from "lucide-react"
 import Track from "@/components/album/Track"
+import Link from "next/link"
+import { useMusicPlayer } from "@/contexts/MusicPlayerContext"
 
 export default function Album() {
 	const router = useRouter()
@@ -25,7 +27,11 @@ export default function Album() {
 		fetchData()
 	}, [router.query.id])
 
-	function play() {}
+	const { playAlbum } = useMusicPlayer()
+
+	function play() {
+		playAlbum(albumTracks)
+	}
 
 	if (!router.query.id || !albumData || !albumTracks) return <></>
 
@@ -42,9 +48,9 @@ export default function Album() {
 
 				<div>
 					<h1>{albumData?.name}</h1>
-					<a href={`/artist/${albumData.artist._id}`}>
+					<Link href={`/artist/${albumData.artist._id}`}>
 						<h2>{albumData.artist.name}</h2>
-					</a>
+					</Link>
 
 					<span className={styles.play}>
 						<Button leftIcon={<Play />} onClick={() => play()}>

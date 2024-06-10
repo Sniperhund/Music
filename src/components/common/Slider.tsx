@@ -1,7 +1,7 @@
-import { Link } from "@chakra-ui/react"
 import { ChevronLeft, ChevronRight } from "lucide-react"
 import styles from "@/styles/slider.module.css"
 import { ReactNode, useRef } from "react"
+import Link from "next/link"
 
 interface SliderProps {
 	title: string
@@ -26,9 +26,11 @@ export default function Slider(props: SliderProps) {
 
 	return (
 		<section className={styles.slider}>
-			<a href={props.href} className={styles.categoryLink}>
+			<Link
+				href={props.href ? props.href : "#"}
+				className={styles.categoryLink}>
 				{props.title} {props.href ? <ChevronRight size="30" /> : ""}
-			</a>
+			</Link>
 
 			<section>
 				<ChevronLeft

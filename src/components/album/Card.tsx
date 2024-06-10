@@ -1,4 +1,5 @@
 import Image from "next/image"
+import Link from "next/link"
 
 interface CardProps {
 	imageUrl: string
@@ -9,7 +10,7 @@ interface CardProps {
 
 export default function Card(props: CardProps) {
 	return (
-		<a
+		<Link
 			href={`/album/${props.albumId}`}
 			className="text-sm justify-start flex flex-col">
 			<img
@@ -19,6 +20,6 @@ export default function Card(props: CardProps) {
 			/>
 			<p className="mt-0.5">{props.albumName}</p>
 			<p className="opacity-50">{props.artistName}</p>
-		</a>
+		</Link>
 	)
 }
