@@ -25,9 +25,11 @@ import {
 	Shuffle,
 	SkipBack,
 	SkipForward,
+	Volume2,
 } from "lucide-react"
 import Image from "next/image"
 import { useEffect, useState } from "react"
+import { getCookie, setCookie } from "cookies-next"
 
 export default function Player() {
 	const {
@@ -43,6 +45,8 @@ export default function Player() {
 		getSecondsPlayed,
 		setSecondsPlayed,
 		getQueue,
+		getVolume,
+		setVolume,
 	} = useMusicPlayer()
 
 	const [duration, setDuration] = useState(0)
@@ -65,6 +69,17 @@ export default function Player() {
 
 		return () => clearInterval(intervalId)
 	}, [movingSlider, getSecondsPlayed])
+
+	const [volume, setVolumeValue] = useState(getVolume() * 100)
+	const [movingVolumeSlider, setMovingVolumeSlider] = useState(false)
+
+	useEffect(() => {
+		const intervalId = setInterval(() => {
+			if (!movingVolumeSlider) setVolumeValue(getVolume())
+		}, 500)
+
+		return () => clearInterval(intervalId)
+	}, [movingVolumeSlider, getVolume])
 
 	const { isOpen, onOpen, onClose } = useDisclosure()
 
@@ -131,6 +146,7 @@ export default function Player() {
 							onChange={(e) => {
 								setSecondsPlayed(e)
 								setSecondsPlayedValue(e)
+								setCookie("secondsPlayed", e.toString())
 							}}
 							onChangeEnd={() => {
 								setMovingSlider(false)
@@ -149,6 +165,31 @@ export default function Player() {
 				</section>
 
 				<article className={styles.miscBtns}>
+					<div className="mx-auto max-w-36 w-full flex gap-2">
+						<Volume2 />
+						<Slider
+							className="w-full"
+							aria-label="slider-ex-1"
+							max={1}
+							step={0.01}
+							value={volume}
+							onChangeStart={() => {
+								setMovingVolumeSlider(true)
+							}}
+							onChange={(e) => {
+								setVolume(e)
+								setVolumeValue(e)
+								setCookie("volume", e.toString())
+							}}
+							onChangeEnd={() => {
+								setMovingVolumeSlider(false)
+							}}>
+							<SliderTrack>
+								<SliderFilledTrack />
+							</SliderTrack>
+							<SliderThumb />
+						</Slider>
+					</div>
 					<List onClick={() => onOpen()} />
 				</article>
 			</section>

@@ -2,6 +2,7 @@ import axios, { AxiosRequestConfig } from "axios"
 import refreshToken from "./refreshToken"
 import defu from "defu"
 import { getCookie } from "cookies-next"
+import signout from "./signout"
 
 async function useAPI<T>(
 	url: string,
@@ -46,7 +47,7 @@ async function useAPI<T>(
 				return retryResponse.data
 			} catch (retryError) {
 				console.log("Token refresh failed:", retryError)
-				throw retryError
+				signout()
 			}
 		} else {
 			console.log(error)

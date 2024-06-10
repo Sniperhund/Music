@@ -2,6 +2,7 @@
 import React, { createContext } from "react"
 import { Howl } from "howler"
 import getFilePath from "@/util/getFilePath"
+import { getCookie, hasCookie } from "cookies-next"
 
 const MusicPlayerContext = createContext()
 
@@ -50,6 +51,7 @@ class MusicPlayerProvider extends React.Component {
 			src: [getFilePath("Track", song.audioFile)],
 			html5: true,
 			autoplay: false,
+			volume: hasCookie("volume") ? getCookie("volume") : 0.5,
 			onend: () => {
 				this.next()
 			},
@@ -308,6 +310,15 @@ class MusicPlayerProvider extends React.Component {
 		return this.state.queue
 	}
 
+	getVolume = () => {
+		if (this.state.sound) return this.state.sound.volume()
+		return 0
+	}
+
+	setVolume = (volume) => {
+		if (this.state.sound) this.state.sound.volume(volume)
+	}
+
 	render() {
 		const { children } = this.props
 		return (
@@ -331,6 +342,8 @@ class MusicPlayerProvider extends React.Component {
 					getSecondsPlayed: this.getSecondsPlayed,
 					setSecondsPlayed: this.setSecondsPlayed,
 					getQueue: this.getQueue,
+					getVolume: this.getVolume,
+					setVolume: this.setVolume,
 				}}>
 				{children}
 			</MusicPlayerContext.Provider>
