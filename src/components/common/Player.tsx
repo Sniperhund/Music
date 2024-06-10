@@ -204,7 +204,14 @@ export default function Player() {
 						{getQueue().length === 0 ? (
 							<p>No upcoming songs.</p>
 						) : (
-							<p>Yes</p>
+							<>
+								<h1 className="mb-4 text-2xl font-bold">
+									This is still WIP
+								</h1>
+								{getQueue().map((song: any, index: any) => {
+									return <p key={index}>{song.name}</p>
+								})}
+							</>
 						)}
 					</DrawerBody>
 				</DrawerContent>
