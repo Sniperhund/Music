@@ -17,7 +17,7 @@ export default async function signup(
 				email: email,
 				password: password,
 				name: name,
-				frontendUrl: "http://" + origin + "/auth/verify",
+				frontendUrl: origin + "/auth/verify",
 			}
 		)
 	} catch (error: any) {
