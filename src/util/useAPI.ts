@@ -45,9 +45,11 @@ async function useAPI<T>(
 
 				const retryResponse = await axios(url, retryConfig)
 				return retryResponse.data
-			} catch (retryError) {
+			} catch (retryError: any) {
 				console.log("Token refresh failed:", retryError)
 				signout()
+
+				return retryError.response
 			}
 		} else {
 			console.log(error)
