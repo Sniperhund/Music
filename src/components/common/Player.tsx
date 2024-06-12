@@ -18,6 +18,7 @@ import {
 	useDisclosure,
 } from "@chakra-ui/react"
 import {
+	Expand,
 	List,
 	Pause,
 	Play,
@@ -34,6 +35,7 @@ import { getCookie, setCookie } from "cookies-next"
 export default function Player() {
 	const {
 		isPlaying,
+		isRepeating,
 		pause,
 		play,
 		prev,
@@ -128,7 +130,14 @@ export default function Player() {
 							/>
 						)}
 						<SkipForward onClick={() => next()} />
-						<Repeat onClick={() => toggleRepeat()} />
+						<Repeat
+							onClick={() => toggleRepeat()}
+							color={
+								isRepeating
+									? "rgb(144, 205, 244)"
+									: "rgb(255, 255, 255)"
+							}
+						/>
 					</article>
 					<article>
 						<p>
@@ -191,6 +200,7 @@ export default function Player() {
 						</Slider>
 					</div>
 					<List onClick={() => onOpen()} />
+					<Expand />
 				</article>
 			</section>
 

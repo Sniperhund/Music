@@ -23,6 +23,22 @@ class MusicPlayerProvider extends React.Component {
 		}
 	}
 
+	componentDidMount() {
+		navigator.mediaSession.setActionHandler("play", () => {
+			console.log("Hello")
+			this.play()
+		})
+		navigator.mediaSession.setActionHandler("pause", this.pause)
+		navigator.mediaSession.setActionHandler("seekforward", () =>
+			this.setSecondsPlayed(this.getSecondsPlayed() + 10)
+		)
+		navigator.mediaSession.setActionHandler("seekbackward", () =>
+			this.setSecondsPlayed(this.getSecondsPlayed() - 10)
+		)
+		navigator.mediaSession.setActionHandler("previoustrack", this.prev)
+		navigator.mediaSession.setActionHandler("nexttrack", this.next)
+	}
+
 	loadInternalState = () => {
 		this.internalState = this.state
 	}
@@ -30,6 +46,31 @@ class MusicPlayerProvider extends React.Component {
 	saveInternalState = () => {
 		if (this.internalState != {}) this.setState(this.internalState)
 		this.internalState = {}
+	}
+
+	updateMediaSession = async () => {
+		if ("mediaSession" in navigator) {
+			const { currentSong } = this.internalState
+
+			if (!currentSong) return
+
+			navigator.mediaSession.metadata = new MediaMetadata({
+				title: currentSong.name,
+				artist: currentSong.artist.name,
+				album: currentSong.album.name,
+				artwork: [
+					{
+						src: getFilePath("Album", currentSong.album.cover),
+						sizes: "512x512",
+					},
+				],
+			})
+
+			navigator.mediaSession.setPositionState({
+				duration: await this.getDuration(),
+				position: this.getSecondsPlayed(),
+			})
+		}
 	}
 
 	internalNextCurrentSong = () => {
@@ -57,14 +98,19 @@ class MusicPlayerProvider extends React.Component {
 			},
 			onstop: () => {
 				this.setState({ isPlaying: false })
+				navigator.mediaSession.playbackState = "none"
+				console.log(navigator.mediaSession)
 			},
 			onplay: () => {
 				this.setState({ isPlaying: true })
+				navigator.mediaSession.playbackState = "playing"
+				console.log(navigator.mediaSession)
 			},
 			onpause: () => {
 				this.setState({ isPlaying: false })
+				navigator.mediaSession.playbackState = "paused"
+				console.log(navigator.mediaSession)
 			},
-			html5PoolSize: 1,
 		})
 
 		this.setState({ sound: newSound })
@@ -87,6 +133,8 @@ class MusicPlayerProvider extends React.Component {
 			this.internalState.sound.play()
 			this.internalState.isPlaying = true
 		}
+
+		this.updateMediaSession()
 	}
 
 	play = async () => {
@@ -100,6 +148,8 @@ class MusicPlayerProvider extends React.Component {
 	internalPause = () => {
 		this.internalState.sound.pause()
 		this.internalState.isPlaying = false
+
+		this.updateMediaSession()
 	}
 
 	pause = () => {
@@ -130,6 +180,8 @@ class MusicPlayerProvider extends React.Component {
 		if (this.internalState.currentSong) {
 			this.internalPlay()
 		}
+
+		this.updateMediaSession()
 	}
 
 	next = async () => {
@@ -161,11 +213,15 @@ class MusicPlayerProvider extends React.Component {
 			const newSound = await this.createHowl(prevSong)
 			this.internalPlay(newSound)
 		}
+
+		this.updateMediaSession()
 	}
 
 	prev = async () => {
 		this.loadInternalState()
+
 		await this.internalPrev()
+
 		this.saveInternalState()
 	}
 
@@ -325,6 +381,7 @@ class MusicPlayerProvider extends React.Component {
 			<MusicPlayerContext.Provider
 				value={{
 					isPlaying: this.state.isPlaying,
+					isRepeating: this.state.repeat,
 					play: this.play,
 					pause: this.pause,
 					next: this.next,
