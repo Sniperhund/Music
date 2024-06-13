@@ -29,7 +29,11 @@ import Link from "next/link"
 import { useRouter } from "next/router"
 import { useEffect, useState } from "react"
 
-export default function Sidebar() {
+interface SidebarProps {
+	admin: boolean
+}
+
+export default function Sidebar(props: SidebarProps) {
 	const router = useRouter()
 
 	const [user, setUser] = useState<any>(null)
@@ -44,103 +48,188 @@ export default function Sidebar() {
 		fetchData()
 	}, [])
 
+	if (!props.admin)
+		return (
+			<>
+				<Text fontSize="2xl">Music</Text>
+
+				<InputGroup>
+					<InputLeftElement pointerEvents="none">
+						<Search />
+					</InputLeftElement>
+					<Input placeholder="Search..." />
+				</InputGroup>
+				<section className="flex flex-col">
+					<Link href="/">
+						<Button
+							variant="ghost"
+							justifyContent="left"
+							w="full"
+							leftIcon={<Home />}>
+							Home
+						</Button>
+					</Link>
+					<Link href="/browse">
+						<Button
+							variant="ghost"
+							justifyContent="left"
+							w="full"
+							leftIcon={<Grid2X2 />}>
+							Browse
+						</Button>
+					</Link>
+				</section>
+				<section className="flex flex-col">
+					<span className="text-xs font-semibold">Library</span>
+					<Link href="/library/recently-added">
+						<Button
+							variant="ghost"
+							justifyContent="left"
+							w="full"
+							leftIcon={<Clock />}>
+							Recently Added
+						</Button>
+					</Link>
+					<Link href="/library/artists">
+						<Button
+							variant="ghost"
+							justifyContent="left"
+							w="full"
+							leftIcon={<MicVocal />}>
+							Artists
+						</Button>
+					</Link>
+					<Link href="/library/albums">
+						<Button
+							variant="ghost"
+							justifyContent="left"
+							w="full"
+							leftIcon={<GalleryVerticalEnd />}>
+							Albums
+						</Button>
+					</Link>
+					<Link href="/library/songs">
+						<Button
+							variant="ghost"
+							justifyContent="left"
+							w="full"
+							leftIcon={<Music />}>
+							Songs
+						</Button>
+					</Link>
+				</section>
+				<section className="flex flex-col">
+					<span className="text-xs font-semibold">Playlists</span>
+					<Link href="#">
+						<Button
+							variant="ghost"
+							justifyContent="left"
+							w="full"
+							leftIcon={<ListMusic />}>
+							WIP
+						</Button>
+					</Link>
+				</section>
+				{user && user.role == "admin" ? (
+					<section className="flex flex-col">
+						<span className="text-xs font-semibold">Secrets</span>
+						<Link href="/admin/dashboard">
+							<Button
+								variant="ghost"
+								justifyContent="left"
+								w="full"
+								leftIcon={<FileSliders />}>
+								Switch to admin panel
+							</Button>
+						</Link>
+					</section>
+				) : (
+					""
+				)}
+
+				{user ? (
+					<Menu>
+						<MenuButton mt="auto">
+							<Flex alignItems="center" gap="4">
+								<Avatar name={user.name} />
+								<Text fontSize="lg">{user.name}</Text>
+							</Flex>
+						</MenuButton>
+						<MenuList>
+							<MenuItem
+								icon={<LogOut />}
+								onClick={(e) => {
+									if (signout()) router.push("/auth/signin")
+								}}>
+								Sign out
+							</MenuItem>
+						</MenuList>
+					</Menu>
+				) : (
+					""
+				)}
+			</>
+		)
+
 	return (
 		<>
-			<Text fontSize="2xl">Music</Text>
+			<Text fontSize="2xl">Music - Admin Panel</Text>
 
-			<InputGroup>
-				<InputLeftElement pointerEvents="none">
-					<Search />
-				</InputLeftElement>
-				<Input placeholder="Search..." />
-			</InputGroup>
 			<section className="flex flex-col">
-				<Link href="/">
-					<Button
-						variant="ghost"
-						justifyContent="left"
-						w="full"
-						leftIcon={<Home />}>
-						Home
+				<span className="text-xs font-semibold">Manage content</span>
+				<Link href="/manage/artists">
+					<Button variant="ghost" justifyContent="left" w="full">
+						Manage Artists
 					</Button>
 				</Link>
-				<Link href="/browse">
-					<Button
-						variant="ghost"
-						justifyContent="left"
-						w="full"
-						leftIcon={<Grid2X2 />}>
-						Browse
+				<Link href="/manage/genres">
+					<Button variant="ghost" justifyContent="left" w="full">
+						Manage Genres
+					</Button>
+				</Link>
+				<Link href="/manage/albums">
+					<Button variant="ghost" justifyContent="left" w="full">
+						Manage Albums
+					</Button>
+				</Link>
+				<Link href="/manage/tracks">
+					<Button variant="ghost" justifyContent="left" w="full">
+						Manage Tracks
 					</Button>
 				</Link>
 			</section>
 			<section className="flex flex-col">
 				<span className="text-xs font-semibold">Library</span>
-				<Link href="/library/recently-added">
-					<Button
-						variant="ghost"
-						justifyContent="left"
-						w="full"
-						leftIcon={<Clock />}>
-						Recently Added
+				<Link href="/admin/add/artist">
+					<Button variant="ghost" justifyContent="left" w="full">
+						Add new artist
 					</Button>
 				</Link>
-				<Link href="/library/artists">
-					<Button
-						variant="ghost"
-						justifyContent="left"
-						w="full"
-						leftIcon={<MicVocal />}>
-						Artists
+				<Link href="/admin/add/genre">
+					<Button variant="ghost" justifyContent="left" w="full">
+						Add new genre
 					</Button>
 				</Link>
-				<Link href="/library/albums">
-					<Button
-						variant="ghost"
-						justifyContent="left"
-						w="full"
-						leftIcon={<GalleryVerticalEnd />}>
-						Albums
+				<Link href="/admin/add/album">
+					<Button variant="ghost" justifyContent="left" w="full">
+						Add new album
 					</Button>
 				</Link>
-				<Link href="/library/songs">
-					<Button
-						variant="ghost"
-						justifyContent="left"
-						w="full"
-						leftIcon={<Music />}>
-						Songs
+				<Link href="/admin/add/track">
+					<Button variant="ghost" justifyContent="left" w="full">
+						Add new track
 					</Button>
 				</Link>
 			</section>
+
 			<section className="flex flex-col">
-				<span className="text-xs font-semibold">Playlists</span>
-				<Link href="#">
-					<Button
-						variant="ghost"
-						justifyContent="left"
-						w="full"
-						leftIcon={<ListMusic />}>
-						WIP
+				<span className="text-xs font-semibold">Exit</span>
+				<Link href="/">
+					<Button variant="ghost" justifyContent="left" w="full">
+						Exit admin panel
 					</Button>
 				</Link>
 			</section>
-			{user && user.role == "admin" ? (
-				<section className="flex flex-col">
-					<span className="text-xs font-semibold">Secrets</span>
-					<Link href="/admin/dashboard">
-						<Button
-							variant="ghost"
-							justifyContent="left"
-							w="full"
-							leftIcon={<FileSliders />}>
-							Switch to admin panel
-						</Button>
-					</Link>
-				</section>
-			) : (
-				""
-			)}
 
 			{user ? (
 				<Menu>
