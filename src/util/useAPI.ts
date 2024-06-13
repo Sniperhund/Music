@@ -53,7 +53,7 @@ async function useAPI<T>(
 			}
 		} else {
 			console.log(error)
-			throw error
+			return error.response
 		}
 	}
 }
