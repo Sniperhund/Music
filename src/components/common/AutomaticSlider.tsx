@@ -15,10 +15,8 @@ interface AutomaticSliderProps {
 }
 
 export default function AutomaticSlider(props: AutomaticSliderProps) {
-	if (props.amount) return AutoFetchGenreSlider(props.amount)
-	else if (props.genre) return GenreProvidedSlider(props.genre)
-
-	return <>An error happened</>
+	if (props.genre) return GenreProvidedSlider(props.genre)
+	else return AutoFetchGenreSlider(props.amount ? props.amount : 10)
 }
 
 function AutoFetchGenreSlider(amount: number) {
@@ -50,9 +48,11 @@ function AutoFetchGenreSlider(amount: number) {
 	return (
 		<section className="flex flex-col gap-8">
 			{genreData.map(function (genre, i) {
+				if (!randomAlbums[i] || randomAlbums[i].status) return <></>
+
 				return (
 					<Slider title={genre.name} key={i}>
-						{randomAlbums[i]?.map(function (album: any, j: number) {
+						{randomAlbums[i].map(function (album: any, j: number) {
 							return (
 								<Card
 									key={j}

@@ -12,7 +12,7 @@ export default function Home() {
 
 	return (
 		<>
-			<AutomaticSlider amount={2} />
+			<AutomaticSlider />
 		</>
 	)
 }
