@@ -25,9 +25,9 @@ export default function DefaultLayout({ children }: any) {
 			<article
 				className="flex flex-col gap-5 relative p-5 border-r border-r-[var(--chakra-colors-chakra-border-color)] md:min-w-64 xl:min-w-80"
 				ref={sidebar}>
-				<Sidebar />
+				<Sidebar admin={false} />
 			</article>
-			<article className="py-14 px-12 w-full overflow-y-auto mb-20">
+			<article className="py-14 px-12 w-full overflow-y-auto pb-24">
 				{children}
 			</article>
 			<div
