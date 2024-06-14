@@ -79,8 +79,6 @@ function GenreProvidedSlider(genre: Genre) {
 				`/albums/${genre.id}/random`
 			)
 
-			console.log(randomAlbumArray)
-
 			setRandomAlbums(randomAlbumArray)
 		}
 
