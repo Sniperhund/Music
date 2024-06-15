@@ -12,7 +12,7 @@
 		position: relative;
 	}
 
-	& div {
+	.sliderContainer {
 		display: flex;
 		gap: 10px;
 		overflow-x: auto;
@@ -21,7 +21,7 @@
 		scroll-behavior: smooth;
 	}
 
-	& div::-webkit-scrollbar {
+	.sliderContainer::-webkit-scrollbar {
 		display: none;
 	}
 }

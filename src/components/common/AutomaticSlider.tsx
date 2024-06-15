@@ -28,8 +28,14 @@ function AutoFetchGenreSlider(amount: number) {
 			const genres: any[] = await useAPI(`/genres/random?limit=${amount}`)
 
 			setGenreData(genres)
+		}
 
-			const albumPromises = genres.map((genre) =>
+		fetchData()
+	}, [amount])
+
+	useEffect(() => {
+		async function fetchData() {
+			const albumPromises = genreData.map((genre) =>
 				useAPI(`/albums/${genre._id}/random`)
 			)
 			const tempRandomAlbums = await Promise.all(albumPromises)
@@ -38,13 +44,19 @@ function AutoFetchGenreSlider(amount: number) {
 		}
 
 		fetchData()
-	}, [amount])
+	}, [genreData])
 
 	return (
 		<section className="flex flex-col gap-8">
 			{genreData.map(function (genre, i) {
-				if (!randomAlbums[i] || randomAlbums[i].status == 404)
-					return <></>
+				if (!randomAlbums[i] || randomAlbums[i]?.status == 404)
+					return (
+						<Slider title={genre.name} key={i}>
+							{Array.apply(0, Array(10)).map(function (x, j) {
+								return <Card key={j} loading />
+							})}
+						</Slider>
+					)
 
 				return (
 					<Slider title={genre.name} key={i}>

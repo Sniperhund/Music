@@ -38,7 +38,9 @@ export default function Slider(props: SliderProps) {
 					className={styles.left}
 					onClick={() => left()}
 				/>
-				<div ref={slider}>{props.children}</div>
+				<div ref={slider} className={styles.sliderContainer}>
+					{props.children}
+				</div>
 				<ChevronRight
 					size="48"
 					className={styles.right}

@@ -1,14 +1,23 @@
+import { Skeleton, SkeletonText, Stack } from "@chakra-ui/react"
 import Image from "next/image"
 import Link from "next/link"
 
 interface CardProps {
-	imageUrl: string
-	albumName: string
-	artistName: string
-	albumId: string
+	imageUrl?: string
+	albumName?: string
+	artistName?: string
+	albumId?: string
+	loading?: boolean
 }
 
 export default function Card(props: CardProps) {
+	if (props.loading)
+		return (
+			<div>
+				<Skeleton height="298px" width="256px" />
+			</div>
+		)
+
 	return (
 		<Link
 			href={`/album/${props.albumId}`}
