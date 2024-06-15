@@ -48,7 +48,8 @@ function AutoFetchGenreSlider(amount: number) {
 	return (
 		<section className="flex flex-col gap-8">
 			{genreData.map(function (genre, i) {
-				if (!randomAlbums[i] || randomAlbums[i].status) return <></>
+				if (!randomAlbums[i] || randomAlbums[i].status == 404)
+					return <></>
 
 				return (
 					<Slider title={genre.name} key={i}>

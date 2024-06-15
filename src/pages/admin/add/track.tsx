@@ -33,7 +33,7 @@ export default function Track() {
 		formData.append("file", audioFile)
 		formData.append("album", albumId)
 
-		const result = await useAPI("/admin/track", {
+		const result: any = await useAPI("/admin/track", {
 			method: "POST",
 			data: formData,
 			headers: {
@@ -41,10 +41,17 @@ export default function Track() {
 			},
 		})
 
-		toast({
-			status: "success",
-			title: "Track added successfully",
-		})
+		if (result.status == 200)
+			toast({
+				status: "success",
+				title: "Track added successfully",
+			})
+		else
+			toast({
+				title: "An error happened",
+				description: result.message,
+				status: "error",
+			})
 	}
 
 	const [artistOptions, setArtistOptions] = useState<any[]>([])
@@ -52,7 +59,10 @@ export default function Track() {
 
 	useEffect(() => {
 		async function fetchData() {
-			const artistResult: [] = await useAPI("/all/artists")
+			const artistResult: any = await useAPI("/all/artists")
+
+			if (!Array.isArray(artistResult) && artistResult?.status != 200)
+				return
 
 			const tempArtistOptions = artistResult.map((item: any) => ({
 				label: item.name,
@@ -61,7 +71,10 @@ export default function Track() {
 
 			setArtistOptions(tempArtistOptions)
 
-			const albumResult: [] = await useAPI("/all/albums")
+			const albumResult: any = await useAPI("/all/albums")
+
+			if (!Array.isArray(albumResult) && albumResult?.status != 200)
+				return
 
 			const tempAlbumOptions = albumResult.map((item: any) => ({
 				label: item.name,
@@ -73,6 +86,9 @@ export default function Track() {
 
 		fetchData()
 	}, [])
+
+	if (!artistOptions || !albumOptions)
+		return <>Not enough artists or albums</>
 
 	return (
 		<>
