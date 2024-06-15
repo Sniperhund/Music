@@ -29,15 +29,10 @@ function AutoFetchGenreSlider(amount: number) {
 
 			setGenreData(genres)
 
-			let tempRandomAlbums = []
-
-			for (const genre of genres) {
-				const randomAlbumArray: any[] = await useAPI(
-					`/albums/${genre._id}/random`
-				)
-
-				tempRandomAlbums.push(randomAlbumArray)
-			}
+			const albumPromises = genres.map((genre) =>
+				useAPI(`/albums/${genre._id}/random`)
+			)
+			const tempRandomAlbums = await Promise.all(albumPromises)
 
 			setRandomAlbums(tempRandomAlbums)
 		}

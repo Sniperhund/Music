@@ -52,7 +52,6 @@ async function useAPI<T>(
 				return retryError.response
 			}
 		} else {
-			console.log(error)
 			return error.response
 		}
 	}

@@ -24,10 +24,7 @@ class MusicPlayerProvider extends React.Component {
 	}
 
 	componentDidMount() {
-		navigator.mediaSession.setActionHandler("play", () => {
-			console.log("Hello")
-			this.play()
-		})
+		navigator.mediaSession.setActionHandler("play", this.play)
 		navigator.mediaSession.setActionHandler("pause", this.pause)
 		navigator.mediaSession.setActionHandler("seekforward", () =>
 			this.setSecondsPlayed(this.getSecondsPlayed() + 10)

@@ -1,6 +1,7 @@
 .playerContainer {
 	border: 1px solid var(--chakra-colors-chakra-border-color);
 	border-radius: 1rem;
+	background-color: var(--chakra-colors-chakra-body-bg);
 	width: 100%;
 	height: 100%;
 	transition: transform 0.8s ease-in-out;
