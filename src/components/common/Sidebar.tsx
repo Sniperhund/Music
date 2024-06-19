@@ -81,15 +81,6 @@ export default function Sidebar(props: SidebarProps) {
 				</section>
 				<section className="flex flex-col">
 					<span className="text-xs font-semibold">Library</span>
-					<Link href="/library/recently-added">
-						<Button
-							variant="ghost"
-							justifyContent="left"
-							w="full"
-							leftIcon={<Clock />}>
-							Recently Added
-						</Button>
-					</Link>
 					<Link href="/library/artists">
 						<Button
 							variant="ghost"

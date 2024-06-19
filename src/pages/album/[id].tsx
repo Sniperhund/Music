@@ -33,7 +33,13 @@ export default function Album() {
 		playAlbum(albumTracks)
 	}
 
-	if (!router.query.id || !albumData || !albumTracks) return <></>
+	if (
+		!router.query.id ||
+		!albumData ||
+		!albumTracks ||
+		albumTracks.status == 404
+	)
+		return <></>
 
 	return (
 		<>

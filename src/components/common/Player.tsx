@@ -101,6 +101,7 @@ export default function Player() {
 			<section className={styles.player}>
 				<article className={styles.trackInfo}>
 					<img
+						className={styles.img}
 						src={getFilePath("Album", getSong().album.cover)}
 						alt="Album cover image"
 					/>
@@ -113,7 +114,7 @@ export default function Player() {
 				</article>
 
 				<section className={styles.controls}>
-					<article>
+					<article className={styles.playerSections}>
 						<Shuffle onClick={() => shuffle()} />
 						<SkipBack onClick={() => prev()} />
 						{isPlaying ? (
@@ -139,7 +140,7 @@ export default function Player() {
 							}
 						/>
 					</article>
-					<article>
+					<article className={styles.playerSections}>
 						<p>
 							{new Date(secondsPlayed * 1000)
 								.toISOString()

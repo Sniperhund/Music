@@ -15,3 +15,28 @@
 .more {
 	margin-left: auto;
 }
+
+.menu {
+	display: none !important;
+	right: 0;
+
+	border-radius: 8px;
+	padding: 5px 0;
+
+	background-color: rgb(45, 55, 72);
+
+	min-width: 14rem;
+
+	z-index: 100;
+
+	& button {
+		border-radius: 0;
+		justify-content: space-between;
+		min-height: 48px;
+	}
+}
+
+.active {
+	display: inline-flex !important;
+	position: absolute;
+}
