@@ -86,7 +86,7 @@ export default function Track(props: TrackProps) {
 			<div className="relative" ref={menuRef}>
 				<Ellipsis
 					size={20}
-					onClick={() => setIsMenuOpen(true)}
+					onClick={() => setIsMenuOpen(!isMenuOpen)}
 					className="cursor-pointer"
 				/>
 				<ButtonGroup
