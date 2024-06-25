@@ -26,7 +26,7 @@ import { useEffect, useRef, useState } from "react"
 interface TrackProps {
 	index: number
 	track: any
-	album: []
+	album: { _id: string }[]
 }
 
 export default function Track(props: TrackProps) {
@@ -49,7 +49,7 @@ export default function Track(props: TrackProps) {
 
 	const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false)
 
-	const menuRef = useRef(null)
+	const menuRef = useRef<any>(null)
 
 	useEffect(() => {
 		function handleClickOutside(event: MouseEvent) {
@@ -111,7 +111,7 @@ export default function Track(props: TrackProps) {
 					<Button
 						onClick={async () => {
 							setIsMenuOpen(false)
-							const result = await useAPI("/user/tracks", {
+							const result: any = await useAPI("/user/tracks", {
 								method: "PUT",
 								data: {
 									ids: [props.album[props.index]._id],
