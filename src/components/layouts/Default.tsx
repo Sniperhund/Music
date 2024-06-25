@@ -27,7 +27,12 @@ export default function DefaultLayout({ children }: any) {
 				ref={sidebar}>
 				<Sidebar admin={false} />
 			</article>
-			<article className="py-14 px-12 w-full overflow-y-auto pb-24">
+			<article
+				className={`py-14 px-12 w-full overflow-y-auto ${
+					getCurrentSong() || getQueue().length !== 0
+						? "mb-[5.5rem]"
+						: ""
+				}`}>
 				{children}
 			</article>
 			<div
