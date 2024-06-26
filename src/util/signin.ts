@@ -3,10 +3,13 @@ import { setCookie } from "cookies-next"
 
 export default async function signin(email: string, password: string) {
 	try {
-		const result = await axios.post("https://api.lucasskt.dk/auth/login", {
-			email: email,
-			password: password,
-		})
+		const result = await axios.post(
+			`${process.env.NEXT_PUBLIC_API_URL}auth/login`,
+			{
+				email: email,
+				password: password,
+			}
+		)
 
 		if (result.status !== 200) {
 			return {

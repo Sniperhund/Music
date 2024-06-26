@@ -12,7 +12,7 @@ export default async function signup(
 
 	try {
 		const result = await axios.post(
-			"https://api.lucasskt.dk/auth/register",
+			`${process.env.NEXT_PUBLIC_API_URL}auth/register`,
 			{
 				email: email,
 				password: password,

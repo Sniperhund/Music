@@ -1,4 +1,4 @@
-const backendUrl = "https://api.lucasskt.dk/"
+const backendUrl = process.env.NEXT_PUBLIC_API_URL
 
 export default function getFilePath(type: String, path: String) {
 	switch (type) {
