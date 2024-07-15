@@ -29,7 +29,6 @@
 		"react-dom": "^18"
 	},
 	"devDependencies": {
-		"@tauri-apps/cli": "^1.6.0",
 		"@types/howler": "^2.2.11",
 		"@types/node": "^20",
 		"@types/react": "^18",
