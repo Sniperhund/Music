@@ -54,8 +54,8 @@ export default function Album() {
 
 				<div>
 					<h1>{albumData?.name}</h1>
-					<Link href={`/artist/${albumData.artist._id}`}>
-						<h2>{albumData.artist.name}</h2>
+					<Link href={`/artist/${albumData.artists[0]._id}`}>
+						<h2>{albumData.artists[0].name}</h2>
 					</Link>
 
 					<span className={styles.play}>

@@ -53,7 +53,7 @@ class MusicPlayerProvider extends React.Component {
 
 			navigator.mediaSession.metadata = new MediaMetadata({
 				title: currentSong.name,
-				artist: currentSong.artist.name,
+				artist: currentSong.artists[0].name,
 				album: currentSong.album.name,
 				artwork: [
 					{
@@ -96,17 +96,14 @@ class MusicPlayerProvider extends React.Component {
 			onstop: () => {
 				this.setState({ isPlaying: false })
 				navigator.mediaSession.playbackState = "none"
-				console.log(navigator.mediaSession)
 			},
 			onplay: () => {
 				this.setState({ isPlaying: true })
 				navigator.mediaSession.playbackState = "playing"
-				console.log(navigator.mediaSession)
 			},
 			onpause: () => {
 				this.setState({ isPlaying: false })
 				navigator.mediaSession.playbackState = "paused"
-				console.log(navigator.mediaSession)
 			},
 		})
 

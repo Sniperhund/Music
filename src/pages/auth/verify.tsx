@@ -13,7 +13,7 @@ export default function Verify() {
 			if (router.query.q)
 				response = await verify(router.query.q as string)
 
-			setResponseMessage(response.message)
+			setResponseMessage(response?.message)
 		}
 
 		verifyUser()
@@ -23,7 +23,7 @@ export default function Verify() {
 		return (
 			<section className="flex flex-col items-center justify-center h-screen text-xl">
 				<h1 className="text-2xl">Error</h1>
-				<h2>{responseMessage.toString()}</h2>
+				<h2>{responseMessage ? responseMessage.toString() : ""}</h2>
 			</section>
 		)
 

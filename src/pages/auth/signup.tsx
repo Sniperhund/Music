@@ -41,7 +41,6 @@ export default function Signup() {
 			)
 
 			if (result?.error) {
-				console.log(result?.result.response.data.message)
 				toast({
 					title: result?.result.response.data.message,
 					status: "error",

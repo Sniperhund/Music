@@ -20,11 +20,11 @@ export default async function signin(email: string, password: string) {
 
 		const expireTime = new Date().getTime() + 1000 * 3600 * 60
 
-		setCookie("access_token", result.data.accessToken, {
+		setCookie("access_token", result.data.response.accessToken, {
 			path: "/",
 			expires: new Date(expireTime),
 		})
-		setCookie("refresh_token", result.data.refreshToken, {
+		setCookie("refresh_token", result.data.response.refreshToken, {
 			path: "/",
 			expires: new Date(expireTime),
 		})

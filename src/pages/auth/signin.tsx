@@ -32,7 +32,6 @@ export default function Signin() {
 			const result = await signin(values.email, values.password)
 
 			if (result?.error) {
-				console.log(result?.result.response.data.message)
 				toast({
 					title: result?.result.response.data.message,
 					status: "error",

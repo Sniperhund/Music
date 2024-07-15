@@ -9,16 +9,16 @@ export default async function verify(verifyToken: string) {
 			`${process.env.NEXT_PUBLIC_API_URL}auth/verify?q=${verifyToken}`
 		)
 	} catch (error: unknown) {
-		return error
+		return error.response.data
 	}
 
 	const expireTime = new Date().getTime() + 1000 * 3600 * 60
 
-	setCookie("access_token", result.data.accessToken, {
+	setCookie("access_token", result.data.response.accessToken, {
 		path: "/",
 		expires: new Date(expireTime),
 	})
-	setCookie("refresh_token", result.data.refreshToken, {
+	setCookie("refresh_token", result.data.response.refreshToken, {
 		path: "/",
 		expires: new Date(expireTime),
 	})

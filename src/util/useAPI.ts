@@ -11,7 +11,7 @@ async function useAPI<T>(
 	let accessToken = getCookie("access_token")
 
 	const defaults: AxiosRequestConfig = {
-		baseURL: "https://api.lucasskt.dk/",
+		baseURL: process.env.NEXT_PUBLIC_API_URL,
 		headers: {
 			Authorization: `${accessToken}`,
 		},
@@ -20,8 +20,13 @@ async function useAPI<T>(
 	const config: AxiosRequestConfig = defu(options, defaults)
 
 	try {
-		const response = await axios(url, config)
-		return response.data
+		const result = await axios(url, config)
+
+		if (result.data.status === "error") {
+			throw new Error(result.data.message)
+		}
+
+		return result.data.response
 	} catch (error: any) {
 		if (
 			error.response &&
@@ -32,7 +37,7 @@ async function useAPI<T>(
 				accessToken = getCookie("access_token")
 
 				const newDefaults: AxiosRequestConfig = {
-					baseURL: "https://api.lucasskt.dk/",
+					baseURL: process.env.NEXT_PUBLIC_API_URL,
 					headers: {
 						Authorization: `${accessToken}`,
 					},

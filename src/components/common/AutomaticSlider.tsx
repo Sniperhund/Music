@@ -25,7 +25,7 @@ function AutoFetchGenreSlider(amount: number) {
 
 	useEffect(() => {
 		async function fetchData() {
-			const genres: any[] = await useAPI(`/genres/random?limit=${amount}`)
+			const genres: any = await useAPI(`/genres/random?limit=${amount}`)
 
 			setGenreData(genres)
 		}
@@ -46,6 +46,8 @@ function AutoFetchGenreSlider(amount: number) {
 		fetchData()
 	}, [genreData])
 
+	if (!genreData || genreData.length == 0) return <></>
+
 	return (
 		<section className="flex flex-col gap-8">
 			{genreData.map(function (genre, i) {
@@ -61,12 +63,14 @@ function AutoFetchGenreSlider(amount: number) {
 				return (
 					<Slider title={genre.name} key={i}>
 						{randomAlbums[i].map(function (album: any, j: number) {
+							console.log(album)
+
 							return (
 								<Card
 									key={j}
 									imageUrl={getFilePath("Album", album.cover)}
 									albumName={album.name}
-									artistName={album.artist.name}
+									artistName={album.artists[0].name}
 									albumId={album._id}
 								/>
 							)
@@ -101,7 +105,7 @@ function GenreProvidedSlider(genre: Genre) {
 						key={j}
 						imageUrl={getFilePath("Album", album.cover)}
 						albumName={album.name}
-						artistName={album.artist.name}
+						artistName={album.artists[0].name}
 						albumId={album._id}
 					/>
 				)
