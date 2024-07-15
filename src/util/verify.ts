@@ -8,7 +8,7 @@ export default async function verify(verifyToken: string) {
 		result = await axios.get(
 			`${process.env.NEXT_PUBLIC_API_URL}auth/verify?q=${verifyToken}`
 		)
-	} catch (error: unknown) {
+	} catch (error: any) {
 		return error.response.data
 	}
 
