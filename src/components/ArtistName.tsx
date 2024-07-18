@@ -17,7 +17,7 @@ export default function ArtistName(props: { artists: [any] }) {
 				return (
 					<div className="flex" key={index}>
 						{prefix(index)}
-						<Link href={`/artist/${artist.id}`} className="inline">
+						<Link href={`/artist/${artist._id}`} className="inline">
 							<h2>{artist.name}</h2>
 						</Link>
 					</div>
