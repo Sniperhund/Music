@@ -15,12 +15,9 @@ export default function ArtistName(props: { artists: [any] }) {
 		<div className="flex flex-wrap">
 			{props.artists.map((artist: any, index: number) => {
 				return (
-					<div className="flex">
+					<div className="flex" key={index}>
 						{prefix(index)}
-						<Link
-							href={`/artist/${artist.id}`}
-							key={index}
-							className="inline">
+						<Link href={`/artist/${artist.id}`} className="inline">
 							<h2>{artist.name}</h2>
 						</Link>
 					</div>
