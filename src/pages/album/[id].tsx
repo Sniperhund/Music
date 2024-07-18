@@ -10,6 +10,7 @@ import { Play } from "lucide-react"
 import Track from "@/components/album/Track"
 import Link from "next/link"
 import { useMusicPlayer } from "@/contexts/MusicPlayerContext"
+import ArtistName from "@/components/ArtistName"
 
 export default function Album() {
 	const router = useRouter()
@@ -52,11 +53,9 @@ export default function Album() {
 					alt="Album cover image"
 				/>
 
-				<div>
+				<div className={styles.info_details}>
 					<h1>{albumData?.name}</h1>
-					<Link href={`/artist/${albumData.artists[0]._id}`}>
-						<h2>{albumData.artists[0].name}</h2>
-					</Link>
+					<ArtistName artists={albumData.artists} />
 
 					<span className={styles.play}>
 						<Button leftIcon={<Play />} onClick={() => play()}>

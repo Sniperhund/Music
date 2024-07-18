@@ -8,7 +8,7 @@
 		border-radius: 10px;
 	}
 
-	& div {
+	.info_details {
 		padding-top: 70px;
 		display: flex;
 		flex-direction: column;
@@ -22,7 +22,7 @@
 
 	& h2 {
 		font-weight: 400;
-		font-size: 1.4rem;
+		font-size: 1.2rem;
 	}
 
 	.play {
