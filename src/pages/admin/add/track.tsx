@@ -41,7 +41,7 @@ export default function Track() {
 			},
 		})
 
-		if (result.data.response.status == "ok")
+		if (result._id)
 			toast({
 				status: "success",
 				title: "Track added successfully",
