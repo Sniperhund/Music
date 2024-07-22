@@ -21,7 +21,7 @@ export default function ArtistName(props: { artists: [any]; element: string }) {
 	}
 
 	return (
-		<div className="flex flex-wrap">
+		<div className="inline-flex flex-wrap">
 			{props.artists.map((artist: any, index: number) => {
 				return (
 					<div className="flex" key={index}>
