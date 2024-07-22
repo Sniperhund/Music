@@ -29,7 +29,7 @@ export default function Slider(props: SliderProps) {
 			<Link
 				href={props.href ? props.href : "#"}
 				className={styles.categoryLink}>
-				{props.title} {props.href ? <ChevronRight size="30" /> : ""}
+				{props.title} {props.href ? <ChevronRight size="24" /> : ""}
 			</Link>
 
 			<section>

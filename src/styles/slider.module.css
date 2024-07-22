@@ -8,7 +8,7 @@
 
 .slider {
 	& section {
-		margin-top: 0.25rem;
+		padding-top: 0.5rem;
 		position: relative;
 	}
 
