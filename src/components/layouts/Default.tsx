@@ -36,7 +36,11 @@ export default function DefaultLayout({ children }: any) {
 				{children}
 			</article>
 			<div
-				className="p-2.5 h-24 fixed right-0 bottom-0 z-50"
+				className={`p-2.5 h-24 fixed right-0 bottom-0 ${
+					getCurrentSong() || getQueue().length !== 0
+						? "z-50"
+						: "-z-50"
+				}`}
 				ref={playerContainer}>
 				<article
 					className={`${styles.playerContainer} ${
