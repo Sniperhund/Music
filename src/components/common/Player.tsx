@@ -31,6 +31,7 @@ import {
 import Image from "next/image"
 import { useEffect, useState } from "react"
 import { getCookie, setCookie } from "cookies-next"
+import ArtistName from "../ArtistName"
 
 export default function Player() {
 	const {
@@ -105,10 +106,14 @@ export default function Player() {
 						src={getFilePath("Album", getSong().album.cover)}
 						alt="Album cover image"
 					/>
-					<div>
-						<p>{getSong().name}</p>
-						<p>
-							{getSong().album.name} - {getSong().album.name}
+					<div className="flex flex-col w-full truncate leading-snug">
+						<p className="truncate">{getSong().name}</p>
+						<p className="truncate">
+							<ArtistName
+								artists={getSong().artists}
+								element="p"
+							/>{" "}
+							― {getSong().album.name}
 						</p>
 					</div>
 				</article>
