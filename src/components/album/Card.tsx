@@ -6,6 +6,7 @@ interface CardProps {
 	imageUrl?: string
 	albumName?: string
 	artistName?: string
+	artistId?: string
 	albumId?: string
 	loading?: boolean
 }
@@ -28,7 +29,13 @@ export default function Card(props: CardProps) {
 				alt="Album cover image"
 			/>
 			<p className="mt-0.5">{props.albumName}</p>
-			<p className="opacity-50">{props.artistName}</p>
+			{props.artistId ? (
+				<Link className="opacity-50" href={`/artist/${props.artistId}`}>
+					{props.artistName}
+				</Link>
+			) : (
+				<p className="opacity-50">{props.artistName}</p>
+			)}
 		</Link>
 	)
 }
