@@ -61,7 +61,7 @@ export default function Album() {
 
 				<div className={styles.info_details}>
 					<h1>{albumData?.name}</h1>
-					<ArtistName artists={albumData.artists} />
+					<ArtistName artists={albumData.artists} element="h2" />
 
 					<span className={styles.play}>
 						<Button leftIcon={<Play />} onClick={() => play()}>
