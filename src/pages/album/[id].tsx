@@ -21,6 +21,7 @@ export default function Album() {
 	useEffect(() => {
 		async function fetchData() {
 			if (!router.query.id) return
+
 			setAlbumData(await useAPI(`albums/${router.query.id}`))
 			setAlbumTracks(await useAPI(`albums/${router.query.id}/tracks`))
 		}
@@ -34,13 +35,18 @@ export default function Album() {
 		playAlbum(albumTracks)
 	}
 
-	if (
-		!router.query.id ||
-		!albumData ||
-		!albumTracks ||
-		albumTracks.status == 404
-	)
-		return <></>
+	if (!albumData || !albumTracks) return <></>
+
+	if (albumData?.status == 400 || albumTracks?.status == 400) {
+		return (
+			<>
+				<Head>
+					<title>Error</title>
+				</Head>
+				An error occurred
+			</>
+		)
+	}
 
 	return (
 		<>
