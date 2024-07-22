@@ -63,14 +63,13 @@ function AutoFetchGenreSlider(amount: number) {
 				return (
 					<Slider title={genre.name} key={i}>
 						{randomAlbums[i].map(function (album: any, j: number) {
-							console.log(album)
-
 							return (
 								<Card
 									key={j}
 									imageUrl={getFilePath("Album", album.cover)}
 									albumName={album.name}
 									artistName={album.artists[0].name}
+									artistId={album.artists[0]._id}
 									albumId={album._id}
 								/>
 							)
