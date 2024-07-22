@@ -13,8 +13,6 @@ export default function Track(props: TrackProps) {
 	const { playAlbumAtIndex } = useMusicPlayer()
 
 	function play() {
-		console.log(props.album)
-
 		playAlbumAtIndex(props.album, props.index)
 	}
 

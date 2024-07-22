@@ -11,6 +11,7 @@ import Link from "next/link"
 import Track from "@/components/artist/Track"
 import Slider from "@/components/common/Slider"
 import Card from "@/components/album/Card"
+import { useMusicPlayer } from "@/contexts/MusicPlayerContext"
 
 export default function Artist() {
 	const router = useRouter()
@@ -34,7 +35,11 @@ export default function Artist() {
 		fetchData()
 	}, [router.query.id])
 
-	function play() {}
+	const { playAlbum } = useMusicPlayer()
+
+	function play() {
+		playAlbum(artistTracks)
+	}
 
 	if (!artistData || !artistTracks || !artistAlbums) return <></>
 
