@@ -70,7 +70,7 @@ export default function Album() {
 					</span>
 				</div>
 			</section>
-			<section className={styles.tracks}>
+			<section className="tracks">
 				{albumTracks?.map(function (track: any, j: number) {
 					return (
 						<Track

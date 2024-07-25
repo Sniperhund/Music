@@ -29,11 +29,3 @@
 		margin-top: auto;
 	}
 }
-
-.tracks {
-	margin-top: 50px;
-
-	& article:nth-child(odd) {
-		background-color: rgb(255, 255, 255, 0.1);
-	}
-}

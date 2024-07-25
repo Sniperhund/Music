@@ -32,6 +32,14 @@ body {
 	}
 }
 
+.tracks {
+	margin-top: 50px;
+
+	& article:nth-child(odd) {
+		background-color: rgb(255, 255, 255, 0.1);
+	}
+}
+
 h1 {
 	font-size: 2.5rem;
 	font-weight: bold;
