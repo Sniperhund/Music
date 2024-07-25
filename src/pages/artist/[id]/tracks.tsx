@@ -10,6 +10,8 @@ export default function ArtistTracks() {
 
 	useEffect(() => {
 		async function fetchTracks() {
+			if (!router.query.id) return
+
 			setTracks(await useAPI(`artists/${router.query.id}/tracks`))
 		}
 		fetchTracks()
@@ -27,6 +29,13 @@ export default function ArtistTracks() {
 									key={j}
 									index={j}
 									track={track}
+									extendedInfo={{
+										album: {
+											name: track.album.name,
+											_id: track.album._id,
+										},
+										artists: track.artists,
+									}}
 									album={tracks}
 								/>
 							)

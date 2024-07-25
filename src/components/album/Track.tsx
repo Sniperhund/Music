@@ -1,19 +1,8 @@
 import styles from "@/components/album/track.module.css"
 import { useMusicPlayer } from "@/contexts/MusicPlayerContext"
 import useAPI from "@/util/useAPI"
+import { Button, ButtonGroup, Divider, useToast } from "@chakra-ui/react"
 import {
-	Button,
-	ButtonGroup,
-	Divider,
-	Menu,
-	MenuButton,
-	MenuDivider,
-	MenuList,
-	Portal,
-	useToast,
-} from "@chakra-ui/react"
-import {
-	ChevronDown,
 	Ellipsis,
 	ListEnd,
 	ListPlus,
@@ -22,11 +11,17 @@ import {
 	Plus,
 } from "lucide-react"
 import { useEffect, useRef, useState } from "react"
+import ArtistName from "../ArtistName"
+import Link from "next/link"
 
 interface TrackProps {
 	index: number
 	track: any
 	album: { _id: string }[]
+	extendedInfo?: {
+		album: { name: string; _id: string }
+		artists: { name: string; _id: string }[]
+	}
 }
 
 export default function Track(props: TrackProps) {
@@ -66,7 +61,9 @@ export default function Track(props: TrackProps) {
 
 	return (
 		<article
-			className={styles.track}
+			className={`${styles.track} ${
+				props.extendedInfo ? styles.extendedTrackInfo : ""
+			}`}
 			onMouseOver={() => setHovering(true)}
 			onMouseLeave={() => setHovering(false)}>
 			<div className={styles.index}>
@@ -77,6 +74,21 @@ export default function Track(props: TrackProps) {
 				)}
 			</div>
 			<p className={styles.name}>{props.track.name}</p>
+
+			{props.extendedInfo ? (
+				<>
+					<ArtistName
+						artists={props.extendedInfo.artists}
+						element="p"
+					/>
+					<Link href={`/album/${props.extendedInfo.album._id}`}>
+						<p>{props.extendedInfo.album.name}</p>
+					</Link>
+				</>
+			) : (
+				""
+			)}
+
 			<p className={styles.duration}>
 				{new Date(props.track.durationInSeconds * 1000)
 					.toISOString()
@@ -91,7 +103,7 @@ export default function Track(props: TrackProps) {
 				/>
 				<ButtonGroup
 					className={`${styles.menu} ${
-						isMenuOpen ? styles.active : ""
+						isMenuOpen ? styles.menuActive : ""
 					}`}
 					flexDirection="column"
 					spacing={0}

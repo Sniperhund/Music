@@ -1,7 +1,10 @@
 import Link from "next/link"
 import React from "react"
 
-export default function ArtistName(props: { artists: [any]; element: string }) {
+export default function ArtistName(props: {
+	artists: { name: string; _id: string }[]
+	element: string
+}) {
 	const prefix = (index: number) => {
 		if (index > 0 && props.artists.length - 1 != index) {
 			return React.createElement(
