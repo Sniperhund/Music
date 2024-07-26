@@ -15,7 +15,7 @@ import { NoSSR } from "@kwooshung/react-no-ssr"
 
 export default function Track() {
 	const [trackName, setTrackName] = useState("")
-	const [artistId, setArtistId] = useState("")
+	const [artistId, setArtistId] = useState<any>("")
 	const [audioFile, setAudioFile] = useState<any>(null)
 	const [albumId, setAlbumId] = useState("")
 
@@ -29,7 +29,9 @@ export default function Track() {
 		let formData = new FormData()
 
 		formData.append("name", trackName)
-		formData.append("artist", artistId)
+		if (artistId.length > 1)
+			artistId.forEach((id: string) => formData.append("artists", id))
+		else formData.append("artist", artistId)
 		formData.append("file", audioFile)
 		formData.append("album", albumId)
 
@@ -104,8 +106,13 @@ export default function Track() {
 					<FormControl isInvalid={artistId === ""} isRequired>
 						<FormLabel>Choose an artist</FormLabel>
 						<Select
+							isMulti
 							options={artistOptions}
-							onChange={(e) => setArtistId(e.value)}
+							onChange={(e) =>
+								setArtistId(
+									Array.from(e).map((option) => option.value)
+								)
+							}
 						/>
 					</FormControl>
 				</NoSSR>

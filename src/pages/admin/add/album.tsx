@@ -15,7 +15,7 @@ import { NoSSR } from "@kwooshung/react-no-ssr"
 
 export default function Album() {
 	const [albumName, setAlbumName] = useState("")
-	const [artistId, setArtistId] = useState("")
+	const [artistId, setArtistId] = useState<any>("")
 	const [coverImage, setCoverImage] = useState<any>(null)
 	const [genreId, setGenreId] = useState("")
 
@@ -29,7 +29,9 @@ export default function Album() {
 		let formData = new FormData()
 
 		formData.append("name", albumName)
-		formData.append("artist", artistId)
+		if (artistId.length > 1)
+			artistId.forEach((id: string) => formData.append("artists", id))
+		else formData.append("artist", artistId)
 		formData.append("file", coverImage)
 		formData.append("genres", genreId)
 
@@ -41,10 +43,17 @@ export default function Album() {
 			},
 		})
 
-		toast({
-			status: "success",
-			title: "Album added successfully",
-		})
+		if (result._id)
+			toast({
+				status: "success",
+				title: "Album added successfully",
+			})
+		else
+			toast({
+				title: "An error happened",
+				description: result.message,
+				status: "error",
+			})
 	}
 
 	const [artistOptions, setArtistOptions] = useState<any[]>([])
@@ -91,10 +100,15 @@ export default function Album() {
 						id="artist-id">
 						<FormLabel>Choose an artist</FormLabel>
 						<Select
+							isMulti
 							inputId="artist-id"
 							instanceId="chakra-react-select-1"
 							options={artistOptions}
-							onChange={(e) => setArtistId(e.value)}
+							onChange={(e) =>
+								setArtistId(
+									Array.from(e).map((option) => option.value)
+								)
+							}
 						/>
 					</FormControl>
 				</NoSSR>

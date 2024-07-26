@@ -4,19 +4,22 @@ import React from "react"
 export default function ArtistName(props: {
 	artists: { name: string; _id: string }[]
 	element: string
+	className?: string
 }) {
+	if (!props.artists || props.artists.length == 0) return <></>
+
 	const prefix = (index: number) => {
 		if (index > 0 && props.artists.length - 1 != index) {
 			return React.createElement(
 				props.element,
-				{ className: "whitespace-pre" },
+				{ className: `whitespace-pre ${props.className}` },
 				", "
 			)
 		}
 		if (props.artists.length - 1 == index && props.artists.length != 1) {
 			return React.createElement(
 				props.element,
-				{ className: "whitespace-pre" },
+				{ className: `whitespace-pre ${props.className}` },
 				" and "
 			)
 		}
@@ -32,7 +35,7 @@ export default function ArtistName(props: {
 						<Link href={`/artist/${artist._id}`} className="inline">
 							{React.createElement(
 								props.element,
-								null,
+								{ className: props.className },
 								artist.name
 							)}
 						</Link>

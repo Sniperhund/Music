@@ -114,8 +114,7 @@ export default function Artist() {
 							key={index}
 							imageUrl={getFilePath("Album", album.cover)}
 							albumName={album.name}
-							artistName={artistData?.name}
-							albumId={album._id}
+							artists={album.artists}
 						/>
 					)
 				})}

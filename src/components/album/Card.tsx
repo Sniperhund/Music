@@ -1,14 +1,14 @@
 import { Skeleton, SkeletonText, Stack } from "@chakra-ui/react"
 import Image from "next/image"
 import Link from "next/link"
+import ArtistName from "../ArtistName"
 
 interface CardProps {
 	imageUrl?: string
 	albumName?: string
-	artistName?: string
-	artistId?: string
 	albumId?: string
 	loading?: boolean
+	artists: { name: string; _id: string }[]
 }
 
 export default function Card(props: CardProps) {
@@ -29,13 +29,11 @@ export default function Card(props: CardProps) {
 				alt="Album cover image"
 			/>
 			<p className="mt-0.5">{props.albumName}</p>
-			{props.artistId ? (
-				<Link className="opacity-50" href={`/artist/${props.artistId}`}>
-					{props.artistName}
-				</Link>
-			) : (
-				<p className="opacity-50">{props.artistName}</p>
-			)}
+			<ArtistName
+				artists={props.artists}
+				element="p"
+				className="opacity-50"
+			/>
 		</Link>
 	)
 }

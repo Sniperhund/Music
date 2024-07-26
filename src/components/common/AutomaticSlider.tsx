@@ -53,7 +53,7 @@ function AutoFetchGenreSlider(amount: number) {
 	return (
 		<section className="flex flex-col gap-8">
 			{genreData?.map(function (genre, i) {
-				if (!randomAlbums[i] || randomAlbums[i]?.status == 404)
+				if (!randomAlbums[i] || randomAlbums[i]?.status)
 					return (
 						<Slider title={genre.name} key={i}>
 							{Array.apply(0, Array(10)).map(function (x, j) {
@@ -64,14 +64,13 @@ function AutoFetchGenreSlider(amount: number) {
 
 				return (
 					<Slider title={genre.name} key={i}>
-						{randomAlbums[i].map(function (album: any, j: number) {
+						{randomAlbums[i]?.map(function (album: any, j: number) {
 							return (
 								<Card
 									key={j}
 									imageUrl={getFilePath("Album", album.cover)}
 									albumName={album.name}
-									artistName={album.artists[0].name}
-									artistId={album.artists[0]._id}
+									artists={album.artists}
 									albumId={album._id}
 								/>
 							)
