@@ -168,22 +168,22 @@ export default function Sidebar(props: SidebarProps) {
 
 			<section className="flex flex-col">
 				<span className="text-xs font-semibold">Manage content</span>
-				<Link href="/manage/artists">
+				<Link href="/admin/manage/artists">
 					<Button variant="ghost" justifyContent="left" w="full">
 						Manage Artists
 					</Button>
 				</Link>
-				<Link href="/manage/genres">
+				<Link href="/admin/manage/genres">
 					<Button variant="ghost" justifyContent="left" w="full">
 						Manage Genres
 					</Button>
 				</Link>
-				<Link href="/manage/albums">
+				<Link href="/admin/manage/albums">
 					<Button variant="ghost" justifyContent="left" w="full">
 						Manage Albums
 					</Button>
 				</Link>
-				<Link href="/manage/tracks">
+				<Link href="/admin/manage/tracks">
 					<Button variant="ghost" justifyContent="left" w="full">
 						Manage Tracks
 					</Button>
