@@ -8,7 +8,7 @@ interface CardProps {
 	albumName?: string
 	albumId?: string
 	loading?: boolean
-	artists: { name: string; _id: string }[]
+	artists?: { name: string; _id: string }[]
 }
 
 export default function Card(props: CardProps) {

@@ -105,7 +105,7 @@ function GenreProvidedSlider(genre: Genre) {
 						key={j}
 						imageUrl={getFilePath("Album", album.cover)}
 						albumName={album.name}
-						artistName={album.artists[0].name}
+						artists={album.artists}
 						albumId={album._id}
 					/>
 				)

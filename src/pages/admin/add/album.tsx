@@ -35,7 +35,7 @@ export default function Album() {
 		formData.append("file", coverImage)
 		formData.append("genres", genreId)
 
-		const result = await useAPI("/admin/album", {
+		const result: any = await useAPI("/admin/album", {
 			method: "POST",
 			data: formData,
 			headers: {
