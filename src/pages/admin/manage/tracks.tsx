@@ -338,7 +338,8 @@ export default function Tracks() {
 										onChange={(e) =>
 											setArtistId(
 												Array.from(e).map(
-													(option) => option.value
+													(option: any) =>
+														option.value
 												)
 											)
 										}
@@ -375,7 +376,9 @@ export default function Tracks() {
 									<FormLabel>Choose an album</FormLabel>
 									<MultiSelect
 										options={albumOptions}
-										onChange={(e) => setAlbumId(e.value)}
+										onChange={(e: any) =>
+											setAlbumId(e.value)
+										}
 										defaultValue={() => {
 											if (!activeTrack) return
 
