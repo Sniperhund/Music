@@ -98,7 +98,7 @@ export default function Genres() {
 			`/all/genres?offset=${(page - 1) * limit}&limit=${limit}`
 		)
 
-		if (result.status)
+		if (result?.status)
 			return alert(`Failed to fetch data: ${result.message}`)
 
 		setTableData(result)
