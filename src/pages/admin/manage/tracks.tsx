@@ -181,6 +181,8 @@ export default function Tracks() {
 				description: result.message,
 				status: "error",
 			})
+
+		fetchData()
 	}
 
 	return (
