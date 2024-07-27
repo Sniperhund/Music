@@ -260,12 +260,18 @@ export default function Tracks() {
 															"Are you sure you want to delete this track?"
 														)
 													) {
-														await useAPI(
-															`/admin/track?id=${track._id}`,
-															{
-																method: "DELETE",
-															}
-														)
+														const result: any =
+															await useAPI(
+																`/admin/track?id=${track._id}`,
+																{
+																	method: "DELETE",
+																}
+															)
+
+														if (result.status)
+															return alert(
+																`Failed to delete track: ${result.message}`
+															)
 													}
 
 													fetchData()
