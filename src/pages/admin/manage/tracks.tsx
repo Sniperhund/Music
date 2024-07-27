@@ -210,7 +210,7 @@ export default function Tracks() {
 							<Th>name</Th>
 							<Th>album name</Th>
 							<Th>artist(s)</Th>
-							<Th className="max-w-12">action</Th>
+							<Th className="w-12">action</Th>
 						</Tr>
 					</Thead>
 					<Tbody>
