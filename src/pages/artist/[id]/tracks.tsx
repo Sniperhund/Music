@@ -2,23 +2,46 @@ import Track from "@/components/album/Track"
 import useAPI from "@/util/useAPI"
 import { useEffect, useState } from "react"
 import { useRouter } from "next/router"
+import Head from "next/head"
 
 export default function ArtistTracks() {
 	const router = useRouter()
 
 	const [tracks, setTracks] = useState<any>()
+	const [artistName, setArtistName] = useState<string>()
 
 	useEffect(() => {
-		async function fetchTracks() {
-			if (!router.query.id) return
+		if (!router.query.id) return
 
-			setTracks(await useAPI(`artists/${router.query.id}/tracks`))
-		}
-		fetchTracks()
+		useAPI(`artists/${router.query.id}/tracks`).then((tracks: any) => {
+			if (tracks?.data?.status == "error") {
+				router.push("/404", undefined, { shallow: true })
+				return
+			}
+
+			setTracks(tracks)
+		})
+
+		useAPI(`artists/${router.query.id}`).then((artist: any) => {
+			if (artist?.data?.status == "error") {
+				router.push("/404", undefined, { shallow: true })
+				return
+			}
+
+			setArtistName(artist.name)
+		})
 	}, [router.query.id])
 
 	return (
 		<>
+			<Head>
+				{artistName ? (
+					<title>{artistName} - Songs</title>
+				) : (
+					<title>Loading...</title>
+				)}
+			</Head>
+
 			<h1>Songs</h1>
 
 			<section className="tracks">
