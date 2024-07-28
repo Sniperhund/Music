@@ -85,40 +85,54 @@ export default function Artist() {
 				</div>
 			</section>
 
-			<section>
-				<Link
-					href={`/artist/${router.query.id}/tracks`}
-					className={sliderStyles.categoryLink}>
-					Songs <ChevronRight size="24" />
-				</Link>
+			{artistTracks && artistTracks.length > 0 ? (
+				<section>
+					<Link
+						href={`/artist/${router.query.id}/tracks`}
+						className={sliderStyles.categoryLink}>
+						Songs <ChevronRight size="24" />
+					</Link>
 
-				<article
-					className={`grid ${calculateGridStyles()} 2xl:grid-cols-3 grid-cols-2 grid-flow-col gap-4 w-full pt-2`}>
-					{artistTracks?.map((track: any, index: number) => {
+					<article
+						className={`grid ${calculateGridStyles()} 2xl:grid-cols-3 grid-cols-2 grid-flow-col gap-4 w-full pt-2`}>
+						{artistTracks?.map((track: any, index: number) => {
+							return (
+								<Track
+									key={index}
+									index={index}
+									track={track}
+									album={artistTracks}
+								/>
+							)
+						})}
+					</article>
+				</section>
+			) : (
+				<p className={sliderStyles.categoryLink}>
+					No tracks were found
+				</p>
+			)}
+
+			{artistAlbums && artistAlbums.length > 0 ? (
+				<Slider
+					title="Albums"
+					href={`/artist/${router.query.id}/albums`}>
+					{artistAlbums?.map((album: any, index: number) => {
 						return (
-							<Track
+							<Card
 								key={index}
-								index={index}
-								track={track}
-								album={artistTracks}
+								imageUrl={getFilePath("Album", album.cover)}
+								albumName={album.name}
+								artists={album.artists}
 							/>
 						)
 					})}
-				</article>
-			</section>
-
-			<Slider title="Albums" href={`/artist/${router.query.id}/albums`}>
-				{artistAlbums?.map((album: any, index: number) => {
-					return (
-						<Card
-							key={index}
-							imageUrl={getFilePath("Album", album.cover)}
-							albumName={album.name}
-							artists={album.artists}
-						/>
-					)
-				})}
-			</Slider>
+				</Slider>
+			) : (
+				<p className={sliderStyles.categoryLink}>
+					No albums were found
+				</p>
+			)}
 		</section>
 	)
 }
