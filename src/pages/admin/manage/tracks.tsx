@@ -270,7 +270,7 @@ export default function Tracks() {
 																}
 															)
 
-														if (result.status)
+														if (result?.status)
 															return alert(
 																`Failed to delete track: ${result.message}`
 															)

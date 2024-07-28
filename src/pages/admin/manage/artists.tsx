@@ -223,7 +223,7 @@ export default function Artists() {
 																}
 															)
 
-														if (result.status)
+														if (result?.status)
 															return alert(
 																`Failed to delete artist: ${result.message}`
 															)
