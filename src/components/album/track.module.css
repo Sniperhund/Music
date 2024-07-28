@@ -21,7 +21,7 @@
 		grid-template-columns: 30px 2fr 1fr 50px 30px;
 	}
 
-	.extendedTrackInfo p:nth-child(4) {
+	.extendedTrackInfo a:nth-child(4) {
 		display: none;
 	}
 }
@@ -33,10 +33,6 @@
 
 	.extendedTrackInfo div:nth-child(3) {
 		display: none;
-	}
-
-	.track p {
-		font-size: 0.875rem;
 	}
 }
 
