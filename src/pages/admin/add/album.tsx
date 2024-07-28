@@ -21,6 +21,9 @@ export default function Album() {
 
 	const toast = useToast()
 
+	const [artistSelectValue, setArtistSelectValue] = useState<any>(null)
+	const [genreSelectValue, setGenreSelectValue] = useState<any>(null)
+
 	async function submit(event: any) {
 		event.preventDefault()
 
@@ -43,7 +46,7 @@ export default function Album() {
 			},
 		})
 
-		if (result._id)
+		if (result?._id)
 			toast({
 				status: "success",
 				title: "Album added successfully",
@@ -51,9 +54,16 @@ export default function Album() {
 		else
 			toast({
 				title: "An error happened",
-				description: result.message,
+				description: result?.message,
 				status: "error",
 			})
+
+		setAlbumName("")
+		setArtistId("")
+		setCoverImage(null)
+		setGenreId("")
+		setArtistSelectValue(null)
+		setGenreSelectValue(null)
 	}
 
 	const [artistOptions, setArtistOptions] = useState<any[]>([])
@@ -90,7 +100,10 @@ export default function Album() {
 			<form onSubmit={submit} className="space-y-4 max-w-2xl mt-4">
 				<FormControl isInvalid={albumName === ""} isRequired>
 					<FormLabel>Album Name</FormLabel>
-					<Input onChange={(e) => setAlbumName(e.target.value)} />
+					<Input
+						onChange={(e) => setAlbumName(e.target.value)}
+						value={albumName}
+					/>
 				</FormControl>
 
 				<NoSSR>
@@ -100,15 +113,17 @@ export default function Album() {
 						id="artist-id">
 						<FormLabel>Choose an artist</FormLabel>
 						<Select
+							value={artistSelectValue}
 							isMulti
 							inputId="artist-id"
 							instanceId="chakra-react-select-1"
 							options={artistOptions}
-							onChange={(e) =>
+							onChange={(e) => {
 								setArtistId(
 									Array.from(e).map((option) => option.value)
 								)
-							}
+								setArtistSelectValue(e)
+							}}
 						/>
 					</FormControl>
 				</NoSSR>
@@ -135,7 +150,11 @@ export default function Album() {
 							inputId="genre-id"
 							instanceId="chakra-react-select-2"
 							options={genreOptions}
-							onChange={(e) => setGenreId(e.value)}
+							onChange={(e) => {
+								setGenreId(e.value)
+								setGenreSelectValue(e)
+							}}
+							value={genreSelectValue}
 						/>
 					</FormControl>
 				</NoSSR>

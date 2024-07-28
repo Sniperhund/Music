@@ -22,17 +22,26 @@ export default function Genre() {
 
 		if (!genreName) return
 
-		const result = await useAPI("/admin/genre", {
+		const result: any = await useAPI("/admin/genre", {
 			method: "POST",
 			data: {
 				name: genreName,
 			},
 		})
 
-		toast({
-			status: "success",
-			title: "Genre added successfully",
-		})
+		if (result?._id)
+			toast({
+				status: "success",
+				title: "Genre added successfully",
+			})
+		else
+			toast({
+				title: "An error happened",
+				description: result?.message,
+				status: "error",
+			})
+
+		setGenreName("")
 	}
 
 	return (
@@ -42,7 +51,10 @@ export default function Genre() {
 			<form onSubmit={submit} className="space-y-4 max-w-2xl mt-4">
 				<FormControl isInvalid={genreName === ""} isRequired>
 					<FormLabel>Genre Name</FormLabel>
-					<Input onChange={(e) => setGenreName(e.target.value)} />
+					<Input
+						onChange={(e) => setGenreName(e.target.value)}
+						value={genreName}
+					/>
 				</FormControl>
 
 				<div>

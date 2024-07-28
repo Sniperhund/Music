@@ -10,7 +10,7 @@ import {
 	useToast,
 } from "@chakra-ui/react"
 import { Select } from "chakra-react-select"
-import { ReactElement, useEffect, useState } from "react"
+import { ReactElement, useEffect, useRef, useState } from "react"
 import { NoSSR } from "@kwooshung/react-no-ssr"
 
 export default function Track() {
@@ -20,6 +20,9 @@ export default function Track() {
 	const [albumId, setAlbumId] = useState("")
 
 	const toast = useToast()
+
+	const [artistSelectValue, setArtistSelectValue] = useState<any>(null)
+	const [albumSelectValue, setAlbumSelectValue] = useState<any>(null)
 
 	async function submit(event: any) {
 		event.preventDefault()
@@ -54,6 +57,13 @@ export default function Track() {
 				description: result.message,
 				status: "error",
 			})
+
+		setTrackName("")
+		setArtistId("")
+		setArtistSelectValue(null)
+		setAudioFile(null)
+		setAlbumId("")
+		setAlbumSelectValue(null)
 	}
 
 	const [artistOptions, setArtistOptions] = useState<any[]>([])
@@ -99,7 +109,10 @@ export default function Track() {
 			<form onSubmit={submit} className="space-y-4 max-w-2xl mt-4">
 				<FormControl isInvalid={trackName === ""} isRequired>
 					<FormLabel>Track Name</FormLabel>
-					<Input onChange={(e) => setTrackName(e.target.value)} />
+					<Input
+						onChange={(e) => setTrackName(e.target.value)}
+						value={trackName}
+					/>
 				</FormControl>
 
 				<NoSSR>
@@ -108,11 +121,13 @@ export default function Track() {
 						<Select
 							isMulti
 							options={artistOptions}
-							onChange={(e) =>
+							onChange={(e) => {
 								setArtistId(
 									Array.from(e).map((option) => option.value)
 								)
-							}
+								setArtistSelectValue(e)
+							}}
+							value={artistSelectValue}
 						/>
 					</FormControl>
 				</NoSSR>
@@ -134,7 +149,11 @@ export default function Track() {
 						<FormLabel>Choose an album</FormLabel>
 						<Select
 							options={albumOptions}
-							onChange={(e) => setAlbumId(e.value)}
+							onChange={(e) => {
+								setAlbumId(e.value)
+								setAlbumSelectValue(e)
+							}}
+							value={albumSelectValue}
 						/>
 					</FormControl>
 				</NoSSR>

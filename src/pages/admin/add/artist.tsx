@@ -28,7 +28,7 @@ export default function Artist() {
 		formData.append("name", artistName)
 		formData.append("file", coverImage)
 
-		const result = await useAPI("/admin/artist", {
+		const result: any = await useAPI("/admin/artist", {
 			method: "POST",
 			data: formData,
 			headers: {
@@ -36,10 +36,20 @@ export default function Artist() {
 			},
 		})
 
-		toast({
-			status: "success",
-			title: "Arist added successfully",
-		})
+		if (result?._id)
+			toast({
+				status: "success",
+				title: "Artist added successfully",
+			})
+		else
+			toast({
+				title: "An error happened",
+				description: result?.message,
+				status: "error",
+			})
+
+		setArtistName("")
+		setCoverImage(null)
 	}
 
 	return (
@@ -49,7 +59,10 @@ export default function Artist() {
 			<form onSubmit={submit} className="space-y-4 max-w-2xl mt-4">
 				<FormControl isInvalid={artistName === ""} isRequired>
 					<FormLabel>Artist Name</FormLabel>
-					<Input onChange={(e) => setArtistName(e.target.value)} />
+					<Input
+						onChange={(e) => setArtistName(e.target.value)}
+						value={artistName}
+					/>
 				</FormControl>
 
 				<FormControl isInvalid={!coverImage} isRequired>
