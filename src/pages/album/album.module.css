@@ -25,7 +25,9 @@
 		font-size: 1.2rem;
 	}
 
-	.play {
+	.buttons {
 		margin-top: auto;
+		display: flex;
+		gap: 1rem;
 	}
 }

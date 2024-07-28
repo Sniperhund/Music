@@ -6,7 +6,7 @@ import Head from "next/head"
 import styles from "@/pages/album/album.module.css"
 import Image from "next/image"
 import { Button } from "@chakra-ui/react"
-import { Play } from "lucide-react"
+import { Play, Shuffle } from "lucide-react"
 import Track from "@/components/album/Track"
 import sliderStyles from "@/styles/slider.module.css"
 import { useMusicPlayer } from "@/contexts/MusicPlayerContext"
@@ -35,10 +35,27 @@ export default function Album() {
 		fetchData()
 	}, [router.query.id])
 
-	const { playAlbum } = useMusicPlayer()
+	const {
+		playAlbum,
+		addQueueItem,
+		shuffle,
+		clear,
+		play: musicPlay,
+	} = useMusicPlayer()
 
 	function play() {
 		playAlbum(albumTracks)
+	}
+
+	function shuffleAndPlay() {
+		clear()
+
+		albumTracks.forEach((track: any) => {
+			addQueueItem(track)
+		})
+
+		shuffle()
+		musicPlay()
 	}
 
 	if (!albumData || !albumTracks) return <></>
@@ -69,9 +86,14 @@ export default function Album() {
 					<h1>{albumData?.name}</h1>
 					<ArtistName artists={albumData.artists} element="h2" />
 
-					<span className={styles.play}>
+					<span className={styles.buttons}>
 						<Button leftIcon={<Play />} onClick={() => play()}>
 							Play
+						</Button>
+						<Button
+							leftIcon={<Shuffle />}
+							onClick={() => shuffleAndPlay()}>
+							Shuffle
 						</Button>
 					</span>
 				</div>

@@ -83,7 +83,7 @@ export default function Artist() {
 				<div className={albumStyles.info_details}>
 					<h1>{artistData?.name}</h1>
 
-					<span className={albumStyles.play}>
+					<span className={albumStyles.buttons}>
 						<Button leftIcon={<Play />} onClick={() => play()}>
 							Play
 						</Button>

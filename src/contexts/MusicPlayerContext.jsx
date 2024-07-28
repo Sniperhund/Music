@@ -315,9 +315,18 @@ class MusicPlayerProvider extends React.Component {
 		this.saveInternalState()
 	}
 
+	internalShuffle = () => {
+		this.internalState.queue = this.internalState.queue.sort(
+			() => Math.random() - 0.5
+		)
+	}
+
 	shuffle = () => {
-		const shuffledQueue = this.state.queue.sort(() => Math.random() - 0.5)
-		this.setState({ queue: shuffledQueue })
+		this.loadInternalState()
+
+		this.internalShuffle()
+
+		this.saveInternalState()
 	}
 
 	toggleRepeat = () => {
