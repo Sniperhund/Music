@@ -25,7 +25,13 @@ export default function Artist() {
 		async function fetchData() {
 			if (!router.query.id) return
 
-			setArtistData(await useAPI(`artists/${router.query.id}`))
+			const artistData: any = await useAPI(`artists/${router.query.id}`)
+
+			if (artistData?.data?.status == "error")
+				router.push("/404", undefined, { shallow: true })
+
+			setArtistData(artistData)
+
 			setArtistTracks(
 				await useAPI(`artists/${router.query.id}/tracks?limit=9`)
 			)

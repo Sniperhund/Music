@@ -22,7 +22,13 @@ export default function Album() {
 		async function fetchData() {
 			if (!router.query.id) return
 
-			setAlbumData(await useAPI(`albums/${router.query.id}`))
+			const albumData: any = await useAPI(`albums/${router.query.id}`)
+
+			if (albumData?.data?.status == "error")
+				router.push("/404", undefined, { shallow: true })
+
+			setAlbumData(albumData)
+
 			setAlbumTracks(await useAPI(`albums/${router.query.id}/tracks`))
 		}
 
