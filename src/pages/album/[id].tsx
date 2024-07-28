@@ -8,7 +8,7 @@ import Image from "next/image"
 import { Button } from "@chakra-ui/react"
 import { Play } from "lucide-react"
 import Track from "@/components/album/Track"
-import Link from "next/link"
+import sliderStyles from "@/styles/slider.module.css"
 import { useMusicPlayer } from "@/contexts/MusicPlayerContext"
 import ArtistName from "@/components/ArtistName"
 
@@ -70,18 +70,24 @@ export default function Album() {
 					</span>
 				</div>
 			</section>
-			<section className="tracks">
-				{albumTracks?.map(function (track: any, j: number) {
-					return (
-						<Track
-							key={j}
-							index={j}
-							track={track}
-							album={albumTracks}
-						/>
-					)
-				})}
-			</section>
+			{albumTracks && albumTracks.length > 0 ? (
+				<section className="tracks">
+					{albumTracks?.map(function (track: any, j: number) {
+						return (
+							<Track
+								key={j}
+								index={j}
+								track={track}
+								album={albumTracks}
+							/>
+						)
+					})}
+				</section>
+			) : (
+				<p className={`${sliderStyles.categoryLink} mt-8`}>
+					No albums were found
+				</p>
+			)}
 		</>
 	)
 }
