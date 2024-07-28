@@ -3,7 +3,6 @@ import { useRouter } from "next/router"
 import { useEffect, useState } from "react"
 import getFilePath from "@/util/getFilePath"
 import Head from "next/head"
-import styles from "@/pages/album/album.module.css"
 import Image from "next/image"
 import { Button } from "@chakra-ui/react"
 import { Play, Shuffle } from "lucide-react"
@@ -76,17 +75,17 @@ export default function Album() {
 			<Head>
 				<title>{albumData?.name}</title>
 			</Head>
-			<section className={styles.info}>
+			<section className="info">
 				<img
 					src={getFilePath("Album", albumData?.cover)}
 					alt="Album cover image"
 				/>
 
-				<div className={styles.info_details}>
+				<div className="details">
 					<h1>{albumData?.name}</h1>
 					<ArtistName artists={albumData.artists} element="h2" />
 
-					<span className={styles.buttons}>
+					<span className="buttons">
 						<Button leftIcon={<Play />} onClick={() => play()}>
 							Play
 						</Button>

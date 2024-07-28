@@ -3,7 +3,6 @@ import { Button, useToast } from "@chakra-ui/react"
 import Head from "next/head"
 import { useRouter } from "next/router"
 import { useEffect, useState } from "react"
-import albumStyles from "@/pages/album/album.module.css"
 import sliderStyles from "@/styles/slider.module.css"
 import getFilePath from "@/util/getFilePath"
 import { ChevronRight, Play } from "lucide-react"
@@ -74,16 +73,16 @@ export default function Artist() {
 			<Head>
 				<title>{artistData?.name}</title>
 			</Head>
-			<section className={albumStyles.info}>
+			<section className="info">
 				<img
 					src={getFilePath("Artist", artistData?.cover)}
 					alt="Album cover image"
 				/>
 
-				<div className={albumStyles.info_details}>
+				<div className="details">
 					<h1>{artistData?.name}</h1>
 
-					<span className={albumStyles.buttons}>
+					<span className="buttons">
 						<Button leftIcon={<Play />} onClick={() => play()}>
 							Play
 						</Button>
