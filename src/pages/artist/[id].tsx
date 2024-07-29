@@ -119,9 +119,7 @@ export default function Artist() {
 			)}
 
 			{artistAlbums && artistAlbums.length > 0 ? (
-				<Slider
-					title="Albums"
-					href={`/artist/${router.query.id}/albums`}>
+				<Slider title="Albums">
 					{artistAlbums?.map((album: any, index: number) => {
 						return (
 							<Card
