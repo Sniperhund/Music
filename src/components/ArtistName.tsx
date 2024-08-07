@@ -14,18 +14,11 @@ export default function ArtistName(props: {
 		return <></>
 
 	const prefix = (index: number) => {
-		if (index > 0 && props.artists!.length - 1 != index) {
+		if (index > 0) {
 			return React.createElement(
 				props.element,
 				{ className: `whitespace-pre ${props.className}` },
 				", "
-			)
-		}
-		if (props.artists!.length - 1 == index && props.artists!.length != 1) {
-			return React.createElement(
-				props.element,
-				{ className: `whitespace-pre ${props.className}` },
-				" and "
 			)
 		}
 		return ""
