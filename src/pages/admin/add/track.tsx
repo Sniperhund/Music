@@ -8,6 +8,12 @@ import {
 	FormLabel,
 	Input,
 	useToast,
+	Select as ChakraSelect,
+	Tabs,
+	TabList,
+	Tab,
+	TabPanels,
+	TabPanel,
 } from "@chakra-ui/react"
 import { Select } from "chakra-react-select"
 import { ReactElement, useEffect, useRef, useState } from "react"
@@ -19,15 +25,76 @@ export default function Track() {
 	const [audioFile, setAudioFile] = useState<any>(null)
 	const [albumId, setAlbumId] = useState("")
 
+	const [coverImage, setCoverImage] = useState<any>(null)
+	const [genreId, setGenreId] = useState("")
+
 	const toast = useToast()
 
 	const [artistSelectValue, setArtistSelectValue] = useState<any>(null)
 	const [albumSelectValue, setAlbumSelectValue] = useState<any>(null)
 
+	const [genreSelectValue, setGenreSelectValue] = useState<any>(null)
+
+	const [createNewSingle, setCreateNewSingle] = useState(false)
+
+	async function createSingleAlbum(): Promise<string> {
+		let formData = new FormData()
+
+		formData.append("name", `${trackName} - Single`)
+		formData.append("artist", artistId)
+		formData.append("file", coverImage)
+		formData.append("genres", genreId)
+
+		const result: any = await useAPI("/admin/album", {
+			method: "POST",
+			data: formData,
+			headers: {
+				"Content-Type": "multipart/form-data",
+			},
+		})
+
+		if (!result?._id) {
+			toast({
+				title: "An error happened",
+				description: result?.message,
+				status: "error",
+			})
+
+			return ""
+		}
+
+		return result?._id
+	}
+
+	function clean() {
+		setTrackName("")
+		setArtistId("")
+		setArtistSelectValue(null)
+		setAudioFile(null)
+		setAlbumId("")
+		setAlbumSelectValue(null)
+		setCoverImage(null)
+		setGenreId("")
+		setGenreSelectValue(null)
+	}
+
 	async function submit(event: any) {
 		event.preventDefault()
 
-		if (!trackName || !artistId || !audioFile || !albumId) return
+		if (!trackName || !artistId || !audioFile) return
+
+		if (createNewSingle && !coverImage && !genreId) return
+		if (!createNewSingle && !artistId) return
+
+		let correctAlbumId = albumId
+
+		if (createNewSingle) correctAlbumId = await createSingleAlbum()
+
+		if (correctAlbumId == "") {
+			clean()
+
+			return
+		}
 
 		let formData = new FormData()
 
@@ -36,7 +103,7 @@ export default function Track() {
 			artistId.forEach((id: string) => formData.append("artists", id))
 		else formData.append("artist", artistId)
 		formData.append("file", audioFile)
-		formData.append("album", albumId)
+		formData.append("album", correctAlbumId)
 
 		const result: any = await useAPI("/admin/track", {
 			method: "POST",
@@ -58,16 +125,12 @@ export default function Track() {
 				status: "error",
 			})
 
-		setTrackName("")
-		setArtistId("")
-		setArtistSelectValue(null)
-		setAudioFile(null)
-		setAlbumId("")
-		setAlbumSelectValue(null)
+		clean()
 	}
 
 	const [artistOptions, setArtistOptions] = useState<any[]>([])
 	const [albumOptions, setAlbumOptions] = useState<any[]>([])
+	const [genreOptions, setGenreOptions] = useState<any[]>([])
 
 	useEffect(() => {
 		async function fetchData() {
@@ -94,6 +157,15 @@ export default function Track() {
 			}))
 
 			setAlbumOptions(tempAlbumOptions)
+
+			const genreResult: [] = await useAPI("/all/genres")
+
+			const tempGenreOptions = genreResult.map((item: any) => ({
+				label: item.name,
+				value: item._id,
+			}))
+
+			setGenreOptions(tempGenreOptions)
 		}
 
 		fetchData()
@@ -110,6 +182,7 @@ export default function Track() {
 				<FormControl isInvalid={trackName === ""} isRequired>
 					<FormLabel>Track Name</FormLabel>
 					<Input
+						name="track-name"
 						onChange={(e) => setTrackName(e.target.value)}
 						value={trackName}
 					/>
@@ -119,6 +192,7 @@ export default function Track() {
 					<FormControl isInvalid={artistId === ""} isRequired>
 						<FormLabel>Choose an artist</FormLabel>
 						<Select
+							name="artist"
 							isMulti
 							options={artistOptions}
 							onChange={(e) => {
@@ -144,19 +218,66 @@ export default function Track() {
 					</FormHelperText>
 				</FormControl>
 
-				<NoSSR>
-					<FormControl isInvalid={albumId === ""} isRequired>
-						<FormLabel>Choose an album</FormLabel>
-						<Select
-							options={albumOptions}
-							onChange={(e) => {
-								setAlbumId(e.value)
-								setAlbumSelectValue(e)
-							}}
-							value={albumSelectValue}
-						/>
-					</FormControl>
-				</NoSSR>
+				<Tabs
+					variant="enclosed"
+					onChange={(index) => setCreateNewSingle(index === 1)}>
+					<TabList>
+						<Tab>Use existing album</Tab>
+						<Tab>Create as single</Tab>
+					</TabList>
+					<TabPanels>
+						<TabPanel>
+							<NoSSR>
+								<FormControl isInvalid={albumId === ""}>
+									<FormLabel>Choose an album</FormLabel>
+									<Select
+										name="album"
+										options={albumOptions}
+										onChange={(e) => {
+											setAlbumId(e.value)
+											setAlbumSelectValue(e)
+										}}
+										value={albumSelectValue}
+									/>
+								</FormControl>
+							</NoSSR>
+						</TabPanel>
+						<TabPanel>
+							<FormControl isInvalid={!coverImage} isRequired>
+								<FormLabel>Cover Image</FormLabel>
+								<FileUpload
+									onFileSelected={(file) =>
+										setCoverImage(file)
+									}
+									accept="image/*">
+									<Button w="full">Upload cover image</Button>
+								</FileUpload>
+								<FormHelperText>
+									{coverImage ? coverImage.name : ""}
+								</FormHelperText>
+							</FormControl>
+
+							<NoSSR>
+								<FormControl
+									isInvalid={genreId === ""}
+									id="genre-id">
+									<FormLabel>Choose a genre</FormLabel>
+									<Select
+										name="genre"
+										inputId="genre-id"
+										instanceId="chakra-react-select-2"
+										options={genreOptions}
+										onChange={(e) => {
+											setGenreId(e.value)
+											setGenreSelectValue(e)
+										}}
+										value={genreSelectValue}
+									/>
+								</FormControl>
+							</NoSSR>
+						</TabPanel>
+					</TabPanels>
+				</Tabs>
 
 				<div>
 					<Button className="mt-6" type="submit" w="full">
