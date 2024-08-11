@@ -7,6 +7,7 @@ import { NextPage } from "next"
 import type { AppProps } from "next/app"
 import { ReactElement, ReactNode, useEffect, useState } from "react"
 import { GoogleAnalytics } from "@next/third-parties/google"
+import Head from "next/head"
 
 export type NextPageWithLayout<P = {}, IP = P> = NextPage<P, IP> & {
 	getLayout?: (page: ReactElement) => ReactNode
@@ -25,6 +26,9 @@ export default function App({ Component, pageProps }: AppPropsWithLayout) {
 			<ChakraProvider
 				toastOptions={{ defaultOptions: { position: "bottom-right" } }}
 				theme={theme}>
+				<Head>
+					<title>Music Player</title>
+				</Head>
 				{getLayout(<Component {...pageProps} />)}
 				<GoogleAnalytics gaId="G-BCF20XMJQZ" />
 			</ChakraProvider>
