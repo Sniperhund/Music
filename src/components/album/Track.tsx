@@ -13,6 +13,7 @@ import {
 import { useEffect, useRef, useState } from "react"
 import ArtistName from "../ArtistName"
 import Link from "next/link"
+import React from "react"
 
 interface TrackProps {
 	index: number
@@ -22,6 +23,7 @@ interface TrackProps {
 		album: { name: string; _id: string }
 		artists: { name: string; _id: string }[]
 	}
+	children?: any
 }
 
 export default function Track(props: TrackProps) {
@@ -58,6 +60,21 @@ export default function Track(props: TrackProps) {
 			document.removeEventListener("mousedown", handleClickOutside)
 		}
 	}, [])
+
+	const withMenuClose = (handler: any) => () => {
+		setIsMenuOpen(false)
+		handler()
+	}
+
+	const wrappedChildren = React.Children.map(props.children, (child: any) => {
+		if (React.isValidElement(child)) {
+			return React.cloneElement(child, {
+				// @ts-ignore
+				onClick: withMenuClose(child.props.onClick || (() => {})),
+			})
+		}
+		return child
+	})
 
 	return (
 		<article
@@ -108,75 +125,85 @@ export default function Track(props: TrackProps) {
 					flexDirection="column"
 					spacing={0}
 					variant="ghost">
-					<Button
-						onClick={() => {
-							setIsMenuOpen(false)
-							clear()
-							addQueueItem(props.album[props.index])
-							next()
-							play()
-						}}
-						rightIcon={<Play />}>
-						Play only this
-					</Button>
-					<Divider />
-					<Button
-						onClick={async () => {
-							setIsMenuOpen(false)
-							const result: any = await useAPI("/user/tracks", {
-								method: "PUT",
-								data: {
-									ids: [props.album[props.index]._id],
-								},
-							})
+					{props.children ? (
+						<>{wrappedChildren}</>
+					) : (
+						<>
+							<Button
+								onClick={withMenuClose(() => {
+									clear()
+									addQueueItem(props.album[props.index])
+									next()
+									play()
+								})}
+								rightIcon={<Play />}>
+								Play only this
+							</Button>
+							<Divider />
+							<Button
+								onClick={withMenuClose(async () => {
+									const result: any = await useAPI(
+										"/user/tracks",
+										{
+											method: "PUT",
+											data: {
+												ids: [
+													props.album[props.index]
+														._id,
+												],
+											},
+										}
+									)
 
-							if (result?.status == "ok")
-								toast({
-									title: "Added track to library",
-									status: "success",
-								})
-							else
-								toast({
-									title: "Could not add track to library",
-									status: "error",
-								})
-						}}
-						rightIcon={<Plus />}>
-						Add to Library
-					</Button>
-					<Button
-						onClick={() => {
-							setIsMenuOpen(false)
-							alert("This has not been implemented yet")
-						}}
-						rightIcon={<ListPlus />}>
-						Add to a Playlist...
-					</Button>
-					<Divider />
-					<Button
-						onClick={() => {
-							setIsMenuOpen(false)
-							addQueueItemNext(props.album[props.index])
-							toast({
-								title: "Playing next",
-								status: "info",
-							})
-						}}
-						rightIcon={<ListStart />}>
-						Play Next
-					</Button>
-					<Button
-						onClick={() => {
-							setIsMenuOpen(false)
-							addQueueItem(props.album[props.index])
-							toast({
-								title: "Added to queue",
-								status: "info",
-							})
-						}}
-						rightIcon={<ListEnd />}>
-						Add to Queue
-					</Button>
+									if (result == undefined)
+										toast({
+											title: "Added track to library",
+											status: "success",
+										})
+									else
+										toast({
+											title: "Could not add track to library",
+											status: "error",
+										})
+								})}
+								rightIcon={<Plus />}>
+								Add to Library
+							</Button>
+							<Button
+								onClick={withMenuClose(() => {
+									toast({
+										title: "Sorry, but this has not been implemented yet",
+										status: "error",
+									})
+								})}
+								rightIcon={<ListPlus />}>
+								Add to a Playlist...
+							</Button>
+							<Divider />
+							<Button
+								onClick={withMenuClose(() => {
+									addQueueItemNext(props.album[props.index])
+									toast({
+										title: "Playing next",
+										status: "info",
+									})
+								})}
+								rightIcon={<ListStart />}>
+								Play Next
+							</Button>
+							<Button
+								onClick={withMenuClose(() => {
+									addQueueItem(props.album[props.index])
+									toast({
+										title: "Added to queue",
+										status: "info",
+									})
+								})}
+								rightIcon={<ListEnd />}>
+								Add to Queue
+							</Button>
+						</>
+					)}
 				</ButtonGroup>
 			</div>
 		</article>
