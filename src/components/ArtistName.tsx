@@ -17,7 +17,7 @@ export default function ArtistName(props: {
 		if (index > 0) {
 			return React.createElement(
 				props.element,
-				{ className: `whitespace-pre ${props.className}` },
+				{ className: `!whitespace-pre ${props.className}` },
 				", "
 			)
 		}
