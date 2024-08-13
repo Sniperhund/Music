@@ -1,7 +1,10 @@
 import { NextRequest, NextResponse } from "next/server"
 
 export default function middleware(request: NextRequest) {
-	if (request.nextUrl.pathname.startsWith("/_next/"))
+	if (
+		request.nextUrl.pathname.startsWith("/_next/") ||
+		request.nextUrl.pathname.startsWith("/api/")
+	)
 		return NextResponse.next()
 
 	if (
