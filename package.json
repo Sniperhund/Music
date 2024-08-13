@@ -28,6 +28,7 @@
 		"npm": "^10.8.1",
 		"qs": "^6.13.0",
 		"react": "^18",
+		"react-debounce-input": "^3.3.0",
 		"react-dom": "^18"
 	},
 	"devDependencies": {
