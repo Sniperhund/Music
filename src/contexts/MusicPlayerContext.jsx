@@ -385,6 +385,7 @@ class MusicPlayerProvider extends React.Component {
 				value={{
 					isPlaying: this.state.isPlaying,
 					isRepeating: this.state.repeat,
+					currentSong: this.state.currentSong,
 					play: this.play,
 					pause: this.pause,
 					next: this.next,
