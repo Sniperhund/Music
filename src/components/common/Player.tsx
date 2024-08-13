@@ -29,7 +29,7 @@ import {
 	Volume2,
 } from "lucide-react"
 import Image from "next/image"
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { getCookie, setCookie } from "cookies-next"
 import ArtistName from "../ArtistName"
 
@@ -65,7 +65,9 @@ export default function Player() {
 
 	useEffect(() => {
 		const intervalId = setInterval(() => {
-			if (!movingSlider) setSecondsPlayedValue(getSecondsPlayed())
+			if (!movingSlider) {
+				setSecondsPlayedValue(getSecondsPlayed())
+			}
 		}, 500)
 
 		return () => clearInterval(intervalId)
@@ -152,6 +154,8 @@ export default function Player() {
 						<Slider
 							aria-label="slider-ex-1"
 							max={duration}
+							value={secondsPlayed}
+							focusThumbOnChange={false}
 							onChangeStart={() => {
 								setMovingSlider(true)
 							}}
