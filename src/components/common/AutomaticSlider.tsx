@@ -35,7 +35,7 @@ function AutoFetchGenreSlider(amount: number) {
 
 	useEffect(() => {
 		async function fetchData() {
-			if (!genreData || genreData.length == 0) return
+			if (!genreData.length) return
 
 			const albumPromises = genreData.map((genre) =>
 				useAPI(`/albums/${genre._id}/random`)
@@ -48,7 +48,7 @@ function AutoFetchGenreSlider(amount: number) {
 		fetchData()
 	}, [genreData])
 
-	if (!genreData || genreData.length == 0) return <></>
+	if (!genreData.length) return <></>
 
 	return (
 		<section className="flex flex-col gap-8">
