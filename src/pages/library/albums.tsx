@@ -34,7 +34,7 @@ export default function Albums() {
 
 			setAlbums(albums)
 		})
-	}, [])
+	}, [router])
 
 	return (
 		<>
@@ -45,6 +45,7 @@ export default function Albums() {
 					? albums?.map(function (album: any, j: number) {
 							return (
 								<Card
+									key={j}
 									albumId={album._id}
 									albumName={album.name}
 									imageUrl={getFilePath("album", album.cover)}

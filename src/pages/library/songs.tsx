@@ -30,7 +30,7 @@ export default function Songs() {
 
 			setTracks(tracks)
 		})
-	}, [])
+	}, [router])
 
 	return (
 		<>

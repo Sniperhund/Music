@@ -32,7 +32,7 @@ export default function Album() {
 		}
 
 		fetchData()
-	}, [router.query.id])
+	}, [router.query.id, router])
 
 	const {
 		playAlbum,

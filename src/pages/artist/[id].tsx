@@ -38,7 +38,7 @@ export default function Artist() {
 		}
 
 		fetchData()
-	}, [router.query.id])
+	}, [router.query.id, router])
 
 	const { playAlbum } = useMusicPlayer()
 

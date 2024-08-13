@@ -183,6 +183,7 @@ export default function Artists() {
 								<Td>{artist._id}</Td>
 								<Td>
 									<img
+										alt="Artist image"
 										src={getFilePath(
 											"artist",
 											artist.cover

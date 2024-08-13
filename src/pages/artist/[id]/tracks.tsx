@@ -30,7 +30,7 @@ export default function ArtistTracks() {
 
 			setArtistName(artist.name)
 		})
-	}, [router.query.id])
+	}, [router.query.id, router])
 
 	return (
 		<>
