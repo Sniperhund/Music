@@ -15,8 +15,6 @@ export default async function handler(
 ) {
 	const { id } = req.query
 
-	console.log(req.headers)
-
 	const backendAccessToken = req.headers.authorization as string
 
 	if (!backendAccessToken)

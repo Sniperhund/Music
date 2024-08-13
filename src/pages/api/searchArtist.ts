@@ -2,21 +2,13 @@ import getSpotifyToken from "@/util/server/getSpotifyToken"
 import axios from "axios"
 import type { NextApiRequest, NextApiResponse } from "next"
 
-type ResponseData = {
-	message?: String
-	name?: string
-	image?: string
-}
-
 export default async function handler(
 	req: NextApiRequest,
-	res: NextApiResponse<ResponseData>
+	res: NextApiResponse
 ) {
-	const { id } = req.query
+	const { q } = req.query
 
 	const accessToken = await getSpotifyToken()
-
-	console.log(accessToken)
 
 	if (!accessToken) {
 		res.status(500).json({ message: "Failed to get Spotify access token" })
@@ -24,7 +16,7 @@ export default async function handler(
 	}
 
 	const response = await axios
-		.get(`https://api.spotify.com/v1/artists/${id}`, {
+		.get(`https://api.spotify.com/v1/search?q=${q}&type=artist&limit=10`, {
 			headers: { Authorization: `Bearer ${accessToken}` },
 		})
 		.then((response) => response.data)
@@ -35,5 +27,11 @@ export default async function handler(
 		return
 	}
 
-	res.status(200).json({ name: response.name, image: response.images[0].url })
+	const artists = response.artists.items.map((artist: any) => ({
+		name: artist.name,
+		image: artist.images[0]?.url,
+		id: artist.id,
+	}))
+
+	res.status(200).json({ artists })
 }
