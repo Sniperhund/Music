@@ -50,17 +50,15 @@ export default function Player() {
 		getQueue,
 		getVolume,
 		setVolume,
+		currentSong,
 	} = useMusicPlayer()
 
 	const [duration, setDuration] = useState(0)
 
 	useEffect(() => {
-		async function fetchDuration() {
-			setDuration(await getDuration())
-		}
-
-		fetchDuration()
-	}, [getCurrentSong(), getDuration()])
+		if (currentSong && duration != currentSong.durationInSeconds)
+			setDuration(currentSong.durationInSeconds)
+	}, [currentSong])
 
 	const [secondsPlayed, setSecondsPlayedValue] = useState(0)
 	const [movingSlider, setMovingSlider] = useState(false)
@@ -108,13 +106,13 @@ export default function Player() {
 					/>
 					<div className="flex flex-col w-full truncate leading-snug">
 						<p className="truncate">{getSong().name}</p>
-						<p className="truncate">
+						<div className="truncate">
 							<ArtistName
 								artists={getSong().artists}
 								element="p"
 							/>{" "}
 							― {getSong().album.name}
-						</p>
+						</div>
 					</div>
 				</article>
 
@@ -154,7 +152,6 @@ export default function Player() {
 						<Slider
 							aria-label="slider-ex-1"
 							max={duration}
-							value={secondsPlayed}
 							onChangeStart={() => {
 								setMovingSlider(true)
 							}}
