@@ -234,6 +234,7 @@ export default function Player() {
 									{getQueue().map(
 										(track: any, index: any) => (
 											<article
+												key={index}
 												className={`${styles.track} rounded-lg flex gap-2 p-2 odd:bg-white/10`}>
 												<img
 													src={getFilePath(
