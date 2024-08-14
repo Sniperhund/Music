@@ -70,7 +70,11 @@ export default function Artist() {
 					setSearchResults(data.artists)
 				})
 				.catch((error) => {
-					console.error("Error searching artist:", error)
+					toast({
+						status: "error",
+						title: "An error happened",
+						description: error.message,
+					})
 				})
 		}
 	}, [search])
@@ -122,7 +126,9 @@ export default function Artist() {
 									alt={artist.name}
 									className="w-16 h-16 rounded-lg"
 								/>
-								<p>{artist.name}</p>
+								<a href={artist.href} target="_blank">
+									{artist.name}
+								</a>
 								<Spacer />
 								<Button
 									onClick={() =>
