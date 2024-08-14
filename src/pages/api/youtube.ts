@@ -17,7 +17,7 @@ export default async function handler(
 
 	try {
 		// Define the output path for the audio file
-		const outputPath = path.join(process.cwd(), "public", "audio.mp3")
+		const outputPath = path.join(process.cwd(), "audio.mp3")
 
 		// Use youtube-dl-exec to download the audio as an MP3 file
 		await youtubeDl(url as string, {
