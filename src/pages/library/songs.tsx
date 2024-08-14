@@ -55,7 +55,6 @@ export default function Songs() {
 									<Button
 										onClick={() => {
 											clear()
-											console.log(track)
 											addQueueItem(track)
 											next()
 											play()

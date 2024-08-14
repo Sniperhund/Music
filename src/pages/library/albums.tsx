@@ -30,8 +30,6 @@ export default function Albums() {
 				return
 			}
 
-			console.log(albums)
-
 			setAlbums(albums)
 		})
 	}, [router])
