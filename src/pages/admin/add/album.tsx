@@ -128,7 +128,7 @@ export default function Album() {
 				type: "image/jpeg",
 			})
 			setCoverImage(file)
-		} catch (error) {
+		} catch (error: any) {
 			toast({
 				title: "An error happened",
 				description: error,
