@@ -31,6 +31,7 @@ export default async function handler(
 		name: artist.name,
 		image: artist.images[0]?.url,
 		id: artist.id,
+		href: artist.external_urls.spotify,
 	}))
 
 	res.status(200).json({ artists })
