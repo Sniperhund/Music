@@ -43,7 +43,9 @@ export default function Track() {
 		let formData = new FormData()
 
 		formData.append("name", `${trackName} - Single`)
-		formData.append("artist", artistId)
+		if (artistId.length > 1)
+			artistId.forEach((id: string) => formData.append("artists", id))
+		else formData.append("artist", artistId)
 		formData.append("file", coverImage)
 		formData.append("genres", genreId)
 
@@ -114,6 +116,8 @@ export default function Track() {
 				"Content-Type": "multipart/form-data",
 			},
 		})
+
+		console.log(result)
 
 		if (result._id)
 			toast({
