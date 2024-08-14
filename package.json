@@ -30,6 +30,8 @@
 		"react": "^18",
 		"react-debounce-input": "^3.3.0",
 		"react-dom": "^18",
+		"react-sortablejs": "^6.1.4",
+		"sortablejs": "^1.15.2",
 		"youtube-dl-exec": "^3.0.7"
 	},
 	"devDependencies": {
@@ -38,6 +40,7 @@
 		"@types/qs": "^6.9.15",
 		"@types/react": "^18",
 		"@types/react-dom": "^18",
+		"@types/sortablejs": "^1.15.8",
 		"eslint": "^8",
 		"eslint-config-next": "14.2.3",
 		"postcss": "^8",
