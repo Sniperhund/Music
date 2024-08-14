@@ -38,8 +38,8 @@ export default function DefaultLayout({ children }: any) {
 			<div
 				className={`p-2.5 h-24 fixed right-0 bottom-0 ${
 					getCurrentSong() || getQueue().length !== 0
-						? "z-50"
-						: "-z-50"
+						? "pointer-events-auto"
+						: "pointer-events-none"
 				}`}
 				ref={playerContainer}>
 				<article
