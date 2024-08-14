@@ -14,10 +14,12 @@ import {
 	Tab,
 	TabPanels,
 	TabPanel,
+	Spacer,
 } from "@chakra-ui/react"
 import { Select } from "chakra-react-select"
 import { ReactElement, useEffect, useRef, useState } from "react"
 import { NoSSR } from "@kwooshung/react-no-ssr"
+import { DebounceInput } from "react-debounce-input"
 
 export default function Track() {
 	const [trackName, setTrackName] = useState("")
@@ -35,7 +37,7 @@ export default function Track() {
 
 	const [genreSelectValue, setGenreSelectValue] = useState<any>(null)
 
-	const [createNewSingle, setCreateNewSingle] = useState(false)
+	const [createNewSingle, setCreateNewSingle] = useState(0)
 
 	async function createSingleAlbum(): Promise<string> {
 		let formData = new FormData()
@@ -171,6 +173,78 @@ export default function Track() {
 		fetchData()
 	}, [])
 
+	const [search, setSearch] = useState("")
+	const [searchResults, setSearchResults] = useState<any[]>([])
+
+	useEffect(() => {
+		if (search.length > 2) {
+			fetch(`/api/searchAlbum?q=${search}`)
+				.then(async (response) => {
+					const data = await response.json()
+					setSearchResults(data.albums)
+				})
+				.catch((error) => {
+					toast({
+						title: "An error happened",
+						description: error,
+						status: "error",
+					})
+				})
+		}
+	}, [search])
+
+	async function useImageBySearch(image: any) {
+		try {
+			const response = await fetch(image)
+			const blob = await response.blob()
+			const file = new File([blob], "cover_image.jpg", {
+				type: "image/jpeg",
+			})
+			setCoverImage(file)
+		} catch (error: any) {
+			toast({
+				title: "An error happened",
+				description: error,
+				status: "error",
+			})
+		}
+	}
+
+	const [youtubeLink, setYoutubeLink] = useState("")
+	const [loading, setLoading] = useState(false)
+
+	async function downloadYouTubeAudio() {
+		try {
+			setLoading(true)
+
+			const response = await fetch(`/api/youtube?url=${youtubeLink}`)
+
+			if (!response.ok) {
+				const data = await response.json()
+				toast({
+					title: "An error happened",
+					description: data.message,
+					status: "error",
+				})
+				return
+			}
+
+			const blob = await response.blob()
+			const file = new File([blob], "audio.mp3", {
+				type: "audio/mpeg",
+			})
+			setAudioFile(file)
+
+			setLoading(false)
+		} catch (error: any) {
+			toast({
+				title: "An error happened",
+				description: error,
+				status: "error",
+			})
+		}
+	}
+
 	if (!artistOptions || !albumOptions)
 		return <>Not enough artists or albums</>
 
@@ -206,24 +280,76 @@ export default function Track() {
 					</FormControl>
 				</NoSSR>
 
-				<FormControl isInvalid={!audioFile} isRequired>
-					<FormLabel>Audio File</FormLabel>
-					<FileUpload
-						onFileSelected={(file) => setAudioFile(file)}
-						accept="audio/*">
-						<Button w="full">Upload audio file</Button>
-					</FileUpload>
-					<FormHelperText>
-						{audioFile ? audioFile.name : ""}
-					</FormHelperText>
-				</FormControl>
+				<Tabs variant="enclosed">
+					<TabList>
+						<Tab>Upload audio file</Tab>
+						<Tab>Use YouTube link</Tab>
+					</TabList>
+					<TabPanels>
+						<TabPanel>
+							<FormControl isInvalid={!audioFile} isRequired>
+								<FormLabel>Audio File</FormLabel>
+								<FileUpload
+									onFileSelected={(file) =>
+										setAudioFile(file)
+									}
+									accept="audio/*">
+									<Button w="full">Upload audio file</Button>
+								</FileUpload>
+								<FormHelperText>
+									{audioFile ? audioFile.name : ""}
+								</FormHelperText>
+							</FormControl>
+						</TabPanel>
+						<TabPanel className="space-y-4">
+							{audioFile ? (
+								<>
+									<audio
+										className="w-full"
+										controls
+										src={URL.createObjectURL(audioFile)}
+									/>
+									<Button
+										w="full"
+										onClick={() => setAudioFile(null)}>
+										Choose new file
+									</Button>
+								</>
+							) : (
+								<>
+									<FormControl
+										isInvalid={!audioFile}
+										isRequired>
+										<FormLabel>YouTube Link</FormLabel>
+										<Input
+											placeholder="https://www.youtube.com/watch?v=xxxxxxxxxxx"
+											onChange={(e) =>
+												setYoutubeLink(e.target.value)
+											}
+										/>
+									</FormControl>
+
+									<Button
+										w="full"
+										onClick={() => {
+											downloadYouTubeAudio()
+										}}
+										isLoading={loading}>
+										Use YouTube Link
+									</Button>
+								</>
+							)}
+						</TabPanel>
+					</TabPanels>
+				</Tabs>
 
 				<Tabs
 					variant="enclosed"
-					onChange={(index) => setCreateNewSingle(index === 1)}>
+					onChange={(index) => setCreateNewSingle(index)}>
 					<TabList>
 						<Tab>Use existing album</Tab>
-						<Tab>Create as single</Tab>
+						<Tab>Create as single - Upload</Tab>
+						<Tab>Create as single - Search</Tab>
 					</TabList>
 					<TabPanels>
 						<TabPanel>
@@ -242,8 +368,8 @@ export default function Track() {
 								</FormControl>
 							</NoSSR>
 						</TabPanel>
-						<TabPanel>
-							<FormControl isInvalid={!coverImage} isRequired>
+						<TabPanel className="space-y-4">
+							<FormControl isInvalid={!coverImage}>
 								<FormLabel>Cover Image</FormLabel>
 								<FileUpload
 									onFileSelected={(file) =>
@@ -256,6 +382,76 @@ export default function Track() {
 									{coverImage ? coverImage.name : ""}
 								</FormHelperText>
 							</FormControl>
+
+							<NoSSR>
+								<FormControl
+									isInvalid={genreId === ""}
+									id="genre-id">
+									<FormLabel>Choose a genre</FormLabel>
+									<Select
+										name="genre"
+										inputId="genre-id"
+										instanceId="chakra-react-select-2"
+										options={genreOptions}
+										onChange={(e) => {
+											setGenreId(e.value)
+											setGenreSelectValue(e)
+										}}
+										value={genreSelectValue}
+									/>
+								</FormControl>
+							</NoSSR>
+						</TabPanel>
+
+						<TabPanel className="space-y-4">
+							{coverImage ? (
+								<>
+									<img
+										src={URL.createObjectURL(coverImage)}
+										alt="Cover image"
+										className="w-32 h-32 rounded-lg"
+									/>
+
+									<Button onClick={() => setCoverImage(null)}>
+										Choose new image
+									</Button>
+								</>
+							) : (
+								<>
+									<FormControl isInvalid={search === ""}>
+										<FormLabel>Search for image</FormLabel>
+										<DebounceInput
+											element={Input}
+											debounceTimeout={1000}
+											onChange={(e) =>
+												setSearch(e.target.value)
+											}
+										/>
+									</FormControl>
+
+									{searchResults.map((album) => (
+										<div
+											key={album.id}
+											className="flex items-center space-x-4">
+											<img
+												src={album.image}
+												alt={album.name}
+												className="w-16 h-16 rounded-lg"
+											/>
+											<p>{album.name}</p>
+											<Spacer />
+											<Button
+												onClick={() =>
+													useImageBySearch(
+														album.image
+													)
+												}>
+												Use
+											</Button>
+										</div>
+									))}
+								</>
+							)}
 
 							<NoSSR>
 								<FormControl
