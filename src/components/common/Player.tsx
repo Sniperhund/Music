@@ -1,5 +1,6 @@
 import { useMusicPlayer } from "@/contexts/MusicPlayerContext"
 import styles from "@/styles/player.module.css"
+import trackStyles from "@/components/album/track.module.css"
 import getFilePath from "@/util/getFilePath"
 import {
 	Button,
@@ -32,6 +33,8 @@ import Image from "next/image"
 import { useEffect, useRef, useState } from "react"
 import { getCookie, setCookie } from "cookies-next"
 import ArtistName from "../ArtistName"
+import { ReactSortable } from "react-sortablejs"
+import Track from "../album/Track"
 
 export default function Player() {
 	const {
@@ -48,6 +51,7 @@ export default function Player() {
 		getSecondsPlayed,
 		setSecondsPlayed,
 		getQueue,
+		setQueue,
 		getVolume,
 		setVolume,
 		currentSong,
@@ -219,15 +223,37 @@ export default function Player() {
 
 					<DrawerBody className="flex flex-col">
 						{getQueue().length === 0 ? (
-							<p>No upcoming songs.</p>
+							<p className="self-center my-auto text-white/50 text-sm">
+								No upcoming songs.
+							</p>
 						) : (
 							<>
-								<h1 className="mb-4 text-2xl font-bold">
-									This is still WIP
-								</h1>
-								{getQueue().map((song: any, index: any) => {
-									return <p key={index}>{song.name}</p>
-								})}
+								<ReactSortable
+									list={getQueue()}
+									setList={(newState) => setQueue(newState)}>
+									{getQueue().map(
+										(track: any, index: any) => (
+											<article
+												className={`${styles.track} rounded-lg flex gap-2 p-2 odd:bg-white/10`}>
+												<img
+													src={getFilePath(
+														"album",
+														track.album.cover
+													)}
+													alt="Cover Image"
+													className="w-12 h-12 rounded-lg"
+												/>
+												<div>
+													<p>{track.name}</p>
+													<ArtistName
+														artists={track.artists}
+														element="p"
+													/>
+												</div>
+											</article>
+										)
+									)}
+								</ReactSortable>
 							</>
 						)}
 					</DrawerBody>

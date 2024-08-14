@@ -369,6 +369,10 @@ class MusicPlayerProvider extends React.Component {
 		return this.state.queue
 	}
 
+	setQueue = (queue) => {
+		this.setState({ queue })
+	}
+
 	getVolume = () => {
 		if (this.state.sound) return this.state.sound.volume()
 		return 0
@@ -403,6 +407,7 @@ class MusicPlayerProvider extends React.Component {
 					getSecondsPlayed: this.getSecondsPlayed,
 					setSecondsPlayed: this.setSecondsPlayed,
 					getQueue: this.getQueue,
+					setQueue: this.setQueue,
 					getVolume: this.getVolume,
 					setVolume: this.setVolume,
 				}}>
