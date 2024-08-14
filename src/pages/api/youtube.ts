@@ -24,6 +24,9 @@ export default async function handler(
 			output: outputPath,
 			extractAudio: true,
 			audioFormat: "mp3",
+		}).catch((error) => {
+			console.error("Error downloading audio:", error)
+			res.status(500).json({ message: "Error downloading audio" })
 		})
 
 		// Read the audio file into a buffer
