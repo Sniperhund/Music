@@ -124,7 +124,7 @@ export default function Artist() {
 								<img
 									src={artist.image}
 									alt={artist.name}
-									className="w-16 h-16 rounded-lg"
+									className="w-16 h-16 rounded-lg object-cover"
 								/>
 								<a href={artist.href} target="_blank">
 									{artist.name}
