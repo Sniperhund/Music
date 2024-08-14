@@ -7,11 +7,18 @@ import {
 	FormHelperText,
 	FormLabel,
 	Input,
+	Spacer,
+	Tab,
+	TabList,
+	TabPanel,
+	TabPanels,
+	Tabs,
 	useToast,
 } from "@chakra-ui/react"
 import { Select } from "chakra-react-select"
 import { ReactElement, useEffect, useState } from "react"
 import { NoSSR } from "@kwooshung/react-no-ssr"
+import { DebounceInput } from "react-debounce-input"
 
 export default function Album() {
 	const [albumName, setAlbumName] = useState("")
@@ -93,6 +100,43 @@ export default function Album() {
 		fetchData()
 	}, [])
 
+	const [search, setSearch] = useState("")
+	const [searchResults, setSearchResults] = useState<any[]>([])
+
+	useEffect(() => {
+		if (search.length > 2) {
+			fetch(`/api/searchAlbum?q=${search}`)
+				.then(async (response) => {
+					const data = await response.json()
+					setSearchResults(data.albums)
+				})
+				.catch((error) => {
+					toast({
+						title: "An error happened",
+						description: error,
+						status: "error",
+					})
+				})
+		}
+	}, [search])
+
+	async function useImageBySearch(image: any) {
+		try {
+			const response = await fetch(image)
+			const blob = await response.blob()
+			const file = new File([blob], "cover_image.jpg", {
+				type: "image/jpeg",
+			})
+			setCoverImage(file)
+		} catch (error) {
+			toast({
+				title: "An error happened",
+				description: error,
+				status: "error",
+			})
+		}
+	}
+
 	return (
 		<>
 			<h1>Add new album</h1>
@@ -128,17 +172,79 @@ export default function Album() {
 					</FormControl>
 				</NoSSR>
 
-				<FormControl isInvalid={!coverImage} isRequired>
-					<FormLabel>Cover Image</FormLabel>
-					<FileUpload
-						onFileSelected={(file) => setCoverImage(file)}
-						accept="image/*">
-						<Button w="full">Upload cover image</Button>
-					</FileUpload>
-					<FormHelperText>
-						{coverImage ? coverImage.name : ""}
-					</FormHelperText>
-				</FormControl>
+				<Tabs variant="enclosed">
+					<TabList>
+						<Tab>Upload image</Tab>
+						<Tab>Search for image</Tab>
+					</TabList>
+					<TabPanels>
+						<TabPanel>
+							<FormControl isInvalid={!coverImage}>
+								<FormLabel>Cover Image</FormLabel>
+								<FileUpload
+									onFileSelected={(file) =>
+										setCoverImage(file)
+									}
+									accept="image/*">
+									<Button w="full">Upload cover image</Button>
+								</FileUpload>
+								<FormHelperText>
+									{coverImage ? coverImage.name : ""}
+								</FormHelperText>
+							</FormControl>
+						</TabPanel>
+						<TabPanel className="space-y-4">
+							{coverImage ? (
+								<>
+									<img
+										src={URL.createObjectURL(coverImage)}
+										alt="Cover image"
+										className="w-32 h-32 rounded-lg"
+									/>
+
+									<Button onClick={() => setCoverImage(null)}>
+										Choose new image
+									</Button>
+								</>
+							) : (
+								<>
+									<FormControl isInvalid={search === ""}>
+										<FormLabel>Search for image</FormLabel>
+										<DebounceInput
+											element={Input}
+											debounceTimeout={1000}
+											onChange={(e) =>
+												setSearch(e.target.value)
+											}
+										/>
+									</FormControl>
+
+									{searchResults.map((album) => (
+										<div
+											key={album.id}
+											className="flex items-center space-x-4">
+											<img
+												src={album.image}
+												alt={album.name}
+												className="w-16 h-16 rounded-lg"
+											/>
+											<p>{album.name}</p>
+											<Spacer />
+											<Button
+												onClick={() =>
+													useImageBySearch(
+														album.image
+													)
+												}>
+												Use
+											</Button>
+										</div>
+									))}
+								</>
+							)}
+						</TabPanel>
+					</TabPanels>
+				</Tabs>
 
 				<NoSSR>
 					<FormControl
