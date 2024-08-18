@@ -1,17 +1,13 @@
 import { useMusicPlayer } from "@/contexts/MusicPlayerContext"
 import styles from "@/styles/player.module.css"
-import trackStyles from "@/components/album/track.module.css"
 import getFilePath from "@/util/getFilePath"
 import {
-	Button,
 	Drawer,
 	DrawerBody,
 	DrawerCloseButton,
 	DrawerContent,
-	DrawerFooter,
 	DrawerHeader,
 	DrawerOverlay,
-	Input,
 	Slider,
 	SliderFilledTrack,
 	SliderThumb,
@@ -29,12 +25,10 @@ import {
 	SkipForward,
 	Volume2,
 } from "lucide-react"
-import Image from "next/image"
-import { useEffect, useRef, useState } from "react"
-import { getCookie, setCookie } from "cookies-next"
+import { useEffect, useState } from "react"
+import { setCookie } from "cookies-next"
 import ArtistName from "../ArtistName"
 import { ReactSortable } from "react-sortablejs"
-import Track from "../album/Track"
 
 export default function Player() {
 	const {
@@ -47,7 +41,6 @@ export default function Player() {
 		getCurrentSong,
 		shuffle,
 		toggleRepeat,
-		getDuration,
 		getSecondsPlayed,
 		setSecondsPlayed,
 		getQueue,
@@ -55,6 +48,7 @@ export default function Player() {
 		getVolume,
 		setVolume,
 		currentSong,
+		playAlbumAtIndex,
 	} = useMusicPlayer()
 
 	const [duration, setDuration] = useState(0)
@@ -99,6 +93,10 @@ export default function Player() {
 	function getSong() {
 		if (getCurrentSong()) return getCurrentSong()
 		return getQueue()[0]
+	}
+
+	function skipToIndex(index: number) {
+		playAlbumAtIndex(getQueue(), index)
 	}
 
 	return (
@@ -235,20 +233,32 @@ export default function Player() {
 										(track: any, index: any) => (
 											<article
 												key={index}
-												className={`${styles.track} rounded-lg flex gap-2 p-2 odd:bg-white/10`}>
-												<img
-													src={getFilePath(
-														"album",
-														track.album.cover
-													)}
-													alt="Cover Image"
-													className="w-12 h-12 rounded-lg"
-												/>
-												<div>
-													<p>{track.name}</p>
+												className={`${styles.track} odd:bg-white/10`}>
+												<article
+													className="relative"
+													onClick={() =>
+														skipToIndex(index)
+													}>
+													<img
+														src={getFilePath(
+															"album",
+															track.album.cover
+														)}
+														alt="Cover Image"
+														className="w-12 h-12 rounded-lg"
+													/>
+													<div className="play">
+														<Play size="25px" />
+													</div>
+												</article>
+												<div className="w-full truncate">
+													<p className="truncate">
+														{track.name}
+													</p>
 													<ArtistName
 														artists={track.artists}
 														element="p"
+														className="opacity-50"
 													/>
 												</div>
 											</article>

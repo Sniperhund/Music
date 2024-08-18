@@ -67,3 +67,12 @@
 	justify-content: flex-end;
 	gap: 10px;
 }
+
+.track {
+	display: grid;
+	grid-template-columns: 48px 1fr;
+	gap: 8px;
+
+	padding: 8px;
+	border-radius: 0.5rem;
+}
