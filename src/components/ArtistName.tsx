@@ -13,8 +13,8 @@ export default function ArtistName(props: {
 	)
 		return <></>
 
-	const prefix = (index: number) => {
-		if (index > 0) {
+	const suffix = (index: number) => {
+		if (index > 1) {
 			return React.createElement(
 				props.element,
 				{ className: `!whitespace-pre ${props.className}` },
@@ -24,22 +24,24 @@ export default function ArtistName(props: {
 		return ""
 	}
 
+	if (!props.artists) {
+		return <></>
+	}
+
 	return (
 		<div className="inline-flex flex-wrap">
-			{props.artists.map((artist: any, index: number) => {
-				return (
-					<div className="flex" key={index}>
-						{prefix(index)}
-						<Link href={`/artist/${artist._id}`} className="inline">
-							{React.createElement(
-								props.element,
-								{ className: props.className },
-								artist.name
-							)}
-						</Link>
-					</div>
-				)
-			})}
+			{props.artists.map((artist: any, index: number) => (
+				<div className="flex" key={index}>
+					<Link href={`/artist/${artist._id}`} className="inline">
+						{React.createElement(
+							props.element,
+							{ className: props.className },
+							artist.name
+						)}
+					</Link>
+					{suffix(props?.artists?.length - index)}
+				</div>
+			))}
 		</div>
 	)
 }

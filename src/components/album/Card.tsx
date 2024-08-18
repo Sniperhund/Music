@@ -22,7 +22,7 @@ export default function Card(props: CardProps) {
 	return (
 		<Link
 			href={`/album/${props.albumId}`}
-			className="text-sm justify-start flex flex-col">
+			className="text-sm justify-start flex flex-col max-w-64">
 			<img
 				src={props.imageUrl}
 				className="rounded-lg max-w-64 aspect-square"
