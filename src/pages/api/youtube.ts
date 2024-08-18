@@ -24,7 +24,9 @@ export default async function handler(
 
 		// Download the best audio quality in M4A format using yt-dlp
 		await execPromise(
-			`yt-dlp -o "${tempAudioPath}" ${process.env.YT_DLP_ARGS} --extract-audio --audio-format m4a -f "bestaudio/best" "${url}"`
+			`yt-dlp -o "${tempAudioPath}" ${
+				process.env.YT_DLP_ARGS ? process.env.YT_DLP_ARGS : ""
+			} --extract-audio --audio-format m4a -f "bestaudio/best" "${url}"`
 		)
 
 		// Convert M4A to MP3 with high quality using FFmpeg
