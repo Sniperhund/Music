@@ -230,6 +230,7 @@ export default function Track() {
 					description: data.message,
 					status: "error",
 				})
+				setLoading(false)
 				return
 			}
 
