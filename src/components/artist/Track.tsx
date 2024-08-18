@@ -24,7 +24,7 @@ export default function Track(props: TrackProps) {
 					alt="Album cover image"
 					className="rounded-md"
 				/>
-				<div className={styles.play}>
+				<div className="play">
 					<Play size="25px" />
 				</div>
 			</article>
