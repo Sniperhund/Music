@@ -1,5 +1,4 @@
 import type { NextApiRequest, NextApiResponse } from "next"
-import youtubeDl from "youtube-dl-exec"
 import path from "path"
 import fs from "fs"
 import { exec } from "child_process"
@@ -13,8 +12,8 @@ export default async function handler(
 ) {
 	const { url } = req.query
 
-	if (!url) {
-		res.status(400).json({ message: "No URL provided" })
+	if (!url || Array.isArray(url)) {
+		res.status(400).json({ message: "Invalid or missing URL" })
 		return
 	}
 
@@ -23,16 +22,15 @@ export default async function handler(
 		const tempAudioPath = path.join(process.cwd(), "temp_audio.m4a")
 		const outputPath = path.join(process.cwd(), "audio.mp3")
 
-		// Download the best audio quality in M4A format
-		await youtubeDl(url as string, {
-			output: tempAudioPath,
-			extractAudio: true,
-			audioFormat: "m4a",
-			format: "bestaudio/best",
-		})
+		// Download the best audio quality in M4A format using yt-dlp
+		await execPromise(
+			`yt-dlp -o "${tempAudioPath}" --extract-audio --audio-format m4a -f "bestaudio/best" "${url}"`
+		)
 
 		// Convert M4A to MP3 with high quality using FFmpeg
-		await execPromise(`ffmpeg -i ${tempAudioPath} -b:a 320k ${outputPath}`)
+		await execPromise(
+			`ffmpeg -i "${tempAudioPath}" -b:a 320k "${outputPath}"`
+		)
 
 		// Read the final audio file into a buffer
 		const fileBuffer = fs.readFileSync(outputPath)

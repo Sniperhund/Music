@@ -9,13 +9,15 @@ FROM node:20 AS build
 WORKDIR /app
 COPY --from=dependencies /app/node_modules ./node_modules
 COPY . .
+
 RUN npm run build
 
 # Stage 3: Prepare the final lightweight image
 FROM node:20-alpine3.19 AS release
 WORKDIR /app
 
-RUN apk add --no-cache python3 ffmpeg
+RUN apk add --no-cache python3 ffmpeg py3-pip
+RUN python3 -m pip install yt-dlp --break-system-packages
 
 COPY --from=build /app/node_modules ./node_modules
 COPY --from=build /app/package.json ./package.json
