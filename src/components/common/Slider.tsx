@@ -29,7 +29,16 @@ export default function Slider(props: SliderProps) {
 
 	useEffect(() => {
 		computeIfScroll()
-	}, [props.children])
+
+		const timeoutId = setTimeout(computeIfScroll, 1000)
+
+		window.addEventListener("resize", computeIfScroll)
+
+		return () => {
+			clearTimeout(timeoutId)
+			window.removeEventListener("resize", computeIfScroll)
+		}
+	}, [])
 
 	useResizeObserver<HTMLDivElement>({
 		ref: slider,
@@ -40,6 +49,7 @@ export default function Slider(props: SliderProps) {
 
 	function computeIfScroll() {
 		if (!slider.current) return setDoesScroll(false)
+
 		setDoesScroll(slider.current.scrollWidth > slider.current.offsetWidth)
 	}
 

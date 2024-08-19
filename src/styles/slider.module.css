@@ -19,6 +19,12 @@
 		-ms-overflow-style: none;
 		scrollbar-width: none;
 		scroll-behavior: smooth;
+
+		scroll-snap-type: x mandatory;
+
+		& * {
+			scroll-snap-align: center;
+		}
 	}
 
 	.sliderContainer::-webkit-scrollbar {
