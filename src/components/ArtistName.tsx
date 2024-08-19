@@ -39,7 +39,7 @@ export default function ArtistName(props: {
 							artist.name
 						)}
 					</Link>
-					{suffix(props?.artists?.length - index)}
+					{suffix(props.artists ? props?.artists?.length - index : 0)}
 				</div>
 			))}
 		</div>
