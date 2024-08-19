@@ -31,8 +31,7 @@
 		"react-debounce-input": "^3.3.0",
 		"react-dom": "^18",
 		"react-sortablejs": "^6.1.4",
-		"sortablejs": "^1.15.2",
-		"youtube-dl-exec": "^3.0.7"
+		"sortablejs": "^1.15.2"
 	},
 	"devDependencies": {
 		"@types/howler": "^2.2.11",
