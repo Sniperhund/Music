@@ -57,7 +57,7 @@ body {
 	}
 
 	& h1 {
-		letter-spacing: 2px;
+		font-weight: 700;
 		line-height: 2.4rem;
 		font-size: 2rem;
 	}
