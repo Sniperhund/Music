@@ -7,6 +7,7 @@ import {
 	ListEnd,
 	ListPlus,
 	ListStart,
+	Minus,
 	Play,
 	Plus,
 } from "lucide-react"
@@ -65,6 +66,16 @@ export default function Track(props: TrackProps) {
 		setIsMenuOpen(false)
 		handler()
 	}
+
+	const [inLibrary, setInLibrary] = useState(false)
+
+	useEffect(() => {
+		useAPI(`/user/tracks/contains?id=${props.track._id}`).then(
+			(response: any) => {
+				if (!response.status) setInLibrary(response)
+			}
+		)
+	}, [])
 
 	const wrappedChildren = React.Children.map(props.children, (child: any) => {
 		if (React.isValidElement(child)) {
@@ -140,35 +151,71 @@ export default function Track(props: TrackProps) {
 								Play only this
 							</Button>
 							<Divider />
-							<Button
-								onClick={withMenuClose(async () => {
-									const result: any = await useAPI(
-										"/user/tracks",
-										{
-											method: "PUT",
-											data: {
-												ids: [
-													props.album[props.index]
-														._id,
-												],
-											},
-										}
-									)
+							{inLibrary ? (
+								<Button
+									onClick={withMenuClose(async () => {
+										const result: any = await useAPI(
+											"/user/tracks",
+											{
+												method: "DELETE",
+												data: {
+													ids: [
+														props.album[props.index]
+															._id,
+													],
+												},
+											}
+										)
 
-									if (result == undefined)
-										toast({
-											title: "Added track to library",
-											status: "success",
-										})
-									else
-										toast({
-											title: "Could not add track to library",
-											status: "error",
-										})
-								})}
-								rightIcon={<Plus />}>
-								Add to Library
-							</Button>
+										if (result == undefined) {
+											toast({
+												title: "Removed track from library",
+												status: "success",
+											})
+
+											setInLibrary(!inLibrary)
+										} else
+											toast({
+												title: "Could not remove track from library",
+												status: "error",
+											})
+									})}
+									rightIcon={<Minus />}>
+									Remove from Library
+								</Button>
+							) : (
+								<Button
+									onClick={withMenuClose(async () => {
+										const result: any = await useAPI(
+											"/user/tracks",
+											{
+												method: "PUT",
+												data: {
+													ids: [
+														props.album[props.index]
+															._id,
+													],
+												},
+											}
+										)
+
+										if (result == undefined) {
+											toast({
+												title: "Added track to library",
+												status: "success",
+											})
+
+											setInLibrary(!inLibrary)
+										} else
+											toast({
+												title: "Could not add track to library",
+												status: "error",
+											})
+									})}
+									rightIcon={<Plus />}>
+									Add to Library
+								</Button>
+							)}
 							<Button
 								onClick={withMenuClose(() => {
 									toast({
