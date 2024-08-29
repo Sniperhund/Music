@@ -67,6 +67,8 @@ class MusicPlayerProvider extends React.Component {
 				duration: await this.getDuration(),
 				position: this.getSecondsPlayed(),
 			})
+		} else {
+			console.warn("Media Session API is not supported")
 		}
 	}
 
