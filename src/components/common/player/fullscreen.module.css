@@ -1,0 +1,7 @@
+.image {
+	transition: left 0.4s ease-in-out;
+}
+
+.active {
+	left: -25%;
+}

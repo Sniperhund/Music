@@ -12,6 +12,7 @@ import styles from "@/styles/player.module.css"
 import getFilePath from "@/util/getFilePath"
 import ArtistName from "@/components/ArtistName"
 import { Play } from "lucide-react"
+import Image from "next/image"
 
 export default function Queue(props: any) {
 	const { getQueue, setQueue, playAlbumAtIndex } = useMusicPlayer()
@@ -44,13 +45,15 @@ export default function Queue(props: any) {
 										<article
 											className="relative"
 											onClick={() => skipToIndex(index)}>
-											<img
+											<Image
 												src={getFilePath(
 													"album",
 													track.album.cover
 												)}
 												alt="Cover Image"
 												className="w-12 h-12 rounded-lg"
+												width={500}
+												height={500}
 											/>
 											<div className="play">
 												<Play size="25px" />

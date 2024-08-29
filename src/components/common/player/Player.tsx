@@ -24,6 +24,7 @@ import { setCookie } from "cookies-next"
 import ArtistName from "../../ArtistName"
 import Queue from "./Queue"
 import FullscreenContext from "@/contexts/FullscreenContext"
+import Image from "next/image"
 
 export default function Player() {
 	const {
@@ -97,10 +98,12 @@ export default function Player() {
 		<>
 			<section className={styles.player}>
 				<article className={styles.trackInfo}>
-					<img
+					<Image
 						className={styles.img}
 						src={getFilePath("Album", getSong().album.cover)}
 						alt="Album cover image"
+						width={500}
+						height={500}
 					/>
 					<div className="flex flex-col w-full truncate leading-snug">
 						<p className="truncate">{getSong().name}</p>

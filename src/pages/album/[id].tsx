@@ -76,9 +76,11 @@ export default function Album() {
 				<title>{albumData?.name}</title>
 			</Head>
 			<section className="info">
-				<img
+				<Image
 					src={getFilePath("Album", albumData?.cover)}
 					alt="Album cover image"
+					width={500}
+					height={500}
 				/>
 
 				<div className="details">

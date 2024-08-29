@@ -11,6 +11,7 @@ import Track from "@/components/artist/Track"
 import Slider from "@/components/common/Slider"
 import Card from "@/components/album/Card"
 import { useMusicPlayer } from "@/contexts/MusicPlayerContext"
+import Image from "next/image"
 
 export default function Artist() {
 	const router = useRouter()
@@ -74,9 +75,11 @@ export default function Artist() {
 				<title>{artistData?.name}</title>
 			</Head>
 			<section className="info">
-				<img
+				<Image
 					src={getFilePath("Artist", artistData?.cover)}
 					alt="Album cover image"
+					width={500}
+					height={500}
 				/>
 
 				<div className="details">
