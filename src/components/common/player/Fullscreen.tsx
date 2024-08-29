@@ -1,7 +1,7 @@
 import FullscreenContext from "@/contexts/FullscreenContext"
 import { useMusicPlayer } from "@/contexts/MusicPlayerContext"
 import getFilePath from "@/util/getFilePath"
-import { useContext } from "react"
+import { useContext, useEffect, useRef } from "react"
 import styles from "./fullscreen.module.css"
 import Image from "next/image"
 
@@ -16,11 +16,15 @@ export default function Fullscreen() {
 		return getFilePath("album", getCurrentSong().album.cover)
 	}
 
-	if (!shown) return <></>
+	const imageRef = useRef<HTMLImageElement>(null)
 
 	return (
-		<section className={`fixed w-[200vw] h-[200vh] top-0 left-0`}>
+		<section
+			className={`fixed w-[200vw] h-[200vh] top-0 left-0 ${
+				shown ? "block" : "hidden"
+			}`}>
 			<Image
+				ref={imageRef}
 				src={getSongAlbumUrl()}
 				alt={getCurrentSong().name}
 				className="absolute w-full h-full object-cover top-[-25%] left-[-25%] blur-2xl"
