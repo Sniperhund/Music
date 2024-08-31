@@ -211,6 +211,11 @@ export default function Sidebar(props: SidebarProps) {
 						Add new track
 					</Button>
 				</Link>
+				<Link href="/admin/add/lyrics">
+					<Button variant="ghost" justifyContent="left" w="full">
+						Add new lyrics
+					</Button>
+				</Link>
 			</section>
 
 			<section className="flex flex-col">
