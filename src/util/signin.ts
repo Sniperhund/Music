@@ -18,7 +18,7 @@ export default async function signin(email: string, password: string) {
 			}
 		}
 
-		const expireTime = new Date().getTime() + 1000 * 3600 * 60
+		const expireTime = new Date().getTime() + 1000 * 3600 * 24 * 30
 
 		setCookie("access_token", result.data.response.accessToken, {
 			path: "/",

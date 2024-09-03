@@ -99,14 +99,18 @@ export default function Fullscreen() {
 			className={`fixed w-[200vw] h-[200vh] top-0 left-0 z-50 ${
 				shown ? "block" : "hidden"
 			}`}>
-			<Image
-				ref={imageRef}
-				src={getSongAlbumUrl()}
-				alt={getCurrentSong().name}
-				className="absolute w-full h-full object-cover top-[-25%] left-[-25%] blur-2xl"
-				width={500}
-				height={500}
-			/>
+			{getCurrentSong() ? (
+				<Image
+					ref={imageRef}
+					src={getSongAlbumUrl()}
+					alt={getCurrentSong().name}
+					className="absolute w-full h-full object-cover top-[-25%] left-[-25%] blur-2xl"
+					width={500}
+					height={500}
+				/>
+			) : (
+				""
+			)}
 
 			<section className={styles.fullscreenContainer}>
 				<X
@@ -117,14 +121,18 @@ export default function Fullscreen() {
 
 				<article className={showLyrics ? "" : styles.active}>
 					<div className={`flex flex-col gap-4`}>
-						<Image
-							src={getSongAlbumUrl()}
-							alt={getCurrentSong().name}
-							className="rounded-lg"
-							width={500}
-							height={500}
-							quality={100}
-						/>
+						{getCurrentSong() ? (
+							<Image
+								src={getSongAlbumUrl()}
+								alt={getCurrentSong().name}
+								className="rounded-lg"
+								width={500}
+								height={500}
+								quality={100}
+							/>
+						) : (
+							""
+						)}
 
 						<div>
 							<p className="font-bold text-lg">
