@@ -1,5 +1,6 @@
+import FullscreenContext from "@/contexts/FullscreenContext"
 import Link from "next/link"
-import React from "react"
+import React, { useContext } from "react"
 
 export default function ArtistName(props: {
 	artists: { name: string; _id: string }[] | undefined
@@ -24,6 +25,8 @@ export default function ArtistName(props: {
 		return ""
 	}
 
+	const { shown, setShown } = useContext(FullscreenContext)
+
 	if (!props.artists) {
 		return <></>
 	}
@@ -32,7 +35,10 @@ export default function ArtistName(props: {
 		<div className="inline-flex flex-wrap">
 			{props.artists.map((artist: any, index: number) => (
 				<div className="flex" key={index}>
-					<Link href={`/artist/${artist._id}`} className="inline">
+					<Link
+						href={`/artist/${artist._id}`}
+						className="inline"
+						onClick={() => setShown(false)}>
 						{React.createElement(
 							props.element,
 							{ className: props.className },
