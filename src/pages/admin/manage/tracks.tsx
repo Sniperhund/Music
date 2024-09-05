@@ -36,6 +36,7 @@ import Link from "next/link"
 import { useRouter } from "next/router"
 import { ReactElement, useEffect, useState } from "react"
 import FileUpload from "@/components/common/FileUpload"
+import { DebounceInput } from "react-debounce-input"
 
 export default function Tracks() {
 	const router = useRouter()
@@ -102,6 +103,10 @@ export default function Tracks() {
 			return alert(`Failed to fetch data: ${result.message}`)
 
 		setTableData(result)
+
+		if (search.length < 3) {
+			setShownData(result)
+		}
 	}
 
 	useEffect(() => {
@@ -185,9 +190,37 @@ export default function Tracks() {
 		fetchData()
 	}
 
+	const [search, setSearch] = useState("")
+	const [shownData, setShownData] = useState<any>()
+
+	useEffect(() => {
+		if (search.length < 3) {
+			setShownData(tableData)
+			return
+		}
+
+		useAPI("/search", {
+			params: {
+				q: search,
+				type: "track",
+				limit: parseInt(router.query.limit as string) || 10,
+			},
+		}).then((result: any) => {
+			setShownData(result)
+		})
+	}, [search])
+
 	return (
 		<>
 			<h1>Manage tracks</h1>
+
+			<DebounceInput
+				element={Input}
+				debounceTimeout={500}
+				placeholder="Search..."
+				onChange={(e) => setSearch(e.target.value)}
+				className="my-4"
+			/>
 
 			<section className="flex justify-between my-4">
 				<Button onClick={() => prevPage()}>Previous page</Button>
@@ -216,7 +249,7 @@ export default function Tracks() {
 						</Tr>
 					</Thead>
 					<Tbody>
-						{tableData?.map((track: any) => (
+						{shownData?.map((track: any) => (
 							<Tr key={track._id}>
 								<Td>{track._id}</Td>
 								<Td>{track.name}</Td>

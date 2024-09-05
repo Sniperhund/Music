@@ -37,6 +37,7 @@ import { useRouter } from "next/router"
 import { ReactElement, useEffect, useState } from "react"
 import FileUpload from "@/components/common/FileUpload"
 import getFilePath from "@/util/getFilePath"
+import { DebounceInput } from "react-debounce-input"
 
 export default function Artists() {
 	const router = useRouter()
@@ -103,6 +104,10 @@ export default function Artists() {
 			return alert(`Failed to fetch data: ${result.message}`)
 
 		setTableData(result)
+
+		if (search.length < 3) {
+			setShownData(result)
+		}
 	}
 
 	useEffect(() => {
@@ -148,9 +153,37 @@ export default function Artists() {
 		fetchData()
 	}
 
+	const [search, setSearch] = useState("")
+	const [shownData, setShownData] = useState<any>()
+
+	useEffect(() => {
+		if (search.length < 3) {
+			setShownData(tableData)
+			return
+		}
+
+		useAPI("/search", {
+			params: {
+				q: search,
+				type: "artist",
+				limit: parseInt(router.query.limit as string) || 10,
+			},
+		}).then((result: any) => {
+			setShownData(result)
+		})
+	}, [search])
+
 	return (
 		<>
 			<h1>Manage artists</h1>
+
+			<DebounceInput
+				element={Input}
+				debounceTimeout={500}
+				placeholder="Search..."
+				onChange={(e) => setSearch(e.target.value)}
+				className="my-4"
+			/>
 
 			<section className="flex justify-between my-4">
 				<Button onClick={() => prevPage()}>Previous page</Button>
@@ -178,7 +211,7 @@ export default function Artists() {
 						</Tr>
 					</Thead>
 					<Tbody>
-						{tableData?.map((artist: any) => (
+						{shownData?.map((artist: any) => (
 							<Tr key={artist._id}>
 								<Td>{artist._id}</Td>
 								<Td>
