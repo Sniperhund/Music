@@ -48,16 +48,24 @@ export default function Sidebar(props: SidebarProps) {
 		fetchData()
 	}, [])
 
+	const search = (e: any) => {
+		router.push(
+			{ pathname: "/search", query: { q: e.target.value } },
+			undefined,
+			{ shallow: true }
+		)
+	}
+
 	if (!props.admin)
 		return (
 			<>
 				<Text fontSize="2xl">Music</Text>
 
-				<InputGroup>
+				<InputGroup onFocus={search} onChange={search}>
 					<InputLeftElement pointerEvents="none">
 						<Search />
 					</InputLeftElement>
-					<Input placeholder="Search..." />
+					<Input placeholder="Search..." value={router.query.q} />
 				</InputGroup>
 				<section className="flex flex-col">
 					<Link href="/">

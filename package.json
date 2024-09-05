@@ -31,7 +31,8 @@
 		"react-debounce-input": "^3.3.0",
 		"react-dom": "^18",
 		"react-sortablejs": "^6.1.4",
-		"sortablejs": "^1.15.2"
+		"sortablejs": "^1.15.2",
+		"use-debounce": "^10.0.3"
 	},
 	"devDependencies": {
 		"@types/howler": "^2.2.11",
