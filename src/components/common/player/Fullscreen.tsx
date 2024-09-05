@@ -52,6 +52,8 @@ export default function Fullscreen() {
 	const [syncedLyrics, setSyncedLyrics] = useState(false)
 	const [showLyrics, setShowLyrics] = useState(false)
 
+	const lyricsRef = useRef<HTMLParagraphElement>(null)
+
 	useEffect(() => {
 		if (!currentSong) {
 			setShown(false)
@@ -72,6 +74,10 @@ export default function Fullscreen() {
 				setShowLyrics(true)
 			})
 			.catch(() => setShowLyrics(false))
+
+		if (lyricsRef.current) {
+			lyricsRef.current.scrollTop = 0
+		}
 	}, [currentSong])
 
 	const [duration, setDuration] = useState(0)
@@ -96,8 +102,8 @@ export default function Fullscreen() {
 
 	return (
 		<section
-			className={`fixed w-[200vw] h-[200vh] top-0 left-0 z-50 ${
-				shown ? "block" : "hidden"
+			className={`fixed w-[200vw] h-[200vh] top-0 left-0 ${
+				shown ? "opacity-100 z-50" : "opacity-0 -z-50"
 			}`}>
 			{getCurrentSong() ? (
 				<Image
@@ -213,9 +219,13 @@ export default function Fullscreen() {
 						</article>
 					</div>
 
-					<div className={showLyrics ? styles.active : ""}>
-						<p className="text-white">{lyrics}</p>
-					</div>
+					{showLyrics && (
+						<div>
+							<p className="text-white" ref={lyricsRef}>
+								{lyrics}
+							</p>
+						</div>
+					)}
 				</article>
 			</section>
 		</section>

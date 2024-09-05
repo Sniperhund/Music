@@ -1,5 +1,3 @@
-/* fixed w-screen h-screen top-0 left-0 bg-black bg-opacity-25 flex justify-center items-center */
-
 .fullscreenContainer {
 	position: fixed;
 	width: 100vw;
@@ -27,10 +25,6 @@
 
 		& > div {
 			width: 100%;
-		}
-
-		& > div:nth-child(2) {
-			display: none;
 		}
 
 		& > div:nth-child(2) p {
