@@ -28,6 +28,7 @@ import {
 	FormControl,
 	FormHelperText,
 	useToast,
+	Textarea,
 } from "@chakra-ui/react"
 import { Select as MultiSelect } from "chakra-react-select"
 import { NoSSR } from "@kwooshung/react-no-ssr"
@@ -42,6 +43,11 @@ export default function Tracks() {
 	const router = useRouter()
 	const toast = useToast()
 	const { isOpen, onOpen, onClose } = useDisclosure()
+	const {
+		isOpen: isOpenLyrics,
+		onOpen: onOpenLyrics,
+		onClose: onCloseLyrics,
+	} = useDisclosure()
 
 	function setLimit(limit: number) {
 		if (!limit) return
@@ -190,6 +196,39 @@ export default function Tracks() {
 		fetchData()
 	}
 
+	const [lyrics, setLyrics] = useState("")
+
+	async function submitLyrics(event: any) {
+		event.preventDefault()
+
+		if (!lyrics) return
+
+		const result: any = await useAPI("/admin/lyrics", {
+			method: "PUT",
+			params: {
+				id: activeTrack._id,
+			},
+			data: {
+				synced: false,
+				lyrics: lyrics,
+			},
+		})
+
+		if (result._id) {
+			toast({
+				status: "success",
+				title: "Track lyrics changed successfully",
+			})
+
+			onCloseLyrics()
+		} else
+			toast({
+				title: "An error happened",
+				description: result.message,
+				status: "error",
+			})
+	}
+
 	const [search, setSearch] = useState("")
 	const [shownData, setShownData] = useState<any>()
 
@@ -290,6 +329,20 @@ export default function Tracks() {
 											</MenuItem>
 											<MenuItem
 												onClick={async () => {
+													setActiveTrack(track)
+
+													const lyrics: any =
+														await useAPI(
+															`/tracks/${track._id}/lyrics`
+														)
+													setLyrics(lyrics.lyrics)
+
+													onOpenLyrics()
+												}}>
+												Edit lyrics
+											</MenuItem>
+											<MenuItem
+												onClick={async () => {
 													if (
 														confirm(
 															"Are you sure you want to delete this track?"
@@ -337,7 +390,7 @@ export default function Tracks() {
 				<Button onClick={() => nextPage()}>Next page</Button>
 			</section>
 
-			<Modal isOpen={isOpen} onClose={onClose} size="xl">
+			<Modal isOpen={isOpen} onClose={onClose} size="2xl">
 				<ModalOverlay />
 				<ModalContent>
 					<ModalHeader>
@@ -436,6 +489,45 @@ export default function Tracks() {
 						</form>
 					</ModalBody>
 
+					<ModalFooter></ModalFooter>
+				</ModalContent>
+			</Modal>
+
+			<Modal isOpen={isOpenLyrics} onClose={onCloseLyrics} size="xl">
+				<ModalOverlay />
+				<ModalContent>
+					<ModalHeader>
+						{activeTrack?.name} -{" "}
+						<ArtistName
+							artists={activeTrack?.artists}
+							element="p"
+						/>
+					</ModalHeader>
+					<ModalCloseButton />
+					<ModalBody>
+						<form
+							onSubmit={submitLyrics}
+							className="space-y-4 max-w-2xl mt-4">
+							<FormControl id="lyrics" isRequired>
+								<FormLabel>Lyrics</FormLabel>
+								<Textarea
+									placeholder="Lyrics"
+									id="lyrics"
+									name="lyrics"
+									required
+									rows={25}
+									onChange={(e) => setLyrics(e.target.value)}
+									value={lyrics}
+								/>
+							</FormControl>
+
+							<div>
+								<Button className="mt-6" type="submit" w="full">
+									Submit
+								</Button>
+							</div>
+						</form>
+					</ModalBody>
 					<ModalFooter></ModalFooter>
 				</ModalContent>
 			</Modal>
