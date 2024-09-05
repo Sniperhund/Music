@@ -18,6 +18,7 @@ import {
 import { ReactElement, useEffect, useState } from "react"
 import { DebounceInput } from "react-debounce-input"
 import { getCookie } from "cookies-next"
+import getFilePath from "@/util/getFilePath"
 
 export default function Artist() {
 	const [artistName, setArtistName] = useState("")
@@ -61,6 +62,7 @@ export default function Artist() {
 
 	const [search, setSearch] = useState("")
 	const [searchResults, setSearchResults] = useState<any[]>([])
+	const [existingArtists, setExistingArtists] = useState<any[]>([])
 
 	useEffect(() => {
 		if (search.length > 2) {
@@ -76,6 +78,17 @@ export default function Artist() {
 						description: error.message,
 					})
 				})
+
+			useAPI("/search", {
+				params: {
+					q: search,
+					type: "artist",
+					limit: 3,
+				},
+			}).then((result: any) => {
+				console.log(result)
+				setExistingArtists(result)
+			})
 		}
 	}, [search])
 
@@ -117,6 +130,21 @@ export default function Artist() {
 							onChange={(e) => setSearch(e.target.value)}
 						/>
 
+						<h2>Existing Artists</h2>
+						{existingArtists.map((artist) => (
+							<div
+								key={artist._id}
+								className="flex items-center space-x-4">
+								<img
+									src={getFilePath("artist", artist.cover)}
+									alt={artist.name}
+									className="w-16 h-16 rounded-lg object-cover"
+								/>
+								<p>{artist.name}</p>
+							</div>
+						))}
+
+						<h2>Search Results</h2>
 						{searchResults.map((artist) => (
 							<div
 								key={artist.id}
