@@ -3,6 +3,7 @@ import { useMusicPlayer } from "@/contexts/MusicPlayerContext"
 import useAPI from "@/util/useAPI"
 import { Button, ButtonGroup, Divider, useToast } from "@chakra-ui/react"
 import {
+	ClipboardCopy,
 	Ellipsis,
 	ListEnd,
 	ListPlus,
@@ -248,6 +249,20 @@ export default function Track(props: TrackProps) {
 								})}
 								rightIcon={<ListEnd />}>
 								Add to Queue
+							</Button>
+							<Divider />
+							<Button
+								onClick={withMenuClose(() => {
+									navigator.clipboard.writeText(
+										window.location.href
+									)
+									toast({
+										title: "Link copied to clipboard",
+										status: "info",
+									})
+								})}
+								rightIcon={<ClipboardCopy />}>
+								Share link
 							</Button>
 						</>
 					)}
