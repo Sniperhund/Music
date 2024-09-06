@@ -11,7 +11,12 @@ export default function middleware(request: NextRequest) {
 		!request.nextUrl.pathname.startsWith("/auth/") &&
 		!request.cookies.has("access_token")
 	)
-		return NextResponse.redirect(new URL("/auth/signin", request.url))
+		return NextResponse.redirect(
+			new URL(
+				`/auth/signin?href=${request.nextUrl.pathname.slice(1)}`,
+				request.url
+			)
+		)
 
 	if (
 		request.nextUrl.pathname.startsWith("/auth/") &&

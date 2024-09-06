@@ -17,7 +17,7 @@ import {
 } from "@chakra-ui/react"
 import { useFormik } from "formik"
 import { useRouter } from "next/router"
-import { ReactElement } from "react"
+import { ReactElement, useEffect, useState } from "react"
 
 export default function Signup() {
 	const toast = useToast()
@@ -49,9 +49,15 @@ export default function Signup() {
 				return
 			}
 
-			router.push("/")
+			router.push(`/${forwardAddress}`)
 		},
 	})
+
+	const [forwardAddress, setForwardAddress] = useState<string | null>(null)
+
+	useEffect(() => {
+		setForwardAddress(router.query.href as string)
+	}, [router.query.href])
 
 	return (
 		<Center className="h-screen">
@@ -101,7 +107,9 @@ export default function Signup() {
 				</CardBody>
 				<Divider opacity="0.2" />
 				<CardFooter>
-					<Link href="/auth/signin">Sign in instead?</Link>
+					<Link href={`/auth/signin?href=${forwardAddress}`}>
+						Sign in instead?
+					</Link>
 				</CardFooter>
 			</Card>
 		</Center>
