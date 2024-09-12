@@ -189,6 +189,11 @@ class MusicPlayerProvider extends React.Component {
 	}
 
 	internalPrev = async () => {
+		if (this.internalState.sound.seek() > 5) {
+			this.internalState.sound.seek(0)
+			return
+		}
+
 		const prevSong = this.internalState.prevQueue[0]
 		this.internalState.prevQueue = this.internalState.prevQueue.slice(1)
 
