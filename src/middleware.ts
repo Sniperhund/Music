@@ -15,7 +15,12 @@ export default function middleware(request: NextRequest) {
 		return NextResponse.next()
 
 	if (!request.nextUrl.pathname.startsWith("/auth/") && !hasTokens(request))
-		return NextResponse.redirect(new URL("/auth/signin", request.url))
+		return NextResponse.redirect(
+			new URL(
+				`/auth/signin?href=${request.nextUrl.pathname.slice(1)}`,
+				request.url
+			)
+		)
 
 	if (request.nextUrl.pathname.startsWith("/auth/") && hasTokens(request))
 		return NextResponse.redirect(new URL("/", request.url))
