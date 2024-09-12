@@ -32,9 +32,12 @@ async function useAPI<T>(
 			error.response &&
 			(error.response.status === 406 || error.response.status === 401)
 		) {
+			console.log("Token expired, refreshing...")
+
 			try {
-				await refreshToken()
-				accessToken = getCookie("access_token")
+				accessToken = await refreshToken()
+
+				console.log(accessToken)
 
 				const newDefaults: AxiosRequestConfig = {
 					baseURL: process.env.NEXT_PUBLIC_API_URL,
@@ -49,10 +52,10 @@ async function useAPI<T>(
 				)
 
 				const retryResponse = await axios(url, retryConfig)
-				return retryResponse.data
+				return retryResponse.data.response
 			} catch (retryError: any) {
 				console.log("Token refresh failed:", retryError)
-				signout()
+				//signout()
 
 				return retryError.response
 			}
