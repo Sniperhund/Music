@@ -109,7 +109,7 @@ h2 {
 	.desktop-block,
 	.desktop-flex,
 	.desktop-grid {
-		display: none;
+		display: none !important;
 	}
 
 	.mobile-block {
@@ -129,7 +129,7 @@ h2 {
 	.mobile-block,
 	.mobile-flex,
 	.mobile-grid {
-		display: none;
+		display: none !important;
 	}
 
 	.desktop-block {

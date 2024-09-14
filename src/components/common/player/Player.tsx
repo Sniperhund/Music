@@ -119,8 +119,14 @@ export default function Player() {
 
 				<section className={styles.controls}>
 					<article className={styles.playerSections}>
-						<Shuffle onClick={() => shuffle()} />
-						<SkipBack onClick={() => prev()} />
+						<Shuffle
+							onClick={() => shuffle()}
+							className="desktop-block"
+						/>
+						<SkipBack
+							onClick={() => prev()}
+							className="desktop-block"
+						/>
 						{isPlaying ? (
 							<Pause
 								onClick={() => {
@@ -136,6 +142,7 @@ export default function Player() {
 						)}
 						<SkipForward onClick={() => next()} />
 						<Repeat
+							className="desktop-block"
 							onClick={() => toggleRepeat()}
 							color={
 								isRepeating
@@ -144,7 +151,8 @@ export default function Player() {
 							}
 						/>
 					</article>
-					<article className={styles.playerSections}>
+					<article
+						className={`${styles.playerSections} desktop-flex`}>
 						<p>
 							{new Date(secondsPlayed * 1000)
 								.toISOString()

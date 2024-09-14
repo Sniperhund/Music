@@ -22,6 +22,17 @@
 	& svg {
 		cursor: pointer;
 	}
+
+	@media screen and (max-width: 768px) {
+		& {
+			grid-template-columns: 1fr 1fr;
+			padding: 10px;
+		}
+
+		.miscBtns {
+			display: none;
+		}
+	}
 }
 
 .img {
@@ -59,6 +70,17 @@
 
 		& p {
 			font-size: 0.9rem;
+		}
+	}
+
+	@media screen and (max-width: 768px) {
+		& article:nth-child(1) {
+			height: 100%;
+			max-height: 32px;
+			gap: 8px;
+
+			justify-content: end;
+			margin: auto 0;
 		}
 	}
 }
