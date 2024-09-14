@@ -1,13 +1,16 @@
-import { MutableRefObject, useRef } from "react"
+import { MutableRefObject, useRef, useState } from "react"
 import Player from "../common/player/Player"
 import Sidebar from "../common/Sidebar"
 import useResizeObserver from "use-resize-observer"
 import styles from "@/styles/layout.module.css"
 import { useMusicPlayer } from "@/contexts/MusicPlayerContext"
+import { Menu, X } from "lucide-react"
 
 export default function DefaultLayout({ children }: any) {
 	let playerContainer = useRef<HTMLDivElement>(null)
 	const sidebar = useRef<HTMLDivElement>(null)
+
+	const [isMenuOpen, setIsMenuOpen] = useState(false)
 
 	useResizeObserver<HTMLDivElement>({
 		ref: sidebar,
@@ -15,6 +18,10 @@ export default function DefaultLayout({ children }: any) {
 			if (!playerContainer.current || !sidebar.current) return
 			playerContainer.current.style.width =
 				"calc(100vw - " + sidebar.current?.offsetWidth + "px)"
+
+			if (window.matchMedia("(max-width: 768px)").matches) {
+				playerContainer.current.style.width = "100vw"
+			}
 		},
 	})
 
@@ -23,12 +30,19 @@ export default function DefaultLayout({ children }: any) {
 	return (
 		<section className="w-screen h-screen flex">
 			<article
-				className="flex flex-col gap-5 relative p-5 border-r border-r-[var(--chakra-colors-chakra-border-color)] md:min-w-64 xl:min-w-80"
+				className={`${styles.sidebar} ${
+					isMenuOpen ? styles.active : ""
+				}`}
 				ref={sidebar}>
 				<Sidebar admin />
+				<Menu
+					className={styles.menuButton}
+					size={36}
+					onClick={() => setIsMenuOpen(!isMenuOpen)}
+				/>
 			</article>
 			<article
-				className={`py-14 px-12 w-full overflow-y-auto ${
+				className={`${styles.content} ${
 					getCurrentSong() || getQueue().length !== 0
 						? "mb-[5.5rem]"
 						: ""

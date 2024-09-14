@@ -21,6 +21,7 @@ import {
 	Home,
 	ListMusic,
 	LogOut,
+	MenuIcon,
 	MicVocal,
 	Music,
 	Search,

@@ -104,3 +104,43 @@ h2 {
 	font-size: 1.25rem;
 	font-weight: 600;
 }
+
+@media screen and (max-width: 768px) {
+	.desktop-block,
+	.desktop-flex,
+	.desktop-grid {
+		display: none;
+	}
+
+	.mobile-block {
+		display: block;
+	}
+
+	.mobile-flex {
+		display: flex;
+	}
+
+	.mobile-grid {
+		display: grid;
+	}
+}
+
+@media screen and (min-width: 768px) {
+	.mobile-block,
+	.mobile-flex,
+	.mobile-grid {
+		display: none;
+	}
+
+	.desktop-block {
+		display: block;
+	}
+
+	.desktop-flex {
+		display: flex;
+	}
+
+	.desktop-grid {
+		display: grid;
+	}
+}
