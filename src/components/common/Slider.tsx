@@ -65,7 +65,7 @@ export default function Slider(props: SliderProps) {
 				{doesScroll ? (
 					<ChevronLeft
 						size="48"
-						className={styles.left}
+						className={`${styles.left} desktop-block`}
 						onClick={() => left()}
 					/>
 				) : (
@@ -77,7 +77,7 @@ export default function Slider(props: SliderProps) {
 				{doesScroll ? (
 					<ChevronRight
 						size="48"
-						className={styles.right}
+						className={`${styles.right} desktop-block`}
 						onClick={() => right()}
 					/>
 				) : (

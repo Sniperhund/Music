@@ -26,8 +26,8 @@ export default function Card(props: CardProps) {
 					src={props.imageUrl ? props.imageUrl : ""}
 					className="rounded-lg max-w-64 aspect-square"
 					alt="Album cover image"
-					width={500}
-					height={500}
+					width={256}
+					height={256}
 				/>
 				<p className="mt-0.5">{props.albumName}</p>
 			</Link>
