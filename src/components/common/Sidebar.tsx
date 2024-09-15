@@ -60,7 +60,9 @@ export default function Sidebar(props: SidebarProps) {
 	if (!props.admin)
 		return (
 			<>
-				<Text fontSize="2xl">Music</Text>
+				<Link href="/">
+					<Text fontSize="2xl">Music</Text>
+				</Link>
 
 				<InputGroup onFocus={search} onChange={search}>
 					<InputLeftElement pointerEvents="none">
