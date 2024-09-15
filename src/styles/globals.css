@@ -74,6 +74,36 @@ body {
 	}
 }
 
+@media screen and (max-width: 768px) {
+	.info {
+		flex-direction: column;
+
+		& img {
+			max-width: 100%;
+		}
+
+		& h1 {
+			font-size: 1.6rem;
+		}
+
+		.details {
+			padding-top: 0;
+
+			& div {
+				margin-bottom: 0.25rem;
+			}
+
+			& button {
+				width: 100%;
+			}
+		}
+	}
+
+	.tracks {
+		margin-top: 20px;
+	}
+}
+
 .play {
 	position: absolute;
 	top: 0;
