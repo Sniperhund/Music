@@ -262,7 +262,10 @@ export default function Track() {
 					<FormLabel>Track Name</FormLabel>
 					<Input
 						name="track-name"
-						onChange={(e) => setTrackName(e.target.value)}
+						onChange={(e) => {
+							setTrackName(e.target.value)
+							setSearch(e.target.value)
+						}}
 						value={trackName}
 					/>
 				</FormControl>
@@ -431,6 +434,7 @@ export default function Track() {
 											onChange={(e) =>
 												setSearch(e.target.value)
 											}
+											value={search}
 										/>
 									</FormControl>
 
