@@ -20,8 +20,188 @@ import { Select } from "chakra-react-select"
 import { ReactElement, useEffect, useRef, useState } from "react"
 import { NoSSR } from "@kwooshung/react-no-ssr"
 import { DebounceInput } from "react-debounce-input"
+import getFilePath from "@/util/getFilePath"
+import { getCookie } from "cookies-next"
 
 export default function Track() {
+	return (
+		<Tabs variant="enclosed">
+			<TabList>
+				<Tab>Search for track</Tab>
+				<Tab>Manually add track</Tab>
+			</TabList>
+
+			<TabPanels>
+				<TabPanel>
+					<AutomaticTrack />
+				</TabPanel>
+				<TabPanel>
+					<ManualTrack />
+				</TabPanel>
+			</TabPanels>
+		</Tabs>
+	)
+}
+
+Track.getLayout = function getLayout(page: ReactElement) {
+	return <AdminLayout>{page}</AdminLayout>
+}
+
+function AutomaticTrack() {
+	const toast = useToast()
+
+	const [search, setSearch] = useState("")
+
+	useEffect(() => {
+		if (search.length < 2) return
+
+		fetch(`/api/searchTrack?q=${search}`).then(async (response) => {
+			const data = await response.json()
+			setSearchResults(data.tracks)
+		})
+
+		useAPI(`/search?q=${search}&type=track`, {
+			method: "GET",
+		})
+			.then((response: any) => {
+				setExistingTracks(response)
+			})
+			.catch((error: any) => {
+				toast({
+					title: "An error happened",
+					description: error,
+					status: "error",
+				})
+			})
+	}, [search])
+
+	const [existingTracks, setExistingTracks] = useState<any[]>([])
+	const [searchResults, setSearchResults] = useState<any[]>([])
+
+	async function addTrackBySearch(id: any) {
+		if (!genreId) {
+			toast({
+				title: "An error happened",
+				description: "Please select a genre",
+				status: "error",
+			})
+			return
+		}
+
+		const result: any = await fetch(
+			`/api/addTrack?id=${id}&genreId=${genreId}`,
+			{
+				headers: {
+					authorization: `${getCookie("access_token")}`,
+				},
+			}
+		).then((response) => response.json())
+
+		if (result.status == 200) {
+			toast({
+				status: "success",
+				title: "Track added successfully",
+			})
+		} else {
+			toast({
+				status: "error",
+				title: "An error happened",
+				description: result?.message,
+			})
+		}
+	}
+
+	const [genreId, setGenreId] = useState("")
+	const [genreSelectValue, setGenreSelectValue] = useState<any>(null)
+	const [genreOptions, setGenreOptions] = useState<any[]>([])
+
+	useEffect(() => {
+		useAPI("/all/genres").then((response: any) => {
+			const tempGenreOptions = response.map((item: any) => ({
+				label: item.name,
+				value: item._id,
+			}))
+
+			setGenreOptions(tempGenreOptions)
+		})
+	}, [])
+
+	return (
+		<>
+			<h1>Add new track by searching</h1>
+
+			<section className="space-y-4 max-w-2xl mt-4">
+				<DebounceInput
+					element={Input}
+					debounceTimeout={1000}
+					onChange={(e) => setSearch(e.target.value)}
+				/>
+
+				<NoSSR>
+					<FormControl isInvalid={genreId === ""} id="genre-id">
+						<FormLabel>Choose a genre</FormLabel>
+						<Select
+							name="genre"
+							inputId="genre-id"
+							instanceId="chakra-react-select-2"
+							options={genreOptions}
+							onChange={(e) => {
+								setGenreId(e.value)
+								setGenreSelectValue(e)
+							}}
+							value={genreSelectValue}
+						/>
+					</FormControl>
+				</NoSSR>
+
+				<h2>Existing Tracks</h2>
+				{existingTracks.map((track, i) => (
+					<div key={i} className="flex items-center space-x-4">
+						<img
+							src={getFilePath("album", track.album.cover)}
+							alt={track.name}
+							className="w-16 h-16 rounded-lg object-cover"
+						/>
+						<a href={`/album/${track.album._id}`} target="_blank">
+							{track.name}
+						</a>
+						<Spacer />
+						<audio
+							controls
+							src={getFilePath("track", track.audioFile)}
+						/>
+					</div>
+				))}
+
+				<h2>Search Results</h2>
+				{searchResults.map((track, i) => (
+					<div key={i} className="flex items-center space-x-4">
+						<img
+							src={track.album.image}
+							alt={track.name}
+							className="w-16 h-16 rounded-lg object-cover"
+						/>
+						<a href={track.href} target="_blank">
+							<div>
+								<p>{track.name}</p>
+								<p className="opacity-50 text-sm">
+									{track.album.name}
+								</p>
+							</div>
+						</a>
+						<Spacer />
+						<audio controls src={track.preview} />
+						<Button onClick={() => addTrackBySearch(track.id)}>
+							Add
+						</Button>
+					</div>
+				))}
+			</section>
+		</>
+	)
+}
+
+function ManualTrack() {
 	const [trackName, setTrackName] = useState("")
 	const [artistId, setArtistId] = useState<any>("")
 	const [audioFile, setAudioFile] = useState<any>(null)
@@ -116,8 +296,6 @@ export default function Track() {
 				"Content-Type": "multipart/form-data",
 			},
 		})
-
-		console.log(result)
 
 		if (result._id)
 			toast({
@@ -492,8 +670,4 @@ export default function Track() {
 			</form>
 		</>
 	)
-}
-
-Track.getLayout = function getLayout(page: ReactElement) {
-	return <AdminLayout>{page}</AdminLayout>
 }
