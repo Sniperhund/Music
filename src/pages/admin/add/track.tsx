@@ -89,7 +89,7 @@ function AutomaticTrack() {
 		}
 
 		const result: any = await fetch(
-			`/api/addTrack?id=${id}&genreId=${genreId}`,
+			`/api/addTrack?id=${id}&genreId=${genreId}&url=${youtubeLink}`,
 			{
 				headers: {
 					authorization: `${getCookie("access_token")}`,
@@ -97,11 +97,13 @@ function AutomaticTrack() {
 			}
 		).then((response) => response.json())
 
-		if (result.status == 200) {
+		if (result.message == "Track added") {
 			toast({
 				status: "success",
 				title: "Track added successfully",
 			})
+
+			setYoutubeLink("")
 		} else {
 			toast({
 				status: "error",
@@ -125,6 +127,8 @@ function AutomaticTrack() {
 			setGenreOptions(tempGenreOptions)
 		})
 	}, [])
+
+	const [youtubeLink, setYoutubeLink] = useState("")
 
 	return (
 		<>
@@ -153,6 +157,15 @@ function AutomaticTrack() {
 						/>
 					</FormControl>
 				</NoSSR>
+
+				<FormControl isRequired>
+					<FormLabel>YouTube Link</FormLabel>
+					<Input
+						placeholder="https://www.youtube.com/watch?v=xxxxxxxxxxx"
+						onChange={(e) => setYoutubeLink(e.target.value)}
+						value={youtubeLink}
+					/>
+				</FormControl>
 
 				<h2>Existing Tracks</h2>
 				{existingTracks.map((track, i) => (

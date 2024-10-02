@@ -10,7 +10,7 @@ export default async function handler(
 	res: NextApiResponse
 ) {
 	try {
-		const { id, genreId } = req.query
+		let { id, genreId, url } = req.query
 
 		const backendAccessToken = req.headers.authorization as string
 
@@ -47,11 +47,14 @@ export default async function handler(
 			return
 		}
 
-		const youtubeUrl = await searchYouTube(
-			`${track.name} ${track.artists
-				.map((artist: any) => artist.name)
-				.join(" ")}`
-		)
+		let youtubeUrl
+		if (url) youtubeUrl = url
+		else
+			youtubeUrl = await searchYouTube(
+				`${track.name} ${track.artists
+					.map((artist: any) => artist.name)
+					.join(" ")}`
+			)
 
 		if (!youtubeUrl) {
 			return res.status(404).json({
