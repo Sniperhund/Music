@@ -1,7 +1,7 @@
 import FullscreenContext from "@/contexts/FullscreenContext"
 import { useMusicPlayer } from "@/contexts/MusicPlayerContext"
 import getFilePath from "@/util/getFilePath"
-import { useContext, useEffect, useRef, useState } from "react"
+import { use, useContext, useEffect, useRef, useState } from "react"
 import styles from "./fullscreen.module.css"
 import Image from "next/image"
 import {
@@ -21,6 +21,8 @@ import {
 	SliderThumb,
 	SliderTrack,
 } from "@chakra-ui/react"
+import { setIn } from "formik"
+import Songs from "@/pages/library/songs"
 
 export default function Fullscreen() {
 	const { shown, setShown } = useContext(FullscreenContext)
@@ -99,6 +101,21 @@ export default function Fullscreen() {
 
 		return () => clearInterval(intervalId)
 	}, [movingSlider, getSecondsPlayed])
+
+	const [showScrollbar, setShowScrollbar] = useState(false)
+
+	useEffect(() => {
+		let timeoutId: NodeJS.Timeout
+
+		window.addEventListener("mousemove", () => {
+			setShowScrollbar(true)
+
+			if (timeoutId) clearTimeout(timeoutId)
+			timeoutId = setTimeout(() => {
+				setShowScrollbar(false)
+			}, 2000)
+		})
+	}, [])
 
 	return (
 		<section
@@ -221,7 +238,11 @@ export default function Fullscreen() {
 
 					{showLyrics && (
 						<div>
-							<p className="text-white" ref={lyricsRef}>
+							<p
+								className={`text-white ${styles.lyrics} ${
+									showScrollbar ? styles.show : ""
+								}`}
+								ref={lyricsRef}>
 								{lyrics}
 							</p>
 						</div>

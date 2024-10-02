@@ -42,6 +42,21 @@
 	}
 }
 
+.lyrics::-webkit-scrollbar {
+	width: 10px;
+}
+
+.lyrics::-webkit-scrollbar-thumb {
+	background-color: black;
+	border-radius: 5px;
+	transition: opacity 0.3s ease;
+	opacity: 0;
+}
+
+.lyrics.show::-webkit-scrollbar-thumb {
+	opacity: 0.2;
+}
+
 .active {
 	display: block !important;
 }
