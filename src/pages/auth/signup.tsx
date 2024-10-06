@@ -49,7 +49,7 @@ export default function Signup() {
 				return
 			}
 
-			router.push(`/${forwardAddress}`)
+			router.push(`/${forwardAddress || ""}`)
 		},
 	})
 

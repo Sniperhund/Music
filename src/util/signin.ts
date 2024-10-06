@@ -1,7 +1,12 @@
 import axios from "axios"
 import { setCookie } from "cookies-next"
+import { ExpandIcon } from "lucide-react"
 
-export default async function signin(email: string, password: string) {
+export default async function signin(
+	email: string,
+	password: string,
+	rememberMe: boolean = false
+) {
 	try {
 		const result = await axios.post(
 			`${process.env.NEXT_PUBLIC_API_URL}auth/login`,
@@ -18,15 +23,15 @@ export default async function signin(email: string, password: string) {
 			}
 		}
 
-		const expireTime = new Date().getTime() + 1000 * 3600 * 24 * 30
+		let expireTime = new Date().getTime() + 1000 * 3600 * 24 * 30
 
 		setCookie("access_token", result.data.response.accessToken, {
 			path: "/",
-			expires: new Date(expireTime),
+			expires: rememberMe ? new Date(expireTime) : undefined,
 		})
 		setCookie("refresh_token", result.data.response.refreshToken, {
 			path: "/",
-			expires: new Date(expireTime),
+			expires: rememberMe ? new Date(expireTime) : undefined,
 		})
 	} catch (error: any) {
 		console.error(error)

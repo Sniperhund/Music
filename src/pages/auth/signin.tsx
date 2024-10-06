@@ -6,6 +6,7 @@ import {
 	CardFooter,
 	CardHeader,
 	Center,
+	Checkbox,
 	Divider,
 	FormControl,
 	FormHelperText,
@@ -27,9 +28,18 @@ export default function Signin() {
 		initialValues: {
 			email: "",
 			password: "",
+			rememberMe: false,
 		},
-		onSubmit: async (values: { email: string; password: string }) => {
-			const result = await signin(values.email, values.password)
+		onSubmit: async (values: {
+			email: string
+			password: string
+			rememberMe: boolean
+		}) => {
+			const result = await signin(
+				values.email,
+				values.password,
+				values.rememberMe
+			)
 
 			if (result?.error) {
 				toast({
@@ -40,7 +50,7 @@ export default function Signin() {
 				return
 			}
 
-			router.push(`/${forwardAddress}`)
+			router.push(`/${forwardAddress || ""}`)
 		},
 	})
 
@@ -62,7 +72,7 @@ export default function Signin() {
 				<CardBody>
 					<form
 						onSubmit={formik.handleSubmit}
-						className="flex flex-col gap-4">
+						className="flex flex-col gap-2">
 						<FormControl isRequired>
 							<FormLabel>Email address</FormLabel>
 							<Input
@@ -82,6 +92,13 @@ export default function Signin() {
 								onChange={formik.handleChange}
 							/>
 						</FormControl>
+						<Checkbox
+							className="mb-4"
+							name="rememberMe"
+							isChecked={formik.values.rememberMe}
+							onChange={formik.handleChange}>
+							Remember me?
+						</Checkbox>
 
 						<Button type="submit">Sign in</Button>
 					</form>
