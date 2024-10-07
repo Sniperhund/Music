@@ -120,7 +120,7 @@ export default function Fullscreen() {
 	return (
 		<section
 			className={`fixed w-[200vw] h-[200vh] top-0 left-0 ${
-				shown ? "opacity-100 z-50" : "opacity-0 -z-50"
+				shown ? "opacity-100 z-[150]" : "opacity-0 -z-50"
 			}`}>
 			{getCurrentSong() ? (
 				<Image

@@ -47,7 +47,7 @@ export default function Player() {
 
 	const [duration, setDuration] = useState(0)
 
-	function getSong() {
+	const getSong = () => {
 		if (getCurrentSong()) return getCurrentSong()
 		return getQueue()[0]
 	}
@@ -88,6 +88,12 @@ export default function Player() {
 	} = useDisclosure()
 	const { shown, setShown } = useContext(FullscreenContext)
 
+	const openFullscreen = () => {
+		if (window.matchMedia("(max-width: 768px)").matches) {
+			setShown(true)
+		}
+	}
+
 	if (!getCurrentSong() && getQueue().length === 0) {
 		if (isQueueOpen) onQueueClose()
 
@@ -96,7 +102,7 @@ export default function Player() {
 
 	return (
 		<>
-			<section className={styles.player}>
+			<section className={styles.player} onClick={openFullscreen}>
 				<article className={styles.trackInfo}>
 					<Image
 						className={styles.img}
@@ -129,18 +135,25 @@ export default function Player() {
 						/>
 						{isPlaying ? (
 							<Pause
-								onClick={() => {
+								onClick={(e) => {
+									e.stopPropagation()
 									pause()
 								}}
 							/>
 						) : (
 							<Play
-								onClick={() => {
+								onClick={(e) => {
+									e.stopPropagation()
 									play()
 								}}
 							/>
 						)}
-						<SkipForward onClick={() => next()} />
+						<SkipForward
+							onClick={(e) => {
+								e.stopPropagation()
+								next()
+							}}
+						/>
 						<Repeat
 							className="desktop-block"
 							onClick={() => toggleRepeat()}
