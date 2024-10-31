@@ -1,4 +1,4 @@
-import axios, { AxiosError, AxiosResponse } from "axios"
+import axios, { AxiosResponse } from "axios"
 import { setCookie } from "cookies-next"
 
 export default async function verify(verifyToken: string) {

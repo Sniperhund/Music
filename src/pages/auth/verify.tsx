@@ -13,6 +13,11 @@ export default function Verify() {
 			if (router.query.q)
 				response = await verify(router.query.q as string)
 
+			if (response === true) {
+				router.push("/")
+				return
+			}
+
 			setResponseMessage(response?.message)
 		}
 
