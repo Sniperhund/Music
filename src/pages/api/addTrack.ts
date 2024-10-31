@@ -225,12 +225,14 @@ async function createAlbum(
 	return albumResponse.data.response._id
 }
 
-import { searchMusics } from "node-youtube-music"
-
 async function searchYouTube(query: string): Promise<string | null> {
-	const songs = await searchMusics(query)
+	/*ytmusic.search("Never gonna give you up").then((songs) => {
+		console.log(songs)
+	})
 
 	if (songs.length == 0) return ""
 
-	return `https://www.youtube.com/watch?v=${songs[0].youtubeId}`
+	return `https://www.youtube.com/watch?v=${songs[0].youtubeId}`*/
+
+	throw new Error("Not implemented")
 }
