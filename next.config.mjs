@@ -10,6 +10,10 @@ const nextConfig = {
 				protocol: "https",
 				hostname: "api.lucasskt.dk",
 			},
+			{
+				protocol: "http",
+				hostname: "localhost",
+			},
 		],
 	},
 }
