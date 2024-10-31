@@ -3,6 +3,7 @@ import { Ellipsis, Play } from "lucide-react"
 import styles from "@/components/artist/track.module.css"
 import { useMusicPlayer } from "@/contexts/MusicPlayerContext"
 import Image from "next/image"
+import EllipsisMenu from "../common/EllipsisMenu"
 
 interface TrackProps {
 	index: number
@@ -38,7 +39,7 @@ export default function Track(props: TrackProps) {
 				</p>
 			</article>
 			<article className="flex justify-center items-center">
-				<Ellipsis />
+				<EllipsisMenu index={props.index} album={props.album} />
 			</article>
 		</section>
 	)
