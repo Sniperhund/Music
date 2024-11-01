@@ -6,7 +6,7 @@ export default async function verify(verifyToken: string) {
 
 	try {
 		result = await axios.get(
-			`${process.env.NEXT_PUBLIC_API_URL}auth/verify?q=${verifyToken}`
+			`${process.env.NEXT_PUBLIC_API_URL}auth/verify?q=${verifyToken}`,
 		)
 	} catch (error: any) {
 		return error.response.data
