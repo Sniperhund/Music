@@ -24,6 +24,33 @@ import {
 import { setIn } from "formik"
 import Songs from "@/pages/library/songs"
 
+function parseLyrics(lrc: any) {
+	const regex = /^\[(?<time>\d{2}:\d{2}(.\d{2})?)\](?<text>.*)/
+	const lines = lrc.split("\n")
+	const output: { time: number; text: any }[] = []
+
+	lines.forEach((line: any) => {
+		const match = line.match(regex)
+		if (match == null) return
+
+		const { time, text } = match.groups
+
+		output.push({
+			time: parseTime(time),
+			text: text.trim(),
+		})
+	})
+
+	function parseTime(time: any) {
+		const minsec = time.split(":")
+		const min = parseInt(minsec[0]) * 60
+		const sec = parseFloat(minsec[1])
+		return min + sec
+	}
+
+	return output
+}
+
 export default function Fullscreen() {
 	const { shown, setShown } = useContext(FullscreenContext)
 
@@ -51,6 +78,7 @@ export default function Fullscreen() {
 	const imageRef = useRef<HTMLImageElement>(null)
 
 	const [lyrics, setLyrics] = useState("")
+	const [parsedLyrics, setParsedLyrics] = useState<any>([])
 	const [syncedLyrics, setSyncedLyrics] = useState(false)
 	const [showLyrics, setShowLyrics] = useState(false)
 
@@ -64,14 +92,36 @@ export default function Fullscreen() {
 
 		useAPI(`/tracks/${currentSong._id}/lyrics`)
 			.then((result: any) => {
+				console.log(1)
+
 				if (result?.data?.status == "error") {
 					setShowLyrics(false)
+
+					console.log(2)
 
 					return
 				}
 
+				console.log(3)
+
 				setLyrics(result.lyrics)
 				setSyncedLyrics(result.synced)
+
+				console.log(4)
+
+				if (result.synced) {
+					console.log(5)
+
+					try {
+						setParsedLyrics(parseLyrics(result.lyrics))
+					} catch (e) {
+						console.log(e)
+					}
+
+					console.log(6)
+				}
+
+				console.log(7)
 
 				setShowLyrics(true)
 			})
@@ -81,6 +131,8 @@ export default function Fullscreen() {
 			lyricsRef.current.scrollTop = 0
 		}
 	}, [currentSong])
+
+	const lyricsContainerRef = useRef<HTMLDivElement>(null)
 
 	const [duration, setDuration] = useState(0)
 
@@ -236,17 +288,34 @@ export default function Fullscreen() {
 						</article>
 					</div>
 
-					{showLyrics && (
-						<div>
-							<p
-								className={`text-white ${styles.lyrics} ${
-									showScrollbar ? styles.show : ""
-								}`}
-								ref={lyricsRef}>
-								{lyrics}
-							</p>
-						</div>
-					)}
+					{showLyrics &&
+						(syncedLyrics && parsedLyrics ? (
+							<div
+								className={`${styles.lyricsHeight} ${styles.syncedLyrics}`}>
+								<div
+									ref={lyricsContainerRef}
+									style={{
+										position: "absolute",
+										scrollbarWidth: "none",
+									}}>
+									{parsedLyrics.map(
+										(lyric: any, i: number) => {
+											return <p key={i}>{lyric.text}</p>
+										},
+									)}
+								</div>
+							</div>
+						) : (
+							<div>
+								<p
+									className={`text-white ${styles.lyrics} ${styles.lyricsHeight} ${
+										showScrollbar ? styles.show : ""
+									}`}
+									ref={lyricsRef}>
+									{lyrics}
+								</p>
+							</div>
+						))}
 				</article>
 			</section>
 		</section>

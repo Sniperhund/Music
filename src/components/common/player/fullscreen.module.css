@@ -27,9 +27,28 @@
 			width: 100%;
 		}
 
-		& > div:nth-child(2) p {
+		.lyricsHeight {
 			height: 674px;
+		}
 
+		.syncedLyrics {
+			position: relative;
+			overflow-y: hidden;
+			height: 674px;
+		}
+
+		.syncedLyrics p {
+			font-size: 28px;
+			color: white;
+			opacity: 0.4;
+			line-height: 60px;
+		}
+
+		.syncedLyrics p.active {
+			opacity: 1;
+		}
+
+		& .lyrics {
 			white-space: pre-wrap;
 
 			overflow-y: scroll;
