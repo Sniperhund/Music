@@ -145,17 +145,23 @@ export default function Fullscreen() {
 		const intervalId = setInterval(() => {
 			const time = getSecondsPlayed()
 
-			/*  */
-			if (parsedLyrics[0] && time < parsedLyrics[0].time) {
-				scrollToLyric(parsedLyrics[0])
+			if (lyricsContainerRef.current && time < parsedLyrics[0].time) {
+				for (const child of lyricsContainerRef.current.children) {
+					child.classList.remove(styles.active)
+				}
+
+				// @ts-ignore
+				const offsetHeight = heightRef.current.offsetHeight
+				const scrollPosition = -0 * offsetHeight
+				const offset = 200
+
+				lyricsContainerRef.current.style.transform = `translateY(${scrollPosition + offset}px)`
 				return
 			}
 
 			const lyric = parsedLyrics.find((lyric: any, i: number) => {
 				return lyric.time <= time && (!parsedLyrics[i + 1] || parsedLyrics[i + 1].time > time)
 			})
-
-			console.log(lyric)
 
 			if (!lyric) return
 
