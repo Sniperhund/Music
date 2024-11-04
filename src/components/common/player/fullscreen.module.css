@@ -35,7 +35,14 @@
 			position: relative;
 			overflow-y: hidden;
 
-			mask-image: linear-gradient(transparent 0%, #000 15%, #000, #000, 95%, transparent 100%);
+			mask-image: linear-gradient(
+				transparent 0%,
+				#000 15%,
+				#000,
+				#000,
+				95%,
+				transparent 100%
+			);
 		}
 
 		.syncedLyrics p {
@@ -44,6 +51,12 @@
 			opacity: 0.4;
 			/*line-height: 60px;*/
 			padding: 10px 0;
+			transition: opacity 0.1s ease;
+		}
+
+		.syncedLyrics p:hover {
+			opacity: 1;
+			cursor: pointer;
 		}
 
 		.syncedLyrics p.active {

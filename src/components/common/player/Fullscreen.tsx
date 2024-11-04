@@ -410,7 +410,18 @@ export default function Fullscreen() {
 									</p>
 									{parsedLyrics.map(
 										(lyric: any, i: number) => {
-											return <p key={i}>{lyric.text}</p>
+											return (
+												<p
+													key={i}
+													onClick={() => {
+														setSecondsPlayed(
+															lyric.time,
+														)
+														scrollToLyric(lyric)
+													}}>
+													{lyric.text}
+												</p>
+											)
 										},
 									)}
 								</div>
