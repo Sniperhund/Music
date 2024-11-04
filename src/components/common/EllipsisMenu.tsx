@@ -19,7 +19,7 @@ import React from "react"
 
 interface EllipsisMenuProps {
 	album: any
-	index: number
+	albumIndex: number
 	children?: any
 }
 
@@ -90,7 +90,7 @@ export default function EllipsisMenu(props: EllipsisMenuProps) {
 						<Button
 							onClick={withMenuClose(() => {
 								clear()
-								addQueueItem(props.album[props.index])
+								addQueueItem(props.album[props.albumIndex])
 								next()
 								play()
 							})}
@@ -107,11 +107,12 @@ export default function EllipsisMenu(props: EllipsisMenuProps) {
 											method: "DELETE",
 											data: {
 												ids: [
-													props.album[props.index]
-														._id,
+													props.album[
+														props.albumIndex
+													]._id,
 												],
 											},
-										}
+										},
 									)
 
 									if (result == undefined) {
@@ -139,11 +140,12 @@ export default function EllipsisMenu(props: EllipsisMenuProps) {
 											method: "PUT",
 											data: {
 												ids: [
-													props.album[props.index]
-														._id,
+													props.album[
+														props.albumIndex
+													]._id,
 												],
 											},
-										}
+										},
 									)
 
 									if (result == undefined) {
@@ -176,7 +178,7 @@ export default function EllipsisMenu(props: EllipsisMenuProps) {
 						<Divider />
 						<Button
 							onClick={withMenuClose(() => {
-								addQueueItemNext(props.album[props.index])
+								addQueueItemNext(props.album[props.albumIndex])
 								toast({
 									title: "Playing next",
 									status: "info",
@@ -187,7 +189,7 @@ export default function EllipsisMenu(props: EllipsisMenuProps) {
 						</Button>
 						<Button
 							onClick={withMenuClose(() => {
-								addQueueItem(props.album[props.index])
+								addQueueItem(props.album[props.albumIndex])
 								toast({
 									title: "Added to queue",
 									status: "info",
@@ -200,7 +202,7 @@ export default function EllipsisMenu(props: EllipsisMenuProps) {
 						<Button
 							onClick={withMenuClose(() => {
 								navigator.clipboard.writeText(
-									window.location.href
+									window.location.href,
 								)
 								toast({
 									title: "Link copied to clipboard",

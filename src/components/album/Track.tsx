@@ -35,7 +35,7 @@ export default function Track(props: TrackProps) {
 		useAPI(`/user/tracks/contains?id=${props.track._id}`).then(
 			(response: any) => {
 				if (!response.status) setInLibrary(response)
-			}
+			},
 		)
 	}, [])
 
@@ -75,7 +75,7 @@ export default function Track(props: TrackProps) {
 					.slice(14, 19)}
 			</p>
 
-			<EllipsisMenu index={props.index} album={props.album} />
+			<EllipsisMenu albumIndex={props.index} album={props.album} />
 		</article>
 	)
 }

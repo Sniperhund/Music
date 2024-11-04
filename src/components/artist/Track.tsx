@@ -39,7 +39,7 @@ export default function Track(props: TrackProps) {
 				</p>
 			</article>
 			<article className="flex justify-center items-center">
-				<EllipsisMenu index={props.index} album={props.album} />
+				<EllipsisMenu albumIndex={props.index} album={props.album} />
 			</article>
 		</section>
 	)
