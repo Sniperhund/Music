@@ -29,6 +29,7 @@ import {
 	FormHelperText,
 	useToast,
 	Textarea,
+	Checkbox,
 } from "@chakra-ui/react"
 import { Select as MultiSelect } from "chakra-react-select"
 import { NoSSR } from "@kwooshung/react-no-ssr"
@@ -60,7 +61,7 @@ export default function Tracks() {
 				query: { limit, page },
 			},
 			undefined,
-			{ shallow: true }
+			{ shallow: true },
 		)
 	}
 
@@ -74,7 +75,7 @@ export default function Tracks() {
 				query: { limit, page: page + 1 },
 			},
 			undefined,
-			{ shallow: true }
+			{ shallow: true },
 		)
 	}
 
@@ -90,7 +91,7 @@ export default function Tracks() {
 				query: { limit, page: page - 1 },
 			},
 			undefined,
-			{ shallow: true }
+			{ shallow: true },
 		)
 	}
 
@@ -102,7 +103,7 @@ export default function Tracks() {
 		const limit = parseInt(router.query.limit as string) || 10
 
 		const result: any = await useAPI(
-			`/all/tracks?offset=${(page - 1) * limit}&limit=${limit}`
+			`/all/tracks?offset=${(page - 1) * limit}&limit=${limit}`,
 		)
 
 		if (result.status)
@@ -197,6 +198,7 @@ export default function Tracks() {
 	}
 
 	const [lyrics, setLyrics] = useState("")
+	const [synced, setSynced] = useState(false)
 
 	async function submitLyrics(event: any) {
 		event.preventDefault()
@@ -209,7 +211,7 @@ export default function Tracks() {
 				id: activeTrack._id,
 			},
 			data: {
-				synced: false,
+				synced: synced,
 				lyrics: lyrics,
 			},
 		})
@@ -318,8 +320,8 @@ export default function Tracks() {
 													setArtistId(
 														track.artists.map(
 															(artist: any) =>
-																artist._id
-														)
+																artist._id,
+														),
 													)
 													setAlbumId(track.album._id)
 													setAudioFile(null)
@@ -333,7 +335,7 @@ export default function Tracks() {
 
 													const lyrics: any =
 														await useAPI(
-															`/tracks/${track._id}/lyrics`
+															`/tracks/${track._id}/lyrics`,
 														)
 													setLyrics(lyrics.lyrics)
 
@@ -345,7 +347,7 @@ export default function Tracks() {
 												onClick={async () => {
 													if (
 														confirm(
-															"Are you sure you want to delete this track?"
+															"Are you sure you want to delete this track?",
 														)
 													) {
 														const result: any =
@@ -353,12 +355,12 @@ export default function Tracks() {
 																`/admin/track?id=${track._id}`,
 																{
 																	method: "DELETE",
-																}
+																},
 															)
 
 														if (result?.status)
 															return alert(
-																`Failed to delete track: ${result.message}`
+																`Failed to delete track: ${result.message}`,
 															)
 													}
 
@@ -425,8 +427,8 @@ export default function Tracks() {
 											setArtistId(
 												Array.from(e).map(
 													(option: any) =>
-														option.value
-												)
+														option.value,
+												),
 											)
 										}
 										defaultValue={() => {
@@ -436,7 +438,7 @@ export default function Tracks() {
 												(artist: any) => ({
 													label: artist.name,
 													value: artist._id,
-												})
+												}),
 											)
 										}}
 									/>
@@ -520,6 +522,11 @@ export default function Tracks() {
 									value={lyrics}
 								/>
 							</FormControl>
+
+							<Checkbox
+								onChange={(e) => setSynced(e.target.checked)}>
+								Synced
+							</Checkbox>
 
 							<div>
 								<Button className="mt-6" type="submit" w="full">
