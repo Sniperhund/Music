@@ -1,7 +1,14 @@
 import FullscreenContext from "@/contexts/FullscreenContext"
 import { useMusicPlayer } from "@/contexts/MusicPlayerContext"
 import getFilePath from "@/util/getFilePath"
-import { use, useContext, useEffect, useRef, useState } from "react"
+import {
+	use,
+	useCallback,
+	useContext,
+	useEffect,
+	useRef,
+	useState,
+} from "react"
 import styles from "./fullscreen.module.css"
 import Image from "next/image"
 import {
@@ -51,6 +58,9 @@ function parseLyrics(lrc: any) {
 
 	return output
 }
+
+const animationDuration = 0.4
+const offset = 200
 
 export default function Fullscreen() {
 	const { shown, setShown } = useContext(FullscreenContext)
@@ -118,24 +128,38 @@ export default function Fullscreen() {
 		}
 	}, [currentSong])
 
-	const scrollToLyric = (lyric: any) => {		
+	const scrolling = useRef(false)
+	const translateY = useRef(0)
+
+	const scrollToLyric = (lyric: any) => {
 		if (lyricsContainerRef.current && lyric) {
 			for (const child of lyricsContainerRef.current.children) {
 				child.classList.remove(styles.active)
 			}
 
 			const activeIndex = parsedLyrics.indexOf(lyric) + 1
-			const activeElement: Element = lyricsContainerRef.current.children[activeIndex]
+			const activeElement = lyricsContainerRef.current.children[
+				activeIndex
+			] as HTMLElement
+
+			if (!activeElement) return
 
 			activeElement.classList.add(styles.active)
 
-			// @ts-ignore
-			const offsetHeight = heightRef.current.offsetHeight
-			const scrollPosition = -activeIndex * offsetHeight
+			let accumulatedHeight = 0
+			for (let i = 0; i < activeIndex; i++) {
+				const lineElement = lyricsContainerRef.current.children[
+					i
+				] as HTMLElement
+				if (lineElement) {
+					accumulatedHeight +=
+						lineElement.getBoundingClientRect().height
+				}
+			}
 
-			const offset = 200
+			translateY.current = -accumulatedHeight
 
-			lyricsContainerRef.current.style.transform = `translateY(${scrollPosition + offset}px)`
+			lyricsContainerRef.current.style.transform = `translateY(${translateY.current + offset}px)`
 		}
 	}
 
@@ -143,7 +167,9 @@ export default function Fullscreen() {
 
 	useEffect(() => {
 		const intervalId = setInterval(() => {
-			const time = getSecondsPlayed()
+			if (scrolling.current) return
+
+			const time = getSecondsPlayed() + animationDuration
 
 			if (lyricsContainerRef.current && time < parsedLyrics[0].time) {
 				for (const child of lyricsContainerRef.current.children) {
@@ -153,14 +179,16 @@ export default function Fullscreen() {
 				// @ts-ignore
 				const offsetHeight = heightRef.current.offsetHeight
 				const scrollPosition = -0 * offsetHeight
-				const offset = 200
 
 				lyricsContainerRef.current.style.transform = `translateY(${scrollPosition + offset}px)`
 				return
 			}
 
 			const lyric = parsedLyrics.find((lyric: any, i: number) => {
-				return lyric.time <= time && (!parsedLyrics[i + 1] || parsedLyrics[i + 1].time > time)
+				return (
+					lyric.time <= time &&
+					(!parsedLyrics[i + 1] || parsedLyrics[i + 1].time > time)
+				)
 			})
 
 			if (!lyric) return
@@ -171,7 +199,46 @@ export default function Fullscreen() {
 		return () => clearInterval(intervalId)
 	}, [parsedLyrics])
 
-	const lyricsContainerRef = useRef<HTMLDivElement>(null)
+	const lyricsContainerRef = useRef<HTMLDivElement | null>(null)
+	const scrollingTimeout = useRef<NodeJS.Timeout>()
+
+	const lyricsContainer = useCallback((node: any) => {
+		if (node) {
+			lyricsContainerRef.current = node
+		}
+
+		const lyricsContainerHeightRef: HTMLDivElement | null =
+			document.querySelector(`.${styles.lyricsHeight}`)
+
+		if (lyricsContainerRef.current && lyricsContainerHeightRef) {
+			lyricsContainerRef.current.addEventListener("wheel", (event) => {
+				scrolling.current = true
+
+				clearTimeout(scrollingTimeout.current)
+
+				// prettier-ignore
+				// @ts-ignore
+				let translateY = parseFloat(lyricsContainerRef.current!.style.transform.match(/-?\d+/,),) || 0
+				translateY -= event.deltaY
+
+				const maxTranslateY = offset
+				const minTranslateY =
+					-lyricsContainerRef.current!.scrollHeight +
+					lyricsContainerHeightRef!.offsetHeight
+
+				translateY = Math.min(
+					maxTranslateY,
+					Math.max(minTranslateY, translateY),
+				)
+
+				lyricsContainerRef.current!.style.transform = `translateY(${translateY}px)`
+
+				scrollingTimeout.current = setTimeout(() => {
+					scrolling.current = false
+				}, 3000)
+			})
+		}
+	}, [])
 
 	const [duration, setDuration] = useState(0)
 
@@ -332,13 +399,15 @@ export default function Fullscreen() {
 							<div
 								className={`${styles.lyricsHeight} ${styles.syncedLyrics}`}>
 								<div
-									ref={lyricsContainerRef}
+									ref={lyricsContainer}
 									style={{
 										position: "absolute",
-										transition: "transform 0.4s ease",
+										transition: `transform ${animationDuration}s ease`,
 										scrollbarWidth: "none",
 									}}>
-									<p ref={heightRef} style={{ opacity: 0 }}>A</p>
+									<p ref={heightRef} style={{ opacity: 0 }}>
+										A
+									</p>
 									{parsedLyrics.map(
 										(lyric: any, i: number) => {
 											return <p key={i}>{lyric.text}</p>
