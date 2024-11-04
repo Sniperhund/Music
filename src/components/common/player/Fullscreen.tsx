@@ -25,7 +25,7 @@ import { setIn } from "formik"
 import Songs from "@/pages/library/songs"
 
 function parseLyrics(lrc: any) {
-	const regex = /^\[(?<time>\d{2}:\d{2}(.\d{2})?)\](?<text>.*)/
+	const regex = /^\[(\d{2}:\d{2}(.\d{2})?)\](.*)/
 	const lines = lrc.split("\n")
 	const output: { time: number; text: any }[] = []
 
@@ -33,7 +33,8 @@ function parseLyrics(lrc: any) {
 		const match = line.match(regex)
 		if (match == null) return
 
-		const { time, text } = match.groups
+		const time = match[1]
+		const text = match[3]
 
 		output.push({
 			time: parseTime(time),
@@ -123,13 +124,13 @@ export default function Fullscreen() {
 				child.classList.remove(styles.active)
 			}
 
-			const activeIndex = parsedLyrics.indexOf(lyric)
+			const activeIndex = parsedLyrics.indexOf(lyric) + 1
 			const activeElement: Element = lyricsContainerRef.current.children[activeIndex]
 
 			activeElement.classList.add(styles.active)
 
 			// @ts-ignore
-			const offsetHeight = activeElement.offsetHeight
+			const offsetHeight = heightRef.current.offsetHeight
 			const scrollPosition = -activeIndex * offsetHeight
 
 			const offset = 200
@@ -138,14 +139,25 @@ export default function Fullscreen() {
 		}
 	}
 
-	useEffect(() => {
-		
+	const heightRef = useRef<HTMLParagraphElement>(null)
 
+	useEffect(() => {
 		const intervalId = setInterval(() => {
 			const time = getSecondsPlayed()
+
+			/*  */
+			if (parsedLyrics[0] && time < parsedLyrics[0].time) {
+				scrollToLyric(parsedLyrics[0])
+				return
+			}
+
 			const lyric = parsedLyrics.find((lyric: any, i: number) => {
 				return lyric.time <= time && (!parsedLyrics[i + 1] || parsedLyrics[i + 1].time > time)
 			})
+
+			console.log(lyric)
+
+			if (!lyric) return
 
 			scrollToLyric(lyric)
 		}, 100)
@@ -320,6 +332,7 @@ export default function Fullscreen() {
 										transition: "transform 0.4s ease",
 										scrollbarWidth: "none",
 									}}>
+									<p ref={heightRef} style={{ opacity: 0 }}>A</p>
 									{parsedLyrics.map(
 										(lyric: any, i: number) => {
 											return <p key={i}>{lyric.text}</p>
