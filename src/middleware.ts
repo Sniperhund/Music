@@ -10,7 +10,9 @@ function hasTokens(request: NextRequest) {
 export default function middleware(request: NextRequest) {
 	if (
 		request.nextUrl.pathname.startsWith("/_next/") ||
-		request.nextUrl.pathname.startsWith("/api/")
+		request.nextUrl.pathname.startsWith("/api/") ||
+		request.nextUrl.pathname.startsWith("/manifest.json") ||
+		request.nextUrl.pathname.endsWith(".png")
 	)
 		return NextResponse.next()
 
@@ -18,8 +20,8 @@ export default function middleware(request: NextRequest) {
 		return NextResponse.redirect(
 			new URL(
 				`/auth/signin?href=${request.nextUrl.pathname.slice(1)}`,
-				request.url
-			)
+				request.url,
+			),
 		)
 
 	if (request.nextUrl.pathname.startsWith("/auth/") && hasTokens(request))
