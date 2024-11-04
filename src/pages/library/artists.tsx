@@ -1,3 +1,9 @@
+import PageTitle from "@/components/PageTitle"
+
 export default function Artists() {
-	return <></>
+	return (
+		<>
+			<PageTitle>Artists</PageTitle>
+		</>
+	)
 }

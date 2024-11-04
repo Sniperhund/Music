@@ -1,4 +1,5 @@
 import Track from "@/components/album/Track"
+import PageTitle from "@/components/PageTitle"
 import { useMusicPlayer } from "@/contexts/MusicPlayerContext"
 import useAPI from "@/util/useAPI"
 import { Button, Divider, useToast } from "@chakra-ui/react"
@@ -34,9 +35,9 @@ export default function Songs() {
 
 	return (
 		<>
-			<h1>Songs</h1>
+			<PageTitle>Songs</PageTitle>
 
-			<section className="tracks">
+			<section className="tracks" style={{ marginTop: 0 }}>
 				{tracks && Array.isArray(tracks)
 					? tracks?.map(function (track: any, j: number) {
 							return (
@@ -72,7 +73,7 @@ export default function Songs() {
 													data: {
 														ids: [track._id],
 													},
-												}
+												},
 											)
 
 											if (result == undefined) {
@@ -84,8 +85,8 @@ export default function Songs() {
 												setTracks(
 													[...tracks].filter(
 														(t) =>
-															t._id != track._id
-													)
+															t._id != track._id,
+													),
 												)
 											} else
 												toast({
@@ -131,7 +132,7 @@ export default function Songs() {
 									</Button>
 								</Track>
 							)
-					  })
+						})
 					: ""}
 			</section>
 		</>

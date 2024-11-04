@@ -1,3 +1,4 @@
+import PageTitle from "@/components/PageTitle"
 import SearchResultCard from "@/components/SearchResultCard"
 import useAPI from "@/util/useAPI"
 import { useRouter } from "next/router"
@@ -20,26 +21,30 @@ export default function Search() {
 	}, [debouncedSearch])
 
 	return (
-		<section className="grid grid-cols-[repeat(auto-fit,minmax(350px,1fr))] gap-4">
-			{searchResults
-				? searchResults.map((result, i) => {
-						return (
-							<SearchResultCard
-								key={i}
-								type={result.type}
-								id={result._id}
-								name={result.name}
-								imageUrl={
-									result.type == "track"
-										? result.album.cover
-										: result.cover
-								}
-								tracks={result.tracks}
-								artists={result.artists}
-							/>
-						)
-				  })
-				: ""}
-		</section>
+		<>
+			<PageTitle>Search</PageTitle>
+
+			<section className="grid grid-cols-[repeat(auto-fit,minmax(350px,1fr))] gap-4">
+				{searchResults
+					? searchResults.map((result, i) => {
+							return (
+								<SearchResultCard
+									key={i}
+									type={result.type}
+									id={result._id}
+									name={result.name}
+									imageUrl={
+										result.type == "track"
+											? result.album.cover
+											: result.cover
+									}
+									tracks={result.tracks}
+									artists={result.artists}
+								/>
+							)
+						})
+					: ""}
+			</section>
+		</>
 	)
 }

@@ -1,5 +1,6 @@
 import Card from "@/components/album/Card"
 import Track from "@/components/album/Track"
+import PageTitle from "@/components/PageTitle"
 import { useMusicPlayer } from "@/contexts/MusicPlayerContext"
 import getFilePath from "@/util/getFilePath"
 import useAPI from "@/util/useAPI"
@@ -36,7 +37,7 @@ export default function Albums() {
 
 	return (
 		<>
-			<h1>Albums</h1>
+			<PageTitle>Albums</PageTitle>
 
 			<section>
 				{albums && Array.isArray(albums)
@@ -50,7 +51,7 @@ export default function Albums() {
 									artists={album.artists}
 								/>
 							)
-					  })
+						})
 					: ""}
 			</section>
 		</>
