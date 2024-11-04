@@ -34,14 +34,16 @@
 		.syncedLyrics {
 			position: relative;
 			overflow-y: hidden;
-			height: 674px;
+
+			mask-image: linear-gradient(transparent 0%, #000 15%, #000, #000, 95%, transparent 100%);
 		}
 
 		.syncedLyrics p {
 			font-size: 28px;
 			color: white;
 			opacity: 0.4;
-			line-height: 60px;
+			/*line-height: 60px;*/
+			padding: 10px 0;
 		}
 
 		.syncedLyrics p.active {

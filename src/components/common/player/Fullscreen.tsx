@@ -92,45 +92,66 @@ export default function Fullscreen() {
 
 		useAPI(`/tracks/${currentSong._id}/lyrics`)
 			.then((result: any) => {
-				console.log(1)
-
 				if (result?.data?.status == "error") {
 					setShowLyrics(false)
-
-					console.log(2)
 
 					return
 				}
 
-				console.log(3)
-
 				setLyrics(result.lyrics)
 				setSyncedLyrics(result.synced)
 
-				console.log(4)
-
 				if (result.synced) {
-					console.log(5)
-
-					try {
-						setParsedLyrics(parseLyrics(result.lyrics))
-					} catch (e) {
-						console.log(e)
-					}
-
-					console.log(6)
+					setParsedLyrics(parseLyrics(result.lyrics))
 				}
-
-				console.log(7)
 
 				setShowLyrics(true)
 			})
-			.catch(() => setShowLyrics(false))
+			.catch((e) => {
+				console.log(e)
+				setShowLyrics(false)
+			})
 
 		if (lyricsRef.current) {
 			lyricsRef.current.scrollTop = 0
 		}
 	}, [currentSong])
+
+	const scrollToLyric = (lyric: any) => {		
+		if (lyricsContainerRef.current && lyric) {
+			for (const child of lyricsContainerRef.current.children) {
+				child.classList.remove(styles.active)
+			}
+
+			const activeIndex = parsedLyrics.indexOf(lyric)
+			const activeElement: Element = lyricsContainerRef.current.children[activeIndex]
+
+			activeElement.classList.add(styles.active)
+
+			// @ts-ignore
+			const offsetHeight = activeElement.offsetHeight
+			const scrollPosition = -activeIndex * offsetHeight
+
+			const offset = 200
+
+			lyricsContainerRef.current.style.transform = `translateY(${scrollPosition + offset}px)`
+		}
+	}
+
+	useEffect(() => {
+		
+
+		const intervalId = setInterval(() => {
+			const time = getSecondsPlayed()
+			const lyric = parsedLyrics.find((lyric: any, i: number) => {
+				return lyric.time <= time && (!parsedLyrics[i + 1] || parsedLyrics[i + 1].time > time)
+			})
+
+			scrollToLyric(lyric)
+		}, 100)
+
+		return () => clearInterval(intervalId)
+	}, [parsedLyrics])
 
 	const lyricsContainerRef = useRef<HTMLDivElement>(null)
 
@@ -296,6 +317,7 @@ export default function Fullscreen() {
 									ref={lyricsContainerRef}
 									style={{
 										position: "absolute",
+										transition: "transform 0.4s ease",
 										scrollbarWidth: "none",
 									}}>
 									{parsedLyrics.map(
