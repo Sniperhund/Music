@@ -261,16 +261,19 @@ export default function Fullscreen() {
 	}, [movingSlider, getSecondsPlayed])
 
 	const [showScrollbar, setShowScrollbar] = useState(false)
+	const [showCursor, setShowCursor] = useState(true)
 
 	useEffect(() => {
 		let timeoutId: NodeJS.Timeout
 
 		window.addEventListener("mousemove", () => {
 			setShowScrollbar(true)
+			setShowCursor(true)
 
 			if (timeoutId) clearTimeout(timeoutId)
 			timeoutId = setTimeout(() => {
 				setShowScrollbar(false)
+				setShowCursor(false)
 			}, 2000)
 		})
 	}, [])
@@ -279,7 +282,7 @@ export default function Fullscreen() {
 		<section
 			className={`fixed w-[200vw] h-[200vh] top-0 left-0 ${
 				shown ? "opacity-100 z-[150]" : "opacity-0 -z-50"
-			}`}>
+			} ${showCursor ? "cursor-auto" : "cursor-none"}`}>
 			{getCurrentSong() ? (
 				<Image
 					ref={imageRef}
