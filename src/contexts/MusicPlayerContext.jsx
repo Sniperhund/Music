@@ -26,14 +26,23 @@ class MusicPlayerProvider extends React.Component {
 	componentDidMount() {
 		navigator.mediaSession.setActionHandler("play", this.play)
 		navigator.mediaSession.setActionHandler("pause", this.pause)
-		navigator.mediaSession.setActionHandler("seekforward", () =>
-			this.setSecondsPlayed(this.getSecondsPlayed() + 10)
-		)
-		navigator.mediaSession.setActionHandler("seekbackward", () =>
-			this.setSecondsPlayed(this.getSecondsPlayed() - 10)
-		)
 		navigator.mediaSession.setActionHandler("previoustrack", this.prev)
 		navigator.mediaSession.setActionHandler("nexttrack", this.next)
+		navigator.mediaSession.setActionHandler("seekto", (details) => {
+			this.setSecondsPlayed(details.seekTime)
+		})
+		if (
+			!/Android|webOS|iPhone|iPad|iPod|Opera Mini/i.test(
+				navigator.userAgent,
+			)
+		) {
+			navigator.mediaSession.setActionHandler("seekforward", () =>
+				this.setSecondsPlayed(this.getSecondsPlayed() + 10),
+			)
+			navigator.mediaSession.setActionHandler("seekbackward", () =>
+				this.setSecondsPlayed(this.getSecondsPlayed() - 10),
+			)
+		}
 	}
 
 	loadInternalState = () => {
@@ -324,7 +333,7 @@ class MusicPlayerProvider extends React.Component {
 
 	internalShuffle = () => {
 		this.internalState.queue = this.internalState.queue.sort(
-			() => Math.random() - 0.5
+			() => Math.random() - 0.5,
 		)
 	}
 
@@ -428,7 +437,7 @@ export const useMusicPlayer = () => {
 	const context = React.useContext(MusicPlayerContext)
 	if (context === undefined) {
 		throw new Error(
-			"useMusicPlayer must be used within a MusicPlayerProvider"
+			"useMusicPlayer must be used within a MusicPlayerProvider",
 		)
 	}
 	return context
