@@ -1,8 +1,9 @@
 import withSerwistInit from "@serwist/next"
 
 const withSwerwist = withSerwistInit({
-	swSrc: "/src/sw.ts",
-	swDest: "/public/sw.js",
+	swSrc: "src/sw.ts",
+	swDest: "public/sw.js",
+	cacheOnNavigation: true,
 })
 
 /** @type {import('next').NextConfig} */
@@ -25,4 +26,4 @@ const nextConfig = {
 	},
 }
 
-export default nextConfig
+export default withSwerwist(nextConfig)
