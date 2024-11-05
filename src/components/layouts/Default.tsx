@@ -4,7 +4,8 @@ import Sidebar from "../common/Sidebar"
 import useResizeObserver from "use-resize-observer"
 import styles from "@/styles/layout.module.css"
 import { useMusicPlayer } from "@/contexts/MusicPlayerContext"
-import { Menu, X } from "lucide-react"
+import { Home, LayoutGrid, Menu, Search, X } from "lucide-react"
+import MobileNavIcon from "../common/MobileNavIcon"
 
 export default function DefaultLayout({ children }: any) {
 	let playerContainer = useRef<HTMLDivElement>(null)
@@ -28,7 +29,8 @@ export default function DefaultLayout({ children }: any) {
 	const { getQueue, getCurrentSong } = useMusicPlayer()
 
 	return (
-		<section className="w-screen h-screen flex">
+		<section className="w-screen h-screen flex max-[768px]:pb-safe">
+			{/* Desktop/Tablet nav/sidebar */}
 			<article
 				className={`${styles.sidebar} ${
 					isMenuOpen ? styles.active : ""
@@ -39,6 +41,20 @@ export default function DefaultLayout({ children }: any) {
 					className={styles.menuButton}
 					size={36}
 					onClick={() => setIsMenuOpen(!isMenuOpen)}
+				/>
+			</article>
+			{/* Mobile nav */}
+			<article className={styles.mobileNav}>
+				<MobileNavIcon href="/" icon={<Home />} label="Home" />
+				<MobileNavIcon
+					href="/library"
+					icon={<LayoutGrid />}
+					label="Library"
+				/>
+				<MobileNavIcon
+					href="/search"
+					icon={<Search />}
+					label="Search"
 				/>
 			</article>
 			<article

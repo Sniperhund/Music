@@ -35,7 +35,7 @@
 }
 
 @media screen and (max-width: 768px) {
-	.sidebar {
+	/*.sidebar {
 		width: 100%;
 		height: 100%;
 		max-height: calc(12px + 36px + 12px);
@@ -61,6 +61,10 @@
 	.menuButton {
 		display: block;
 		position: absolute;
+	}*/
+
+	.sidebar {
+		display: none;
 	}
 }
 
@@ -72,6 +76,22 @@
 
 @media screen and (max-width: 768px) {
 	.content {
-		padding: 4rem 1.25rem 0;
+		padding: 3rem 1.25rem 64px;
+	}
+}
+
+@media screen and (max-width: 768px) {
+	.mobileNav {
+		position: fixed;
+		bottom: -1px;
+		left: 0;
+		z-index: 100;
+		width: 100%;
+		display: flex;
+		justify-content: space-around;
+		align-items: center;
+		padding: 1rem;
+		padding-bottom: max(env(safe-area-inset-bottom), 1rem);
+		background-color: var(--chakra-colors-chakra-body-bg);
 	}
 }
