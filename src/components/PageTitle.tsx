@@ -32,7 +32,9 @@ export default function PageTitle({ children }: { children: React.ReactNode }) {
 		<div className="flex justify-between items-center w-full mb-6">
 			<Heading>{children}</Heading>
 
-			{user ? (
+			{user &&
+			window &&
+			window.matchMedia("(max-width: 768px)").matches ? (
 				<Menu>
 					<MenuButton>
 						<Avatar name={user.name} />
