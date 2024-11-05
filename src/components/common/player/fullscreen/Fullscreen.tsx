@@ -1,7 +1,11 @@
+import { useCallback, useContext, useEffect, useRef, useState } from "react"
 import FullscreenContext from "@/contexts/FullscreenContext"
 import { useMusicPlayer } from "@/contexts/MusicPlayerContext"
 import getFilePath from "@/util/getFilePath"
-import { useCallback, useContext, useEffect, useRef, useState } from "react"
+import useAPI from "@/util/useAPI"
+import parseLyrics from "@/util/lyricsUtil"
+import ArtistName from "@/components/ArtistName"
+import LyricsDisplay from "./LyricsDisplay"
 import styles from "./fullscreen.module.css"
 import Image from "next/image"
 import {
@@ -13,20 +17,15 @@ import {
 	SkipForward,
 	X,
 } from "lucide-react"
-import useAPI from "@/util/useAPI"
-import ArtistName from "@/components/ArtistName"
 import {
 	Slider,
 	SliderFilledTrack,
 	SliderThumb,
 	SliderTrack,
 } from "@chakra-ui/react"
-import parseLyrics from "@/util/lyricsUtil"
-import LyricsDisplay from "./LyricsDisplay"
 
 export default function Fullscreen() {
 	const { shown, setShown } = useContext(FullscreenContext)
-
 	const {
 		isPlaying,
 		isRepeating,
@@ -42,27 +41,30 @@ export default function Fullscreen() {
 		currentSong,
 	} = useMusicPlayer()
 
-	function getSongAlbumUrl() {
-		if (!getCurrentSong()) return ""
-
-		return getFilePath("album", getCurrentSong().album.cover)
-	}
+	const [duration, setDuration] = useState(0)
+	const [secondsPlayed, setSecondsPlayedValue] = useState(0)
+	const [movingSlider, setMovingSlider] = useState(false)
+	const [showScrollbar, setShowScrollbar] = useState(false)
+	const [showCursor, setShowCursor] = useState(true)
+	const [showX, setShowX] = useState(false)
+	const [showLyrics, setShowLyrics] = useState(false)
 
 	const imageRef = useRef<HTMLImageElement>(null)
 
-	const [duration, setDuration] = useState(0)
+	const getSongAlbumUrl = () => {
+		const song = getCurrentSong()
+		return song ? getFilePath("album", song.album.cover) : ""
+	}
 
 	useEffect(() => {
-		if (currentSong && duration != currentSong.durationInSeconds)
-			setDuration(currentSong.durationInSeconds)
-
-		if (!currentSong) {
+		if (currentSong) {
+			if (duration !== currentSong.durationInSeconds) {
+				setDuration(currentSong.durationInSeconds)
+			}
+		} else {
 			setShown(false)
 		}
-	}, [currentSong])
-
-	const [secondsPlayed, setSecondsPlayedValue] = useState(0)
-	const [movingSlider, setMovingSlider] = useState(false)
+	}, [currentSong, duration])
 
 	useEffect(() => {
 		const intervalId = setInterval(() => {
@@ -74,11 +76,6 @@ export default function Fullscreen() {
 		return () => clearInterval(intervalId)
 	}, [movingSlider, getSecondsPlayed])
 
-	const [showScrollbar, setShowScrollbar] = useState(false)
-	const [showCursor, setShowCursor] = useState(true)
-	const [showX, setShowX] = useState(false)
-	const [showLyrics, setShowLyrics] = useState(false)
-
 	useEffect(() => {
 		let timeoutId: NodeJS.Timeout
 
@@ -87,7 +84,7 @@ export default function Fullscreen() {
 			setShowCursor(true)
 			setShowX(true)
 
-			if (timeoutId) clearTimeout(timeoutId)
+			clearTimeout(timeoutId)
 			timeoutId = setTimeout(() => {
 				setShowScrollbar(false)
 				setShowCursor(false)
@@ -101,7 +98,7 @@ export default function Fullscreen() {
 			className={`fixed w-[200vw] h-[200vh] top-0 left-0 ${
 				shown ? "opacity-100 z-[150]" : "opacity-0 -z-50"
 			} ${showCursor ? "cursor-auto" : "cursor-none"}`}>
-			{getCurrentSong() ? (
+			{getCurrentSong() && (
 				<Image
 					ref={imageRef}
 					src={getSongAlbumUrl()}
@@ -110,8 +107,6 @@ export default function Fullscreen() {
 					width={500}
 					height={500}
 				/>
-			) : (
-				""
 			)}
 
 			<section className={styles.fullscreenContainer}>
@@ -122,8 +117,8 @@ export default function Fullscreen() {
 				/>
 
 				<article className={showLyrics ? "" : styles.active}>
-					<div className={`flex flex-col gap-4`}>
-						{getCurrentSong() ? (
+					<div className="flex flex-col gap-4">
+						{getCurrentSong() && (
 							<Image
 								src={getSongAlbumUrl()}
 								alt={getCurrentSong().name}
@@ -132,15 +127,12 @@ export default function Fullscreen() {
 								height={500}
 								quality={100}
 							/>
-						) : (
-							""
 						)}
 
 						<div>
 							<p className="font-bold text-lg">
 								{getCurrentSong().name}
 							</p>
-
 							<ArtistName
 								artists={getCurrentSong().artists}
 								element="p"
@@ -155,16 +147,12 @@ export default function Fullscreen() {
 								max={duration}
 								value={secondsPlayed}
 								focusThumbOnChange={false}
-								onChangeStart={() => {
-									setMovingSlider(true)
+								onChangeStart={() => setMovingSlider(true)}
+								onChange={(value) => {
+									setSecondsPlayed(value)
+									setSecondsPlayedValue(value)
 								}}
-								onChange={(e) => {
-									setSecondsPlayed(e)
-									setSecondsPlayedValue(e)
-								}}
-								onChangeEnd={() => {
-									setMovingSlider(false)
-								}}>
+								onChangeEnd={() => setMovingSlider(false)}>
 								<SliderTrack>
 									<SliderFilledTrack />
 								</SliderTrack>
@@ -185,27 +173,17 @@ export default function Fullscreen() {
 						</article>
 
 						<article className="flex align-center justify-center gap-8">
-							<Shuffle size={30} onClick={() => shuffle()} />
-							<SkipBack size={30} onClick={() => prev()} />
+							<Shuffle size={30} onClick={shuffle} />
+							<SkipBack size={30} onClick={prev} />
 							{isPlaying ? (
-								<Pause
-									size={30}
-									onClick={() => {
-										pause()
-									}}
-								/>
+								<Pause size={30} onClick={pause} />
 							) : (
-								<Play
-									size={30}
-									onClick={() => {
-										play()
-									}}
-								/>
+								<Play size={30} onClick={play} />
 							)}
-							<SkipForward size={30} onClick={() => next()} />
+							<SkipForward size={30} onClick={next} />
 							<Repeat
 								size={30}
-								onClick={() => toggleRepeat()}
+								onClick={toggleRepeat}
 								color={
 									isRepeating
 										? "rgb(144, 205, 244)"
