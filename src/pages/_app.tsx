@@ -9,7 +9,7 @@ import { ReactElement, ReactNode, useEffect, useState } from "react"
 import { GoogleAnalytics } from "@next/third-parties/google"
 import Head from "next/head"
 import FullscreenContext from "@/contexts/FullscreenContext"
-import Fullscreen from "@/components/common/player/Fullscreen"
+import Fullscreen from "@/components/common/player/fullscreen/Fullscreen"
 
 export type NextPageWithLayout<P = {}, IP = P> = NextPage<P, IP> & {
 	getLayout?: (page: ReactElement) => ReactNode
