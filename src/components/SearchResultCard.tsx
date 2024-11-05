@@ -34,11 +34,12 @@ export default function SearchResultCard(props: SearchResultCardProps) {
 		return "#"
 	}
 
-	const { addQueueItem, play: musicPlay, playAlbum } = useMusicPlayer()
+	const { addQueueItem, play: musicPlay, playAlbum, clear } = useMusicPlayer()
 
 	const play = () => {
 		if (props.type == SearchResultCardType.TRACK) {
 			useAPI(`/tracks/${props.id}`).then((track) => {
+				clear()
 				addQueueItem(track)
 				musicPlay()
 			})
