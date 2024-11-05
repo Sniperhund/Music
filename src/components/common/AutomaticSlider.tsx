@@ -12,10 +12,12 @@ interface Genre {
 interface AutomaticSliderProps {
 	amount?: number
 	genre?: Genre
+	data?: DataProvidedSliderProps
 }
 
 export default function AutomaticSlider(props: AutomaticSliderProps) {
 	if (props.genre) return GenreProvidedSlider(props.genre)
+	else if (props.data) return DataProvidedSlider(props.data)
 	else return AutoFetchGenreSlider(props.amount ? props.amount : 10)
 }
 
@@ -53,8 +55,7 @@ function AutoFetchGenreSlider(amount: number) {
 	return (
 		<section className="flex flex-col gap-8">
 			{genreData?.map(function (genre, i) {
-				if (!randomAlbums[i] || randomAlbums[i]?.status)
-					return <div key={i}></div>
+				if (!randomAlbums[i] || randomAlbums[i]?.status) return <></>
 				/*return (
 						<Slider title={genre.name} key={i}>
 							{Array.apply(0, Array(10)).map(function (x, j) {
@@ -112,5 +113,57 @@ function GenreProvidedSlider(genre: Genre) {
 				)
 			})}
 		</Slider>
+	)
+}
+
+export interface DataProvidedSliderProps {
+	data: [GenreData]
+}
+
+interface GenreData {
+	title: string
+	albums: [
+		{
+			cover: string
+			name: string
+			artists: [
+				{
+					_id: string
+					name: string
+					cover: string
+				},
+			]
+			_id: string
+		},
+	]
+}
+
+function DataProvidedSlider(data: DataProvidedSliderProps) {
+	return (
+		<section className="flex flex-col gap-8">
+			{data &&
+				data.map((genre: any, i: number) => {
+					if (!genre || !genre.albums) return <></>
+
+					return (
+						<Slider title={genre.title} key={i}>
+							{genre.albums.map((album: any, j: number) => {
+								return (
+									<Card
+										key={j}
+										imageUrl={getFilePath(
+											"Album",
+											album.cover,
+										)}
+										albumName={album.name}
+										artists={album.artists}
+										albumId={album._id}
+									/>
+								)
+							})}
+						</Slider>
+					)
+				})}
+		</section>
 	)
 }

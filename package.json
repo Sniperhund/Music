@@ -34,7 +34,8 @@
     "react-sortablejs": "^6.1.4",
     "sortablejs": "^1.15.2",
     "tailwindcss-safe-area": "^0.6.0",
-    "use-debounce": "^10.0.3"
+    "use-debounce": "^10.0.3",
+    "usehooks-ts": "^3.1.0"
   },
   "devDependencies": {
     "@types/howler": "^2.2.11",
