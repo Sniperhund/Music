@@ -1,3 +1,9 @@
+import PageTitle from "@/components/PageTitle"
+
 export default function Browse() {
-	return <></>
+	return (
+		<>
+			<PageTitle>Browse</PageTitle>
+		</>
+	)
 }
