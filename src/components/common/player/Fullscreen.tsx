@@ -32,7 +32,7 @@ import { setIn } from "formik"
 import Songs from "@/pages/library/songs"
 
 function parseLyrics(lrc: any) {
-	const regex = /^\[(\d{2}:\d{2}(.\d{2})?)\](.*)/
+	const regex = /^\[(\d{2}:\d{2}(.\d{2,3})?)\](.*)/
 	const lines = lrc.split("\n")
 	const output: { time: number; text: any }[] = []
 
@@ -262,6 +262,7 @@ export default function Fullscreen() {
 
 	const [showScrollbar, setShowScrollbar] = useState(false)
 	const [showCursor, setShowCursor] = useState(true)
+	const [showX, setShowX] = useState(false)
 
 	useEffect(() => {
 		let timeoutId: NodeJS.Timeout
@@ -269,11 +270,13 @@ export default function Fullscreen() {
 		window.addEventListener("mousemove", () => {
 			setShowScrollbar(true)
 			setShowCursor(true)
+			setShowX(true)
 
 			if (timeoutId) clearTimeout(timeoutId)
 			timeoutId = setTimeout(() => {
 				setShowScrollbar(false)
 				setShowCursor(false)
+				setShowX(false)
 			}, 2000)
 		})
 	}, [])
@@ -298,7 +301,7 @@ export default function Fullscreen() {
 
 			<section className={styles.fullscreenContainer}>
 				<X
-					className="absolute right-2 top-2 cursor-pointer"
+					className={`absolute right-2 top-2 cursor-pointer transition-opacity ${showX ? "" : "opacity-0"}`}
 					size={28}
 					onClick={() => setShown(false)}
 				/>
