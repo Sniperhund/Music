@@ -142,6 +142,7 @@ function DataProvidedSlider(data: DataProvidedSliderProps) {
 	return (
 		<section className="flex flex-col gap-8">
 			{data &&
+				// @ts-ignore
 				data.map((genre: any, i: number) => {
 					if (!genre || !genre.albums) return <></>
 
