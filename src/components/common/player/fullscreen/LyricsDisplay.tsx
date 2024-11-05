@@ -137,6 +137,8 @@ export default function LyricsDisplay(props: LyricsDisplayProps) {
 				scrolling.current = true
 				clearTimeout(scrollingTimeout.current)
 
+				lyricsContainerRef.current!.style.transition = "none"
+
 				let translateY = parseFloat(
 					lyricsContainerRef.current!.style.transform.match(
 						/-?\d+/,
@@ -158,6 +160,7 @@ export default function LyricsDisplay(props: LyricsDisplayProps) {
 
 				scrollingTimeout.current = setTimeout(() => {
 					scrolling.current = false
+					lyricsContainerRef.current!.style.transition = `transform ${props.animationDuration}s ease`
 				}, 3000)
 			})
 		}
