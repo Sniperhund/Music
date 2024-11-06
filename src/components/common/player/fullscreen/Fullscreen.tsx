@@ -23,6 +23,7 @@ import {
 	SliderThumb,
 	SliderTrack,
 } from "@chakra-ui/react"
+import { useLocalStorage } from "usehooks-ts"
 
 export default function Fullscreen() {
 	const { shown, setShown } = useContext(FullscreenContext)
@@ -40,6 +41,12 @@ export default function Fullscreen() {
 		setSecondsPlayed,
 		currentSong,
 	} = useMusicPlayer()
+
+	const [
+		fullscreenPreference,
+		setFullscreenPreference,
+		removeFullscreenPreference,
+	] = useLocalStorage("fullscreenPreference", true)
 
 	const [duration, setDuration] = useState(0)
 	const [secondsPlayed, setSecondsPlayedValue] = useState(0)
@@ -94,6 +101,8 @@ export default function Fullscreen() {
 	}, [])
 
 	useEffect(() => {
+		if (!fullscreenPreference) return
+
 		if (shown) {
 			document.body.requestFullscreen()
 		} else if (document.fullscreenElement) {

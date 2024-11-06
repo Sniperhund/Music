@@ -3,18 +3,22 @@ import useAPI from "@/util/useAPI"
 import {
 	Avatar,
 	Button,
+	Checkbox,
 	Flex,
 	Input,
 	InputGroup,
 	InputLeftElement,
 	Menu,
 	MenuButton,
+	MenuDivider,
 	MenuItem,
 	MenuList,
 	Text,
+	Tooltip,
 } from "@chakra-ui/react"
 import {
 	Clock,
+	Expand,
 	FileSliders,
 	GalleryVerticalEnd,
 	Grid2X2,
@@ -29,6 +33,7 @@ import {
 import Link from "next/link"
 import { useRouter } from "next/router"
 import { useEffect, useState } from "react"
+import { useLocalStorage } from "usehooks-ts"
 
 interface SidebarProps {
 	admin: boolean
@@ -36,6 +41,12 @@ interface SidebarProps {
 
 export default function Sidebar(props: SidebarProps) {
 	const router = useRouter()
+
+	const [
+		fullscreenPreference,
+		setFullscreenPreference,
+		removeFullscreenPreference,
+	] = useLocalStorage("fullscreenPreference", true)
 
 	const [user, setUser] = useState<any>(null)
 
@@ -53,7 +64,7 @@ export default function Sidebar(props: SidebarProps) {
 		router.push(
 			{ pathname: "/search", query: { q: e.target.value } },
 			undefined,
-			{ shallow: true }
+			{ shallow: true },
 		)
 	}
 
@@ -165,6 +176,18 @@ export default function Sidebar(props: SidebarProps) {
 								}}>
 								Sign out
 							</MenuItem>
+							<MenuDivider />
+							<MenuItem>
+								<Checkbox
+									isChecked={fullscreenPreference}
+									onChange={(e) =>
+										setFullscreenPreference(
+											e.target.checked,
+										)
+									}>
+									Fullscreen lyrics
+								</Checkbox>
+							</MenuItem>
 						</MenuList>
 					</Menu>
 				) : (
@@ -253,6 +276,16 @@ export default function Sidebar(props: SidebarProps) {
 								if (signout()) router.push("/auth/signin")
 							}}>
 							Sign out
+						</MenuItem>
+						<MenuDivider />
+						<MenuItem>
+							<Checkbox
+								isChecked={fullscreenPreference}
+								onChange={(e) =>
+									setFullscreenPreference(e.target.checked)
+								}>
+								Fullscreen lyrics
+							</Checkbox>
 						</MenuItem>
 					</MenuList>
 				</Menu>
