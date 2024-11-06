@@ -94,7 +94,7 @@ function AutomaticTrack() {
 				headers: {
 					authorization: `${getCookie("access_token")}`,
 				},
-			}
+			},
 		).then((response) => response.json())
 
 		if (result.message == "Track added") {
@@ -455,7 +455,7 @@ function ManualTrack() {
 						name="track-name"
 						onChange={(e) => {
 							setTrackName(e.target.value)
-							setSearch(e.target.value)
+							//setSearch(e.target.value)
 						}}
 						value={trackName}
 					/>
@@ -470,7 +470,7 @@ function ManualTrack() {
 							options={artistOptions}
 							onChange={(e) => {
 								setArtistId(
-									Array.from(e).map((option) => option.value)
+									Array.from(e).map((option) => option.value),
 								)
 								setArtistSelectValue(e)
 							}}
@@ -643,7 +643,7 @@ function ManualTrack() {
 											<Button
 												onClick={() =>
 													useImageBySearch(
-														album.image
+														album.image,
 													)
 												}>
 												Use

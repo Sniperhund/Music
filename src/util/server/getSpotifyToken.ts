@@ -5,11 +5,11 @@ import qs from "qs"
 let cachedToken: any = null
 let tokenExpiry: any = null
 
-async function getSpotifyToken() {
+async function getSpotifyToken(reset: boolean = false) {
 	const now = Date.now()
 
 	// Check if the token is still valid
-	if (cachedToken && tokenExpiry && now < tokenExpiry) {
+	if (!reset && cachedToken && tokenExpiry && now < tokenExpiry) {
 		return cachedToken
 	}
 
@@ -29,7 +29,7 @@ async function getSpotifyToken() {
 				headers: {
 					"Content-Type": "application/x-www-form-urlencoded",
 				},
-			}
+			},
 		)
 
 		if (response.data.access_token) {

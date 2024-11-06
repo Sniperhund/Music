@@ -4,7 +4,7 @@ import type { NextApiRequest, NextApiResponse } from "next"
 
 export default async function handler(
 	req: NextApiRequest,
-	res: NextApiResponse
+	res: NextApiResponse,
 ) {
 	const { q } = req.query
 
@@ -21,7 +21,10 @@ export default async function handler(
 			headers: { Authorization: `Bearer ${accessToken}` },
 		})
 		.then((response) => response.data)
-		.catch((error) => error.response.data)
+		.catch((error) => {
+			console.error("Error fetching tracks:", error)
+			getSpotifyToken(true)
+		})
 
 	if (response.error) {
 		res.status(500).json({ message: response.error.message })
@@ -70,7 +73,7 @@ export default async function handler(
 				})),
 				genre,
 			}
-		})
+		}),
 	)
 
 	res.status(200).json({ tracks })
