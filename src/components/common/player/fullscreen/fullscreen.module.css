@@ -46,7 +46,8 @@
 		}
 
 		.syncedLyrics p {
-			font-size: 28px;
+			font-size: 40px;
+			font-weight: 600;
 			color: white;
 			opacity: 0.4;
 			/*line-height: 60px;*/

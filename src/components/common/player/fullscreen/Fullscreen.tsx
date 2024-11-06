@@ -93,6 +93,14 @@ export default function Fullscreen() {
 		})
 	}, [])
 
+	useEffect(() => {
+		if (shown) {
+			document.body.requestFullscreen()
+		} else if (document.fullscreenElement) {
+			document.exitFullscreen()
+		}
+	}, [shown])
+
 	return (
 		<section
 			className={`fixed w-[200vw] h-[200vh] top-0 left-0 ${
