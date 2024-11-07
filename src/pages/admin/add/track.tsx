@@ -17,7 +17,7 @@ import {
 	Spacer,
 } from "@chakra-ui/react"
 import { Select } from "chakra-react-select"
-import { ReactElement, useEffect, useRef, useState } from "react"
+import { ReactElement, useEffect, useState } from "react"
 import { NoSSR } from "@kwooshung/react-no-ssr"
 import { DebounceInput } from "react-debounce-input"
 import getFilePath from "@/util/getFilePath"
@@ -49,6 +49,8 @@ Track.getLayout = function getLayout(page: ReactElement) {
 
 function AutomaticTrack() {
 	const toast = useToast()
+
+	const [loading, setLoading] = useState(false)
 
 	const [search, setSearch] = useState("")
 
@@ -88,6 +90,8 @@ function AutomaticTrack() {
 			return
 		}
 
+		setLoading(true)
+
 		const result: any = await fetch(
 			`/api/addTrack?id=${id}&genreId=${genreId}&url=${youtubeLink}`,
 			{
@@ -111,6 +115,8 @@ function AutomaticTrack() {
 				description: result?.message,
 			})
 		}
+
+		setLoading(false)
 	}
 
 	const [genreId, setGenreId] = useState("")
@@ -204,7 +210,9 @@ function AutomaticTrack() {
 						</a>
 						<Spacer />
 						<audio controls src={track.preview} />
-						<Button onClick={() => addTrackBySearch(track.id)}>
+						<Button
+							onClick={() => addTrackBySearch(track.id)}
+							isLoading={loading}>
 							Add
 						</Button>
 					</div>
