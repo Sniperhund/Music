@@ -12,11 +12,14 @@ import {
 import { LogOut } from "lucide-react"
 import { useRouter } from "next/router"
 import { useEffect, useState } from "react"
+import { useMediaQuery } from "usehooks-ts"
 
 export default function PageTitle({ children }: { children: React.ReactNode }) {
 	const router = useRouter()
 
 	const [user, setUser] = useState<any>(null)
+
+	const mobile = useMediaQuery("(max-width: 768px)")
 
 	useEffect(() => {
 		async function fetchData() {
@@ -32,9 +35,7 @@ export default function PageTitle({ children }: { children: React.ReactNode }) {
 		<div className="flex justify-between items-center w-full mb-6">
 			<Heading>{children}</Heading>
 
-			{user &&
-			window &&
-			window.matchMedia("(max-width: 768px)").matches ? (
+			{user && mobile && (
 				<Menu>
 					<MenuButton>
 						<Avatar name={user.name} />
@@ -49,8 +50,6 @@ export default function PageTitle({ children }: { children: React.ReactNode }) {
 						</MenuItem>
 					</MenuList>
 				</Menu>
-			) : (
-				""
 			)}
 		</div>
 	)
