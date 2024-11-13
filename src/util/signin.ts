@@ -5,7 +5,7 @@ import { ExpandIcon } from "lucide-react"
 export default async function signin(
 	email: string,
 	password: string,
-	rememberMe: boolean = false
+	rememberMe: boolean = false,
 ) {
 	try {
 		const result = await axios.post(
@@ -13,7 +13,7 @@ export default async function signin(
 			{
 				email: email,
 				password: password,
-			}
+			},
 		)
 
 		if (result.status !== 200) {
@@ -23,7 +23,7 @@ export default async function signin(
 			}
 		}
 
-		let expireTime = new Date().getTime() + 1000 * 3600 * 24 * 30
+		let expireTime = new Date().getTime() + 1000 * 3600 * 24 * 30 // 30 days
 
 		setCookie("access_token", result.data.response.accessToken, {
 			path: "/",

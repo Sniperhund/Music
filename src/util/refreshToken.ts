@@ -19,7 +19,7 @@ export default async function refreshToken() {
 			refreshToken: refreshToken,
 		})
 		.then((result) => {
-			const expireTime = new Date().getTime() + 1000 * 3600 * 60
+			let expireTime = new Date().getTime() + 1000 * 3600 * 24 * 30 // 30 days
 
 			const accessToken = result.data.response.accessToken
 			setCookie("access_token", accessToken, {
