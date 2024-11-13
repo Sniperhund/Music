@@ -37,7 +37,7 @@ export default function Signup() {
 			const result = await signup(
 				values.email,
 				values.password,
-				values.name
+				values.name,
 			)
 
 			if (result?.error) {
@@ -64,7 +64,7 @@ export default function Signup() {
 			<Card maxW="lg" className="w-full">
 				<CardHeader>
 					<Heading size="lg" className="text-center">
-						Welcome back!
+						Create a new account!
 					</Heading>
 				</CardHeader>
 				<Divider opacity="0.2" />
