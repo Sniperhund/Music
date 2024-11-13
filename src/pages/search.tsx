@@ -41,7 +41,7 @@ export default function Search() {
 			<InputGroup
 				onChange={search}
 				onFocus={search}
-				className="md:!hidden w-full">
+				className="md:!hidden w-full mb-4">
 				<InputLeftElement pointerEvents="none">
 					<SearchIcon />
 				</InputLeftElement>
