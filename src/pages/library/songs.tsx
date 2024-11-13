@@ -3,7 +3,14 @@ import PageTitle from "@/components/PageTitle"
 import { useMusicPlayer } from "@/contexts/MusicPlayerContext"
 import useAPI from "@/util/useAPI"
 import { Button, Divider, useToast } from "@chakra-ui/react"
-import { ListEnd, ListPlus, ListStart, Minus, Play } from "lucide-react"
+import {
+	ListEnd,
+	ListPlus,
+	ListStart,
+	Minus,
+	Play,
+	Shuffle,
+} from "lucide-react"
 import { useRouter } from "next/router"
 import { useEffect, useState } from "react"
 
@@ -13,11 +20,13 @@ export default function Songs() {
 
 	const {
 		playAlbumAtIndex,
+		playAlbum,
 		clear,
 		addQueueItem,
 		addQueueItemNext,
 		next,
 		play,
+		shuffle,
 	} = useMusicPlayer()
 
 	const [tracks, setTracks] = useState<any>()
@@ -33,11 +42,31 @@ export default function Songs() {
 		})
 	}, [router])
 
+	function shuffleAndPlay() {
+		clear()
+
+		tracks.forEach((track: any) => {
+			addQueueItem(track)
+		})
+
+		shuffle()
+		play()
+	}
+
 	return (
 		<>
 			<PageTitle>Songs</PageTitle>
 
-			<section className="tracks" style={{ marginTop: 0 }}>
+			<span className="flex gap-4">
+				<Button leftIcon={<Play />} onClick={() => playAlbum(tracks)}>
+					Play
+				</Button>
+				<Button leftIcon={<Shuffle />} onClick={() => shuffleAndPlay()}>
+					Shuffle
+				</Button>
+			</span>
+
+			<section className="tracks" style={{ marginTop: "20px" }}>
 				{tracks && Array.isArray(tracks)
 					? tracks?.map(function (track: any, j: number) {
 							return (
