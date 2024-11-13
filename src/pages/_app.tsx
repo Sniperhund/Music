@@ -26,25 +26,33 @@ export default function App({ Component, pageProps }: AppPropsWithLayout) {
 	const [fullscreenShown, setFullscreenShown] = useState(false)
 
 	return (
-		<MusicPlayerProvider>
-			<FullscreenContext.Provider
-				value={{
-					shown: fullscreenShown,
-					setShown: setFullscreenShown,
-				}}>
-				<ChakraProvider
-					toastOptions={{
-						defaultOptions: { position: "bottom-right" },
-					}}
-					theme={theme}>
-					<Head>
-						<title>Music Player</title>
-					</Head>
-					{getLayout(<Component {...pageProps} />)}
-					<GoogleAnalytics gaId="G-BCF20XMJQZ" />
-					<Fullscreen />
-				</ChakraProvider>
-			</FullscreenContext.Provider>
-		</MusicPlayerProvider>
+		<>
+			<Head>
+				<meta
+					name="viewport"
+					content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+				/>
+			</Head>
+			<MusicPlayerProvider>
+				<FullscreenContext.Provider
+					value={{
+						shown: fullscreenShown,
+						setShown: setFullscreenShown,
+					}}>
+					<ChakraProvider
+						toastOptions={{
+							defaultOptions: { position: "bottom-right" },
+						}}
+						theme={theme}>
+						<Head>
+							<title>Music Player</title>
+						</Head>
+						{getLayout(<Component {...pageProps} />)}
+						<GoogleAnalytics gaId="G-BCF20XMJQZ" />
+						<Fullscreen />
+					</ChakraProvider>
+				</FullscreenContext.Provider>
+			</MusicPlayerProvider>
+		</>
 	)
 }
