@@ -23,6 +23,7 @@ export default function Search() {
 	useEffect(() => {
 		if (!debouncedSearch) {
 			setSearchResults([])
+
 			return
 		}
 
@@ -61,7 +62,8 @@ export default function Search() {
 				</Heading>
 			)}
 
-			<section className="grid grid-cols-[repeat(auto-fit,minmax(350px,1fr))] gap-4">
+			<section
+				className={`grid grid-cols-[repeat(auto-fit,minmax(350px,1fr))] gap-4`}>
 				{searchResults.length > 0
 					? searchResults.map((result, i) => {
 							return (

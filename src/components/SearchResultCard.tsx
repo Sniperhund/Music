@@ -43,13 +43,13 @@ export default function SearchResultCard(props: SearchResultCardProps) {
 
 	const play = () => {
 		setRecentlyPlayed([
-			...recentlyPlayed.filter((track: any) => track.id != props.id),
 			props,
+			...recentlyPlayed.filter((track: any) => track.id != props.id),
 		])
 
 		// The amount of recently searched items to store (12 + 1)
 		if (recentlyPlayed.length == 13) {
-			setRecentlyPlayed(recentlyPlayed.slice(1))
+			setRecentlyPlayed(recentlyPlayed.slice(0, 12))
 		}
 
 		if (props.type == SearchResultCardType.TRACK) {
