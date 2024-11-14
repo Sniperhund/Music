@@ -1,11 +1,14 @@
 import PageTitle from "@/components/PageTitle"
-import SearchResultCard from "@/components/SearchResultCard"
+import SearchResultCard, {
+	SearchResultCardProps,
+} from "@/components/SearchResultCard"
 import useAPI from "@/util/useAPI"
-import { Input, InputGroup, InputLeftElement } from "@chakra-ui/react"
+import { Heading, Input, InputGroup, InputLeftElement } from "@chakra-ui/react"
 import { useRouter } from "next/router"
 import { useEffect, useState } from "react"
 import { useDebounce } from "use-debounce"
 import { Search as SearchIcon } from "lucide-react"
+import { useLocalStorage } from "usehooks-ts"
 
 export default function Search() {
 	const router = useRouter()
@@ -13,9 +16,15 @@ export default function Search() {
 	const [debouncedSearch] = useDebounce(router.query.q, 300)
 
 	const [searchResults, setSearchResults] = useState<any[]>([])
+	const [recentlyPlayed, setRecentlyPlayed] = useLocalStorage<
+		SearchResultCardProps | any
+	>("recentlyPlayed", [])
 
 	useEffect(() => {
-		if (!debouncedSearch) return
+		if (!debouncedSearch) {
+			setSearchResults([])
+			return
+		}
 
 		useAPI(`/search`, { params: { q: debouncedSearch, limit: 9 } })
 			.then((result: any) => setSearchResults(result))
@@ -23,8 +32,6 @@ export default function Search() {
 	}, [debouncedSearch])
 
 	const search = (e: any) => {
-		console.log(e.target.value, router.query.q)
-
 		if (e.target.value == router.query.q) return
 
 		router.push(
@@ -48,8 +55,14 @@ export default function Search() {
 				<Input placeholder="Search..." value={router.query.q} />
 			</InputGroup>
 
+			{searchResults.length == 0 && (
+				<Heading size="md" className="mb-2">
+					Recently Searched
+				</Heading>
+			)}
+
 			<section className="grid grid-cols-[repeat(auto-fit,minmax(350px,1fr))] gap-4">
-				{searchResults
+				{searchResults.length > 0
 					? searchResults.map((result, i) => {
 							return (
 								<SearchResultCard
@@ -67,7 +80,21 @@ export default function Search() {
 								/>
 							)
 						})
-					: ""}
+					: recentlyPlayed.map(
+							(result: SearchResultCardProps, i: number) => {
+								return (
+									<SearchResultCard
+										key={i}
+										type={result.type}
+										id={result.id}
+										name={result.name}
+										imageUrl={result.imageUrl}
+										tracks={result.tracks}
+										artists={result.artists}
+									/>
+								)
+							},
+						)}
 			</section>
 		</>
 	)

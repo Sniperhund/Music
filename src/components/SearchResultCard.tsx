@@ -5,6 +5,7 @@ import Link from "next/link"
 import { useMusicPlayer } from "@/contexts/MusicPlayerContext"
 import useAPI from "@/util/useAPI"
 import { Play } from "lucide-react"
+import { useLocalStorage } from "usehooks-ts"
 
 enum SearchResultCardType {
 	TRACK = "track",
@@ -12,7 +13,7 @@ enum SearchResultCardType {
 	ARTIST = "artist",
 }
 
-interface SearchResultCardProps {
+export interface SearchResultCardProps {
 	type: SearchResultCardType
 	id: string
 	name: string
@@ -22,6 +23,10 @@ interface SearchResultCardProps {
 }
 
 export default function SearchResultCard(props: SearchResultCardProps) {
+	const [recentlyPlayed, setRecentlyPlayed] = useLocalStorage<
+		SearchResultCardProps | any
+	>("recentlyPlayed", [])
+
 	const getLink = () => {
 		if (props.type == SearchResultCardType.ARTIST) {
 			return `/artist/${props.id}`
@@ -37,6 +42,16 @@ export default function SearchResultCard(props: SearchResultCardProps) {
 	const { addQueueItem, play: musicPlay, playAlbum, clear } = useMusicPlayer()
 
 	const play = () => {
+		setRecentlyPlayed([
+			...recentlyPlayed.filter((track: any) => track.id != props.id),
+			props,
+		])
+
+		// The amount of recently searched items to store (12 + 1)
+		if (recentlyPlayed.length == 13) {
+			setRecentlyPlayed(recentlyPlayed.slice(1))
+		}
+
 		if (props.type == SearchResultCardType.TRACK) {
 			useAPI(`/tracks/${props.id}`).then((track) => {
 				clear()
