@@ -21,6 +21,7 @@
     "chakra-react-select": "^4.8.0",
     "cookies-next": "^4.2.1",
     "defu": "^6.1.4",
+    "discord-webhook-node": "^1.1.8",
     "formik": "^2.4.6",
     "framer-motion": "^11.2.6",
     "howler": "^2.2.4",
