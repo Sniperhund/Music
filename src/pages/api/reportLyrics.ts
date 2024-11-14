@@ -19,6 +19,13 @@ export default async function handler(
 		if (!backendAccessToken)
 			return res.status(401).json({ message: "Unauthorized" })
 
+		if (
+			trackId == undefined ||
+			issueType == undefined ||
+			message == undefined
+		)
+			return res.status(400).json({ message: "Missing parameters" })
+
 		let result: any = await axios
 			.get(`/tracks/${trackId}`, {
 				baseURL: process.env.NEXT_PUBLIC_API_URL,
@@ -27,10 +34,12 @@ export default async function handler(
 				},
 			})
 			.catch((e: any) => {
+				console.error(e.response)
 				return res
 					.status(500)
 					.json({ message: "Internal server error" })
 			})
+
 		result = result.data.response
 
 		const embed = new MessageBuilder()
@@ -49,6 +58,7 @@ export default async function handler(
 
 		res.status(200).json({ message: "Lyrics reported" })
 	} catch (e) {
+		console.error(e)
 		res.status(500).json({ message: "Internal server error" })
 	}
 }
