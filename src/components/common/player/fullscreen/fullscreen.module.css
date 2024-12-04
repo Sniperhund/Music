@@ -21,6 +21,8 @@
 
 		& svg {
 			cursor: pointer;
+			position: relative;
+			transition: transform 0.2s ease;
 		}
 
 		& > div {
@@ -28,7 +30,13 @@
 		}
 
 		.lyricsHeight {
-			height: 674px;
+			height: 100%;
+			max-height: 674px;
+			transition: max-height 0.2s ease;
+		}
+
+		.lyricsHeightWithNoButtons {
+			max-height: calc(674px - 30px);
 		}
 
 		.syncedLyrics {
@@ -73,6 +81,16 @@
 		&.active {
 			grid-template-columns: 500px;
 			justify-content: center;
+		}
+
+		.hideButtons {
+			overflow: hidden;
+			max-height: 0;
+			transition: max-height 0.2s ease;
+
+			& svg {
+				transform: translateY(-100%);
+			}
 		}
 	}
 }

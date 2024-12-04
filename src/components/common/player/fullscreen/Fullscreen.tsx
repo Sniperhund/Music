@@ -51,9 +51,8 @@ export default function Fullscreen() {
 	const [duration, setDuration] = useState(0)
 	const [secondsPlayed, setSecondsPlayedValue] = useState(0)
 	const [movingSlider, setMovingSlider] = useState(false)
-	const [showScrollbar, setShowScrollbar] = useState(false)
 	const [showCursor, setShowCursor] = useState(true)
-	const [showX, setShowX] = useState(false)
+	const [mouseMoved, setMouseMoved] = useState(false)
 	const [showLyrics, setShowLyrics] = useState(false)
 
 	const imageRef = useRef<HTMLImageElement>(null)
@@ -87,15 +86,13 @@ export default function Fullscreen() {
 		let timeoutId: NodeJS.Timeout
 
 		window.addEventListener("mousemove", () => {
-			setShowScrollbar(true)
+			setMouseMoved(true)
 			setShowCursor(true)
-			setShowX(true)
 
 			clearTimeout(timeoutId)
 			timeoutId = setTimeout(() => {
-				setShowScrollbar(false)
+				setMouseMoved(false)
 				setShowCursor(false)
-				setShowX(false)
 			}, 2000)
 		})
 	}, [])
@@ -128,7 +125,7 @@ export default function Fullscreen() {
 
 			<section className={styles.fullscreenContainer}>
 				<X
-					className={`absolute right-2 top-2 cursor-pointer transition-opacity ${showX ? "" : "opacity-0"}`}
+					className={`absolute right-2 top-2 cursor-pointer transition-opacity ${!mouseMoved && "opacity-0"}`}
 					size={28}
 					onClick={() => setShown(false)}
 				/>
@@ -189,7 +186,8 @@ export default function Fullscreen() {
 							</div>
 						</article>
 
-						<article className="flex align-center justify-center gap-8">
+						<article
+							className={`flex align-center justify-center gap-8 max-h-[30px] ${!mouseMoved && styles.hideButtons}`}>
 							<Shuffle size={30} onClick={shuffle} />
 							<SkipBack size={30} onClick={prev} />
 							{isPlaying ? (
@@ -211,7 +209,7 @@ export default function Fullscreen() {
 					</div>
 
 					<LyricsDisplay
-						showScrollbar={showScrollbar}
+						showScrollbar={mouseMoved}
 						showLyrics={showLyrics}
 						setShowLyrics={setShowLyrics}
 						animationDuration={0.4}

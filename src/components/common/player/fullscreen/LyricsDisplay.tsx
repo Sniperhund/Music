@@ -171,7 +171,7 @@ export default function LyricsDisplay(props: LyricsDisplayProps) {
 			{props.showLyrics &&
 				(syncedLyrics && parsedLyrics ? (
 					<div
-						className={`${styles.lyricsHeight} ${styles.syncedLyrics}`}>
+						className={`${styles.lyricsHeight} ${styles.syncedLyrics} ${!props.showScrollbar && styles.lyricsHeightWithNoButtons}`}>
 						<div
 							ref={lyricsContainer}
 							style={{
