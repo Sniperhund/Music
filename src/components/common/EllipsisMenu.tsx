@@ -96,7 +96,7 @@ export default function EllipsisMenu(props: EllipsisMenuProps) {
 
 		onClose()
 
-		fetch("/api/reportLyrics", {
+		fetch("/api/report", {
 			method: "POST",
 			headers: {
 				"Content-Type": "application/json",
@@ -265,7 +265,7 @@ export default function EllipsisMenu(props: EllipsisMenuProps) {
 									onOpen()
 								})}
 								rightIcon={<ClipboardCopy />}>
-								Report lyrics
+								Report
 							</Button>
 						</>
 					)}
@@ -274,7 +274,7 @@ export default function EllipsisMenu(props: EllipsisMenuProps) {
 				<Modal isOpen={isOpen} onClose={onClose} isCentered>
 					<ModalOverlay />
 					<ModalContent>
-						<ModalHeader>Modal Title</ModalHeader>
+						<ModalHeader>Report</ModalHeader>
 						<ModalCloseButton />
 						<ModalBody>
 							<form onSubmit={submitReport} className="space-y-4">
@@ -293,6 +293,9 @@ export default function EllipsisMenu(props: EllipsisMenuProps) {
 										</option>
 										<option value="Wrong lyrics">
 											Wrong lyrics
+										</option>
+										<option value="Audio issue">
+											Audio issue
 										</option>
 										<option value="Other">Other</option>
 									</Select>
