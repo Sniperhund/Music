@@ -21,8 +21,6 @@
 
 		& svg {
 			cursor: pointer;
-			position: relative;
-			transition: transform 0.2s ease;
 		}
 
 		& > div {
@@ -86,11 +84,6 @@
 		.hideButtons {
 			overflow: hidden;
 			max-height: 0;
-			transition: max-height 0.2s ease;
-
-			& svg {
-				transform: translateY(-100%);
-			}
 		}
 	}
 }

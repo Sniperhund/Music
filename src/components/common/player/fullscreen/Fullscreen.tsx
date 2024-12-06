@@ -187,7 +187,7 @@ export default function Fullscreen() {
 						</article>
 
 						<article
-							className={`flex align-center justify-center gap-8 max-h-[30px] ${!mouseMoved && styles.hideButtons}`}>
+							className={`flex align-center justify-center gap-8 max-h-[30px] transition-[max-height] ${!mouseMoved && styles.hideButtons}`}>
 							<Shuffle size={30} onClick={shuffle} />
 							<SkipBack size={30} onClick={prev} />
 							{isPlaying ? (
