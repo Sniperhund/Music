@@ -1,11 +1,11 @@
 import { MutableRefObject, useRef, useState } from "react"
 import Player from "../common/player/Player"
-import Sidebar from "../common/Sidebar"
+import Sidebar from "./utility/Sidebar"
 import useResizeObserver from "use-resize-observer"
-import styles from "@/styles/layout.module.css"
+import styles from "@/components/layouts/layout.module.css"
 import { useMusicPlayer } from "@/contexts/MusicPlayerContext"
 import { Home, LayoutGrid, Menu, Search, X } from "lucide-react"
-import MobileNavIcon from "../common/MobileNavIcon"
+import MobileNavIcon from "./utility/MobileNavIcon"
 
 export default function DefaultLayout({ children }: any) {
 	let playerContainer = useRef<HTMLDivElement>(null)
@@ -66,7 +66,7 @@ export default function DefaultLayout({ children }: any) {
 				{children}
 			</article>
 			<div
-				className={`p-2.5 h-24 fixed right-0 bottom-0 ${
+				className={`p-2.5 h-24 fixed right-0 min-[768px]:bottom-0 bottom-[60px] z-50 ${
 					getCurrentSong() || getQueue().length !== 0
 						? "pointer-events-auto"
 						: "pointer-events-none"
@@ -74,9 +74,8 @@ export default function DefaultLayout({ children }: any) {
 				ref={playerContainer}>
 				<article
 					className={`${styles.playerContainer} ${
-						getCurrentSong() || getQueue().length !== 0
-							? styles.active
-							: ""
+						(getCurrentSong() || getQueue().length !== 0) &&
+						styles.active
 					}`}>
 					<Player />
 				</article>

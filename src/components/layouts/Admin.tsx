@@ -1,8 +1,8 @@
 import { MutableRefObject, useRef, useState } from "react"
 import Player from "../common/player/Player"
-import Sidebar from "../common/Sidebar"
+import Sidebar from "./utility/Sidebar"
 import useResizeObserver from "use-resize-observer"
-import styles from "@/styles/layout.module.css"
+import styles from "@/components/layouts/layout.module.css"
 import { useMusicPlayer } from "@/contexts/MusicPlayerContext"
 import { Menu, X } from "lucide-react"
 
