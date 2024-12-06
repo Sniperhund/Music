@@ -42,11 +42,12 @@ export default function Fullscreen() {
 		currentSong,
 	} = useMusicPlayer()
 
-	const [
-		fullscreenPreference,
-		setFullscreenPreference,
-		removeFullscreenPreference,
-	] = useLocalStorage("fullscreenPreference", true)
+	const [fullscreenPreference] = useLocalStorage("fullscreenPreference", true)
+
+	const [onlyLyricsPreference] = useLocalStorage(
+		"onlyLyricsPreference",
+		false,
+	)
 
 	const [duration, setDuration] = useState(0)
 	const [secondsPlayed, setSecondsPlayedValue] = useState(0)
@@ -123,7 +124,8 @@ export default function Fullscreen() {
 				/>
 			)}
 
-			<section className={styles.fullscreenContainer}>
+			<section
+				className={` ${!onlyLyricsPreference && styles.onlyLyrics} ${styles.fullscreenContainer}`}>
 				<X
 					className={`absolute right-2 top-2 cursor-pointer transition-opacity ${!mouseMoved && "opacity-0"}`}
 					size={28}
@@ -132,7 +134,7 @@ export default function Fullscreen() {
 
 				<article className={showLyrics ? "" : styles.active}>
 					<div className="flex flex-col gap-4">
-						{getCurrentSong() && (
+						{getCurrentSong() && !onlyLyricsPreference && (
 							<Image
 								src={getSongAlbumUrl()}
 								alt={getCurrentSong().name}

@@ -48,6 +48,12 @@ export default function Sidebar(props: SidebarProps) {
 		removeFullscreenPreference,
 	] = useLocalStorage("fullscreenPreference", true)
 
+	const [
+		onlyLyricsPreference,
+		setOnlyLyricsPreference,
+		removeOnlyLyricsPreference,
+	] = useLocalStorage("onlyLyricsPreference", false)
+
 	const [user, setUser] = useState<any>(null)
 
 	useEffect(() => {
@@ -188,6 +194,17 @@ export default function Sidebar(props: SidebarProps) {
 									Fullscreen lyrics
 								</Checkbox>
 							</MenuItem>
+							<MenuItem>
+								<Checkbox
+									isChecked={onlyLyricsPreference}
+									onChange={(e) =>
+										setOnlyLyricsPreference(
+											e.target.checked,
+										)
+									}>
+									Only show lyrics
+								</Checkbox>
+							</MenuItem>
 						</MenuList>
 					</Menu>
 				) : (
@@ -285,6 +302,15 @@ export default function Sidebar(props: SidebarProps) {
 									setFullscreenPreference(e.target.checked)
 								}>
 								Fullscreen lyrics
+							</Checkbox>
+						</MenuItem>
+						<MenuItem>
+							<Checkbox
+								isChecked={onlyLyricsPreference}
+								onChange={(e) =>
+									setOnlyLyricsPreference(e.target.checked)
+								}>
+								Only show lyrics
 							</Checkbox>
 						</MenuItem>
 					</MenuList>
