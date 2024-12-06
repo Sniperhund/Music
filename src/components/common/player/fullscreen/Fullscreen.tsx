@@ -86,9 +86,22 @@ export default function Fullscreen() {
 	useEffect(() => {
 		let timeoutId: NodeJS.Timeout
 
+		window.addEventListener("resize", (e) => {
+			let viewMatch = window.matchMedia("(max-width: 768px)").matches
+
+			if (viewMatch) {
+				setMouseMoved(true)
+				setShowCursor(true)
+			}
+		})
+
 		window.addEventListener("mousemove", () => {
+			let viewMatch = window.matchMedia("(max-width: 768px)").matches
+
 			setMouseMoved(true)
 			setShowCursor(true)
+
+			if (viewMatch) return
 
 			clearTimeout(timeoutId)
 			timeoutId = setTimeout(() => {

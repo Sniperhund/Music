@@ -90,7 +90,7 @@
 
 .onlyLyrics > article {
 	max-width: calc(670px + 20px);
-	padding: 0 20px;
+	padding: 4rem 1.5rem 2rem;
 	display: flex;
 	flex-direction: column-reverse;
 	gap: 20px;
