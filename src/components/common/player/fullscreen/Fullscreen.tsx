@@ -138,7 +138,7 @@ export default function Fullscreen() {
 			)}
 
 			<section
-				className={` ${!onlyLyricsPreference && styles.onlyLyrics} ${styles.fullscreenContainer}`}>
+				className={`${onlyLyricsPreference ? styles.onlyLyrics : ""} ${styles.fullscreenContainer}`}>
 				<X
 					className={`absolute right-2 top-2 cursor-pointer transition-opacity ${!mouseMoved && "opacity-0"}`}
 					size={28}
