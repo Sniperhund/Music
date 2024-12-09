@@ -24,6 +24,7 @@ import {
 	SliderTrack,
 } from "@chakra-ui/react"
 import { useLocalStorage } from "usehooks-ts"
+import { TrackNameDisplay } from "./TrackNameDisplay"
 
 export default function Fullscreen() {
 	const { shown, setShown } = useContext(FullscreenContext)
@@ -158,28 +159,7 @@ export default function Fullscreen() {
 							/>
 						)}
 
-						<div className="flex gap-4 items-center">
-							{getCurrentSong() && onlyLyricsPreference && (
-								<Image
-									src={getSongAlbumUrl()}
-									alt={getCurrentSong().name}
-									className="rounded-lg"
-									width={60}
-									height={60}
-									quality={100}
-								/>
-							)}
-							<div>
-								<p className="font-bold text-lg">
-									{getCurrentSong().name}
-								</p>
-								<ArtistName
-									artists={getCurrentSong().artists}
-									element="p"
-									className="text-lg"
-								/>
-							</div>
-						</div>
+						<TrackNameDisplay />
 
 						<article>
 							<Slider
@@ -242,6 +222,9 @@ export default function Fullscreen() {
 						animationDuration={0.4}
 						offset={200}
 					/>
+
+					{/* This container has flex-direction: column-reverse; so it's down here instead */}
+					<TrackNameDisplay mobile />
 				</article>
 			</section>
 		</section>
