@@ -23,6 +23,16 @@ class MusicPlayerProvider extends React.Component {
 		}
 	}
 
+	keyDownHandler = (event) => {
+		if (event.repeat || event.code != "Space") return
+
+		if (this.state.isPlaying) {
+			this.pause()
+		} else {
+			this.play()
+		}
+	}
+
 	componentDidMount() {
 		navigator.mediaSession.setActionHandler("play", this.play)
 		navigator.mediaSession.setActionHandler("pause", this.pause)
@@ -43,6 +53,12 @@ class MusicPlayerProvider extends React.Component {
 				this.setSecondsPlayed(this.getSecondsPlayed() - 10),
 			)
 		}
+
+		document.addEventListener("keydown", this.keyDownHandler)
+	}
+
+	componentWillUnmount() {
+		document.removeEventListener("keydown", this.keyDownHandler)
 	}
 
 	loadInternalState = () => {
