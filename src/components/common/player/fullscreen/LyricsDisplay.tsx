@@ -24,6 +24,7 @@ export default function LyricsDisplay(props: LyricsDisplayProps) {
 	const heightRef = useRef<HTMLParagraphElement>(null)
 	const scrolling = useRef(false)
 	const translateY = useRef(0)
+	const previousTranslateY = useRef(-1)
 	const scrollingTimeout = useRef<NodeJS.Timeout>()
 
 	useEffect(() => {
@@ -87,7 +88,18 @@ export default function LyricsDisplay(props: LyricsDisplayProps) {
 			}
 
 			translateY.current = -accumulatedHeight
-			lyricsContainerRef.current.style.transform = `translateY(${translateY.current + props.offset}px)`
+
+			if (
+				previousTranslateY.current ===
+				Math.round(translateY.current + props.offset)
+			)
+				return
+
+			previousTranslateY.current = Math.round(
+				translateY.current + props.offset,
+			)
+
+			lyricsContainerRef.current.style.transform = `translateY(${Math.round(translateY.current + props.offset)}px)`
 		}
 	}
 
