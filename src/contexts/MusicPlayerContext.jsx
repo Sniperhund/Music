@@ -24,7 +24,13 @@ class MusicPlayerProvider extends React.Component {
 	}
 
 	keyDownHandler = (event) => {
-		if (event.repeat || event.code != "Space") return
+		if (
+			event.repeat ||
+			event.code !== "Space" ||
+			event.target.tagName === "INPUT" ||
+			event.target.tagName === "TEXTAREA"
+		)
+			return
 
 		if (this.state.isPlaying) {
 			this.pause()
