@@ -14,7 +14,7 @@ export default function Home() {
 	)
 
 	useEffect(() => {
-		if (homeData.length != 0) {
+		if (homeData.length != 0 && homeData.some((item) => item !== null)) {
 			// @ts-ignore
 			setData(homeData as DataProvidedSliderProps)
 			return

@@ -59,13 +59,20 @@ export default function LyricsDisplay(props: LyricsDisplayProps) {
 		}
 	}, [currentSong])
 
+	let lastActiveIndex = -1
+
 	const scrollToLyric = (lyric: any) => {
 		if (lyricsContainerRef.current && lyric) {
+			const activeIndex = parsedLyrics.indexOf(lyric) + 1
+
+			if (activeIndex === lastActiveIndex) return
+
+			lastActiveIndex = activeIndex
+
 			for (const child of lyricsContainerRef.current.children) {
 				child.classList.remove(styles.active)
 			}
 
-			const activeIndex = parsedLyrics.indexOf(lyric) + 1
 			const activeElement = lyricsContainerRef.current.children[
 				activeIndex
 			] as HTMLElement
