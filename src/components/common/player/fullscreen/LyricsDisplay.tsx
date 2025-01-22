@@ -195,16 +195,27 @@ export default function LyricsDisplay(props: LyricsDisplayProps) {
 							<p ref={heightRef} style={{ opacity: 0 }}>
 								A
 							</p>
-							{parsedLyrics.map((lyric: any, i: number) => (
-								<p
-									key={i}
-									onClick={() => {
-										setSecondsPlayed(lyric.time)
-										scrollToLyric(lyric)
-									}}>
-									{lyric.text}
-								</p>
-							))}
+							{parsedLyrics.map((lyric: any, i: number) => {
+								const words = lyric.text.split(" ")
+								const formattedText =
+									words.length > 1
+										? [
+												...words.slice(0, -2),
+												words.slice(-2).join("\u00A0"),
+											].join(" ")
+										: lyric.text // Handle single-word lines
+
+								return (
+									<p
+										key={i}
+										onClick={() => {
+											setSecondsPlayed(lyric.time)
+											scrollToLyric(lyric)
+										}}>
+										{formattedText}
+									</p>
+								)
+							})}
 						</div>
 					</div>
 				) : (

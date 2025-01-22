@@ -97,7 +97,7 @@ export default function Sidebar(props: SidebarProps) {
 							Home
 						</Button>
 					</Link>
-					<Link href="/browse">
+					{/*<Link href="/browse">
 						<Button
 							variant="ghost"
 							justifyContent="left"
@@ -105,7 +105,7 @@ export default function Sidebar(props: SidebarProps) {
 							leftIcon={<Grid2X2 />}>
 							Browse
 						</Button>
-					</Link>
+					</Link>*/}
 				</section>
 				<section className="flex flex-col">
 					<span className="text-xs font-semibold">Library</span>
