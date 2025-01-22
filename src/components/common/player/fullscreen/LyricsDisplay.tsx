@@ -190,6 +190,7 @@ export default function LyricsDisplay(props: LyricsDisplayProps) {
 								position: "absolute",
 								transition: `transform ${props.animationDuration}s ease`,
 								scrollbarWidth: "none",
+								willChange: "transform",
 							}}>
 							<p ref={heightRef} style={{ opacity: 0 }}>
 								A
