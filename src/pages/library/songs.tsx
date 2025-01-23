@@ -32,7 +32,11 @@ export default function Songs() {
 	const [tracks, setTracks] = useState<any>()
 
 	useEffect(() => {
-		useAPI(`/user/tracks`).then((tracks: any) => {
+		useAPI(`/user/tracks`, {
+			params: {
+				limit: 0,
+			},
+		}).then((tracks: any) => {
 			if (tracks?.data?.status == "error") {
 				router.push("/404", undefined, { shallow: true })
 				return
