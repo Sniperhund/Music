@@ -1,43 +1,53 @@
 import axios from "axios"
-import { getCookie, setCookie } from "cookies-next"
+import { deleteCookie, getCookie, setCookie } from "cookies-next"
 
-let isRefreshing: any = false
-let refreshPromise: any = null
+let refreshPromise: Promise<any> | null = null
+let waitForPromise: boolean = false
 
 export default async function refreshToken() {
-	if (isRefreshing) {
-		// Return the existing promise to avoid multiple refreshes
+	if (waitForPromise) {
+		for (let i = 0; i < 10; i++) {
+			if (refreshPromise != null) {
+				break
+			}
+
+			await new Promise((resolve) => setTimeout(resolve, 5))
+		}
+	}
+
+	waitForPromise = true
+
+	if (refreshPromise != null) {
+		waitForPromise = false
 		return refreshPromise
 	}
 
-	isRefreshing = true
-
 	const refreshToken = getCookie("refresh_token")
+
+	if (!refreshToken) {
+		return null
+	}
 
 	refreshPromise = axios
 		.post(`${process.env.NEXT_PUBLIC_API_URL}auth/refresh`, {
-			refreshToken: refreshToken,
+			refreshToken,
 		})
 		.then((result) => {
-			let expireTime = new Date().getTime() + 1000 * 3600 * 24 * 30 // 30 days
-
 			const accessToken = result.data.response.accessToken
 			setCookie("access_token", accessToken, {
 				path: "/",
-				expires: new Date(expireTime),
 			})
 
-			isRefreshing = false
 			refreshPromise = null
 
 			return accessToken
 		})
 		.catch((error) => {
-			// Handle error, e.g., logging out user or redirecting to login
 			console.error("Token refresh failed:", error)
-			isRefreshing = false
 			refreshPromise = null
-			throw error
+			deleteCookie("access_token")
+
+			return null
 		})
 
 	return refreshPromise
