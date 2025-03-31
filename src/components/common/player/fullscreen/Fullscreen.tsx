@@ -1,10 +1,6 @@
-import { useCallback, useContext, useEffect, useRef, useState } from "react"
+import { useContext, useEffect, useRef, useState } from "react"
 import FullscreenContext from "@/contexts/FullscreenContext"
 import { useMusicPlayer } from "@/contexts/MusicPlayerContext"
-import getFilePath from "@/util/getFilePath"
-import useAPI from "@/util/useAPI"
-import parseLyrics from "@/util/lyricsUtil"
-import ArtistName from "@/components/ArtistName"
 import LyricsDisplay from "./LyricsDisplay"
 import styles from "./fullscreen.module.css"
 import Image from "next/image"
@@ -25,6 +21,7 @@ import {
 } from "@chakra-ui/react"
 import { useLocalStorage } from "usehooks-ts"
 import { TrackNameDisplay } from "./TrackNameDisplay"
+import { getSongAlbumUrl } from "@/util/misc"
 
 export default function Fullscreen() {
 	const { shown, setShown } = useContext(FullscreenContext)
@@ -59,11 +56,6 @@ export default function Fullscreen() {
 
 	const imageRef = useRef<HTMLImageElement>(null)
 
-	const getSongAlbumUrl = () => {
-		const song = getCurrentSong()
-		return song ? getFilePath("album", song.album.cover) : ""
-	}
-
 	useEffect(() => {
 		if (currentSong) {
 			if (duration !== currentSong.durationInSeconds) {
@@ -87,7 +79,7 @@ export default function Fullscreen() {
 	useEffect(() => {
 		let timeoutId: NodeJS.Timeout
 
-		window.addEventListener("resize", (e) => {
+		window.addEventListener("resize", () => {
 			let viewMatch = window.matchMedia("(max-width: 768px)").matches
 
 			if (viewMatch) {

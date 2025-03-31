@@ -59,7 +59,7 @@ export default function LyricsDisplay(props: LyricsDisplayProps) {
 		}
 	}, [currentSong])
 
-	let lastActiveIndex = -1
+	let lastActiveIndex = -1 // Used to optimize the animation, so it doesn't update the value every 100ms
 
 	const scrollToLyric = (lyric: any) => {
 		if (lyricsContainerRef.current && lyric) {

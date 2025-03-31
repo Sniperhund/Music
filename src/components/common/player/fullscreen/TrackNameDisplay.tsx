@@ -2,7 +2,7 @@ import { useMusicPlayer } from "@/contexts/MusicPlayerContext"
 import { useLocalStorage } from "usehooks-ts"
 import Image from "next/image"
 import ArtistName from "@/components/ArtistName"
-import getFilePath from "@/util/getFilePath"
+import { getSongAlbumUrl } from "@/util/misc"
 
 export const TrackNameDisplay = (props: { mobile?: boolean }) => {
 	const [onlyLyricsPreference] = useLocalStorage(
@@ -10,12 +10,7 @@ export const TrackNameDisplay = (props: { mobile?: boolean }) => {
 		false,
 	)
 
-	const { getCurrentSong } = useMusicPlayer()
-
-	const getSongAlbumUrl = () => {
-		const song = getCurrentSong()
-		return song ? getFilePath("album", song.album.cover) : ""
-	}
+    const { getCurrentSong } = useMusicPlayer()
 
 	return (
 		<>
