@@ -215,7 +215,7 @@ export default function Player() {
 							onChange={(e) => {
 								setVolume(e)
 								setVolumeValue(e)
-								setCookie("volume", e.toString())
+								setCookie("volume", e.toString(), { maxAge: 60 * 60 * 24 * 7 }) // 7 days
 							}}
 							onChangeEnd={() => {
 								setMovingVolumeSlider(false)
