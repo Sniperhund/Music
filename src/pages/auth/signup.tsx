@@ -34,6 +34,7 @@ export default function Signup() {
 	const router = useRouter()
 
 	const { isOpen, onOpen, onClose } = useDisclosure()
+	const cancelRef = useRef<HTMLButtonElement>(null)
 
 	const formik = useFormik({
 		initialValues: {
@@ -126,7 +127,10 @@ export default function Signup() {
 					</CardFooter>
 				</Card>
 			</Center>
-			<AlertDialog isOpen={isOpen} onClose={onClose}>
+			<AlertDialog
+				isOpen={isOpen}
+				onClose={onClose}
+				leastDestructiveRef={cancelRef}>
 				<AlertDialogOverlay>
 					<AlertDialogContent>
 						<AlertDialogHeader fontSize="lg" fontWeight="bold">
@@ -140,8 +144,8 @@ export default function Signup() {
 								signup process.
 							</p>
 							<p className="mt-2">
-								If you don't see the email, please check your
-								spam folder.
+								If you don&apos;t see the email, please check
+								your spam folder.
 							</p>
 						</AlertDialogBody>
 
