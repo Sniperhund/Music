@@ -6,6 +6,8 @@ import { useMusicPlayer } from "@/contexts/MusicPlayerContext"
 import useAPI from "@/util/useAPI"
 import { Play } from "lucide-react"
 import { useLocalStorage } from "usehooks-ts"
+import EllipsisMenu from "./common/EllipsisMenu"
+import { use, useEffect } from "react"
 
 enum SearchResultCardType {
 	TRACK = "track",
@@ -42,15 +44,21 @@ export default function SearchResultCard(props: SearchResultCardProps) {
 	const { addQueueItem, play: musicPlay, playAlbum, clear } = useMusicPlayer()
 
 	const play = () => {
-		setRecentlyPlayed([
+		let _recentlyPlayed: any[] = recentlyPlayed
+
+		_recentlyPlayed = [
 			props,
-			...recentlyPlayed.filter((track: any) => track.id != props.id),
-		])
+			..._recentlyPlayed.filter((item: SearchResultCardProps) => {
+				return item.id != props.id
+			}),
+		]
 
 		// The amount of recently searched items to store (12 + 1)
-		if (recentlyPlayed.length == 13) {
-			setRecentlyPlayed(recentlyPlayed.slice(0, 12))
+		if (_recentlyPlayed.length > 12) {
+			_recentlyPlayed = _recentlyPlayed.slice(0, 12)
 		}
+
+		setRecentlyPlayed(_recentlyPlayed)
 
 		if (props.type == SearchResultCardType.TRACK) {
 			useAPI(`/tracks/${props.id}`).then((track) => {
@@ -72,6 +80,13 @@ export default function SearchResultCard(props: SearchResultCardProps) {
 			})
 		}
 	}
+
+	useEffect(() => {
+		if (props.type == SearchResultCardType.ARTIST) return
+
+		if (props.type == SearchResultCardType.ALBUM) {
+		}
+	}, [props])
 
 	return (
 		<article className="flex gap-4 w-full truncate">
@@ -111,6 +126,8 @@ export default function SearchResultCard(props: SearchResultCardProps) {
 					<ArtistName artists={props.artists} element="p" />
 				</div>
 			</Link>
+
+			{/*props.type != SearchResultCardType.ARTIST && <EllipsisMenu />*/}
 		</article>
 	)
 }
