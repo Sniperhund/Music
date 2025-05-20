@@ -81,15 +81,8 @@ export default function SearchResultCard(props: SearchResultCardProps) {
 		}
 	}
 
-	useEffect(() => {
-		if (props.type == SearchResultCardType.ARTIST) return
-
-		if (props.type == SearchResultCardType.ALBUM) {
-		}
-	}, [props])
-
 	return (
-		<article className="grid grid-cols-[75px_1fr]  gap-4 w-full truncate">
+		<article className="grid grid-cols-[75px_1fr] gap-4 w-full truncate">
 			<article className="relative" onClick={play}>
 				<Image
 					src={
