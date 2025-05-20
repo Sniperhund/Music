@@ -89,7 +89,7 @@ export default function SearchResultCard(props: SearchResultCardProps) {
 	}, [props])
 
 	return (
-		<article className="flex gap-4 w-full truncate">
+		<article className="grid grid-cols-[75px_1fr]  gap-4 w-full truncate">
 			<article className="relative" onClick={play}>
 				<Image
 					src={
