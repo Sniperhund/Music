@@ -58,16 +58,17 @@
 			opacity: 0.4;
 			/*line-height: 60px;*/
 			padding: 10px 0;
-			transition: opacity 0.1s ease;
+			transition: opacity 0.1s ease, filter 0.1s ease;
+            filter: blur(1.5px);
 		}
 
 		.syncedLyrics p:hover {
-			opacity: 1;
 			cursor: pointer;
 		}
 
-		.syncedLyrics p.active {
+		.syncedLyrics p.active, .syncedLyrics p:hover {
 			opacity: 1;
+            filter: initial;
 		}
 
 		& .lyrics {
