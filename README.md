@@ -1,21 +1,35 @@
-## Getting Started
+# Music
 
-First, run the development server:
+This project is a music website built with Next.js<br />
+It was created as a learning project to explore component-based frontend development and basic application structure.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## Requirements
+To run the project locally, you need both the frontend and [backend](https://github.com/Sniperhund/MusicBackend)
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Backend
+1. Clone the backend repository
+2. Copy `.env.example` to `.env` and fill in the required values. (SMTP needs to be filled, but can be garbage information)
+3. Start the backend server (`npm i`, `npm run build` and `npm run start`)
 
-### Development
+### Frontend
 
-This project is primarily for personal use on my own server, so active development isn’t a top priority, especially with school taking up most of my time.
+1. Update `next.config.mjs` to point to the correct backend URL
+2. Install dependencies: `npm i`
+3. Start the development server: `npm run dev`
+4. If test mode was enabled on the backend (`TEST=true` in .env), just create an account and log in immediately. It will automatically verify you, but will still show verification modal
 
-Before I continue adding the features I originally planned, the entire codebase either needs a complete rewrite (likely moving away from React/Next) or a major refactor. That said, I'm hoping to resume somewhat consistent development soon.
+## About the project
+This project was developed during my studies.<br />
+While the code is far from perfect, it demonstrates my approach to learning and building a website independently from idea to *somewhat* working implementation.<br />
+There is so many things I would've changed if I started it today (I am also working on a v2), so don't take this as my *best*
+
+### Technologies Used
+- Next.js
+- JavaScript / TypeScript
+- CSS / Tailwind
+- Chakra UI
+- Howler
+- Other small packages.
+
+### Status
+This project is not actively maintained, except for major bugs.
