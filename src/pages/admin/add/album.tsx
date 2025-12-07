@@ -101,41 +101,6 @@ export default function Album() {
 	}, [])
 
 	const [search, setSearch] = useState("")
-	const [searchResults, setSearchResults] = useState<any[]>([])
-
-	useEffect(() => {
-		if (search.length > 2) {
-			fetch(`/api/searchAlbum?q=${search}`)
-				.then(async (response) => {
-					const data = await response.json()
-					setSearchResults(data.albums)
-				})
-				.catch((error) => {
-					toast({
-						title: "An error happened",
-						description: error,
-						status: "error",
-					})
-				})
-		}
-	}, [search])
-
-	async function useImageBySearch(image: any) {
-		try {
-			const response = await fetch(image)
-			const blob = await response.blob()
-			const file = new File([blob], "cover_image.jpg", {
-				type: "image/jpeg",
-			})
-			setCoverImage(file)
-		} catch (error: any) {
-			toast({
-				title: "An error happened",
-				description: error,
-				status: "error",
-			})
-		}
-	}
 
 	return (
 		<>
@@ -164,7 +129,7 @@ export default function Album() {
 							options={artistOptions}
 							onChange={(e) => {
 								setArtistId(
-									Array.from(e).map((option) => option.value)
+									Array.from(e).map((option) => option.value),
 								)
 								setArtistSelectValue(e)
 							}}
@@ -175,7 +140,6 @@ export default function Album() {
 				<Tabs variant="enclosed">
 					<TabList>
 						<Tab>Upload image</Tab>
-						<Tab>Search for image</Tab>
 					</TabList>
 					<TabPanels>
 						<TabPanel>
@@ -192,56 +156,6 @@ export default function Album() {
 									{coverImage ? coverImage.name : ""}
 								</FormHelperText>
 							</FormControl>
-						</TabPanel>
-						<TabPanel className="space-y-4">
-							{coverImage ? (
-								<>
-									<img
-										src={URL.createObjectURL(coverImage)}
-										alt="Cover image"
-										className="w-32 h-32 rounded-lg"
-									/>
-
-									<Button onClick={() => setCoverImage(null)}>
-										Choose new image
-									</Button>
-								</>
-							) : (
-								<>
-									<FormControl isInvalid={search === ""}>
-										<FormLabel>Search for image</FormLabel>
-										<DebounceInput
-											element={Input}
-											debounceTimeout={1000}
-											onChange={(e) =>
-												setSearch(e.target.value)
-											}
-										/>
-									</FormControl>
-
-									{searchResults.map((album) => (
-										<div
-											key={album.id}
-											className="flex items-center space-x-4">
-											<img
-												src={album.image}
-												alt={album.name}
-												className="w-16 h-16 rounded-lg"
-											/>
-											<p>{album.name}</p>
-											<Spacer />
-											<Button
-												onClick={() =>
-													useImageBySearch(
-														album.image
-													)
-												}>
-												Use
-											</Button>
-										</div>
-									))}
-								</>
-							)}
 						</TabPanel>
 					</TabPanels>
 				</Tabs>

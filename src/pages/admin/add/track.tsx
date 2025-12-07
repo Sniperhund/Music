@@ -27,14 +27,10 @@ export default function Track() {
 	return (
 		<Tabs variant="enclosed">
 			<TabList>
-				<Tab>Search for track</Tab>
 				<Tab>Manually add track</Tab>
 			</TabList>
 
 			<TabPanels>
-				<TabPanel>
-					<AutomaticTrack />
-				</TabPanel>
 				<TabPanel>
 					<ManualTrack />
 				</TabPanel>
@@ -45,181 +41,6 @@ export default function Track() {
 
 Track.getLayout = function getLayout(page: ReactElement) {
 	return <AdminLayout>{page}</AdminLayout>
-}
-
-function AutomaticTrack() {
-	const toast = useToast()
-
-	const [loading, setLoading] = useState(false)
-
-	const [search, setSearch] = useState("")
-
-	useEffect(() => {
-		if (search.length < 2) return
-
-		fetch(`/api/searchTrack?q=${search}`).then(async (response) => {
-			const data = await response.json()
-			setSearchResults(data.tracks)
-		})
-
-		useAPI(`/search?q=${search}&type=track`, {
-			method: "GET",
-		})
-			.then((response: any) => {
-				setExistingTracks(response)
-			})
-			.catch((error: any) => {
-				toast({
-					title: "An error happened",
-					description: error,
-					status: "error",
-				})
-			})
-	}, [search])
-
-	const [existingTracks, setExistingTracks] = useState<any[]>([])
-	const [searchResults, setSearchResults] = useState<any[]>([])
-
-	async function addTrackBySearch(id: any) {
-		if (!genreId) {
-			toast({
-				title: "An error happened",
-				description: "Please select a genre",
-				status: "error",
-			})
-			return
-		}
-
-		setLoading(true)
-
-		const result: any = await fetch(
-			`/api/addTrack?id=${id}&genreId=${genreId}&url=${youtubeLink}`,
-			{
-				headers: {
-					authorization: `${getCookie("access_token")}`,
-				},
-			},
-		).then((response) => response.json())
-
-		if (result.message == "Track added") {
-			toast({
-				status: "success",
-				title: "Track added successfully",
-			})
-
-			setYoutubeLink("")
-		} else {
-			toast({
-				status: "error",
-				title: "An error happened",
-				description: result?.message,
-			})
-		}
-
-		setLoading(false)
-	}
-
-	const [genreId, setGenreId] = useState("")
-	const [genreSelectValue, setGenreSelectValue] = useState<any>(null)
-	const [genreOptions, setGenreOptions] = useState<any[]>([])
-
-	useEffect(() => {
-		useAPI("/all/genres").then((response: any) => {
-			const tempGenreOptions = response.map((item: any) => ({
-				label: item.name,
-				value: item._id,
-			}))
-
-			setGenreOptions(tempGenreOptions)
-		})
-	}, [])
-
-	const [youtubeLink, setYoutubeLink] = useState("")
-
-	return (
-		<>
-			<h1>Add new track by searching</h1>
-
-			<section className="space-y-4 max-w-2xl mt-4">
-				<DebounceInput
-					element={Input}
-					debounceTimeout={1000}
-					onChange={(e) => setSearch(e.target.value)}
-				/>
-
-				<NoSSR>
-					<FormControl isInvalid={genreId === ""} id="genre-id">
-						<FormLabel>Choose a genre</FormLabel>
-						<Select
-							name="genre"
-							inputId="genre-id"
-							instanceId="chakra-react-select-2"
-							options={genreOptions}
-							onChange={(e) => {
-								setGenreId(e.value)
-								setGenreSelectValue(e)
-							}}
-							value={genreSelectValue}
-						/>
-					</FormControl>
-				</NoSSR>
-
-				<FormControl isRequired>
-					<FormLabel>YouTube Link</FormLabel>
-					<Input
-						placeholder="https://www.youtube.com/watch?v=xxxxxxxxxxx"
-						onChange={(e) => setYoutubeLink(e.target.value)}
-						value={youtubeLink}
-					/>
-				</FormControl>
-
-				<h2>Existing Tracks</h2>
-				{existingTracks.map((track, i) => (
-					<div key={i} className="flex items-center space-x-4">
-						<img
-							src={getFilePath("album", track.album.cover)}
-							alt={track.name}
-							className="w-16 h-16 rounded-lg object-cover"
-						/>
-						<a href={`/album/${track.album._id}`} target="_blank">
-							{track.name}
-						</a>
-						<Spacer />
-						<audio
-							controls
-							src={getFilePath("track", track.audioFile)}
-						/>
-					</div>
-				))}
-
-				<h2>Search Results</h2>
-				{searchResults.map((track, i) => (
-					<div key={i} className="flex items-center space-x-4">
-						<img
-							src={track.album.image}
-							alt={track.name}
-							className="w-16 h-16 rounded-lg object-cover"
-						/>
-						<a href={track.href} target="_blank">
-							<div>
-								<p>{track.name}</p>
-								<p className="opacity-50 text-sm">
-									{track.album.name}
-								</p>
-							</div>
-						</a>
-						<Spacer />
-						<audio controls src={track.preview} />
-						<Button
-							onClick={() => addTrackBySearch(track.id)}
-							isLoading={loading}>
-							Add
-						</Button>
-					</div>
-				))}
-			</section>
-		</>
-	)
 }
 
 function ManualTrack() {
@@ -379,75 +200,7 @@ function ManualTrack() {
 	const [search, setSearch] = useState("")
 	const [searchResults, setSearchResults] = useState<any[]>([])
 
-	useEffect(() => {
-		if (search.length > 2) {
-			fetch(`/api/searchAlbum?q=${search}`)
-				.then(async (response) => {
-					const data = await response.json()
-					setSearchResults(data.albums)
-				})
-				.catch((error) => {
-					toast({
-						title: "An error happened",
-						description: error,
-						status: "error",
-					})
-				})
-		}
-	}, [search])
-
-	async function useImageBySearch(image: any) {
-		try {
-			const response = await fetch(image)
-			const blob = await response.blob()
-			const file = new File([blob], "cover_image.jpg", {
-				type: "image/jpeg",
-			})
-			setCoverImage(file)
-		} catch (error: any) {
-			toast({
-				title: "An error happened",
-				description: error,
-				status: "error",
-			})
-		}
-	}
-
-	const [youtubeLink, setYoutubeLink] = useState("")
 	const [loading, setLoading] = useState(false)
-
-	async function downloadYouTubeAudio() {
-		try {
-			setLoading(true)
-
-			const response = await fetch(`/api/youtube?url=${youtubeLink}`)
-
-			if (!response.ok) {
-				const data = await response.json()
-				toast({
-					title: "An error happened",
-					description: data.message,
-					status: "error",
-				})
-				setLoading(false)
-				return
-			}
-
-			const blob = await response.blob()
-			const file = new File([blob], "audio.mp3", {
-				type: "audio/mpeg",
-			})
-			setAudioFile(file)
-
-			setLoading(false)
-		} catch (error: any) {
-			toast({
-				title: "An error happened",
-				description: error,
-				status: "error",
-			})
-		}
-	}
 
 	if (!artistOptions || !albumOptions)
 		return <>Not enough artists or albums</>
@@ -490,7 +243,6 @@ function ManualTrack() {
 				<Tabs variant="enclosed">
 					<TabList>
 						<Tab>Upload audio file</Tab>
-						<Tab>Use YouTube link</Tab>
 					</TabList>
 					<TabPanels>
 						<TabPanel>
@@ -508,45 +260,6 @@ function ManualTrack() {
 								</FormHelperText>
 							</FormControl>
 						</TabPanel>
-						<TabPanel className="space-y-4">
-							{audioFile ? (
-								<>
-									<audio
-										className="w-full"
-										controls
-										src={URL.createObjectURL(audioFile)}
-									/>
-									<Button
-										w="full"
-										onClick={() => setAudioFile(null)}>
-										Choose new file
-									</Button>
-								</>
-							) : (
-								<>
-									<FormControl
-										isInvalid={!audioFile}
-										isRequired>
-										<FormLabel>YouTube Link</FormLabel>
-										<Input
-											placeholder="https://www.youtube.com/watch?v=xxxxxxxxxxx"
-											onChange={(e) =>
-												setYoutubeLink(e.target.value)
-											}
-										/>
-									</FormControl>
-
-									<Button
-										w="full"
-										onClick={() => {
-											downloadYouTubeAudio()
-										}}
-										isLoading={loading}>
-										Use YouTube Link
-									</Button>
-								</>
-							)}
-						</TabPanel>
 					</TabPanels>
 				</Tabs>
 
@@ -556,7 +269,6 @@ function ManualTrack() {
 					<TabList>
 						<Tab>Use existing album</Tab>
 						<Tab>Create as single - Upload</Tab>
-						<Tab>Create as single - Search</Tab>
 					</TabList>
 					<TabPanels>
 						<TabPanel>
@@ -589,77 +301,6 @@ function ManualTrack() {
 									{coverImage ? coverImage.name : ""}
 								</FormHelperText>
 							</FormControl>
-
-							<NoSSR>
-								<FormControl
-									isInvalid={genreId === ""}
-									id="genre-id">
-									<FormLabel>Choose a genre</FormLabel>
-									<Select
-										name="genre"
-										inputId="genre-id"
-										instanceId="chakra-react-select-2"
-										options={genreOptions}
-										onChange={(e) => {
-											setGenreId(e.value)
-											setGenreSelectValue(e)
-										}}
-										value={genreSelectValue}
-									/>
-								</FormControl>
-							</NoSSR>
-						</TabPanel>
-
-						<TabPanel className="space-y-4">
-							{coverImage ? (
-								<>
-									<img
-										src={URL.createObjectURL(coverImage)}
-										alt="Cover image"
-										className="w-32 h-32 rounded-lg"
-									/>
-
-									<Button onClick={() => setCoverImage(null)}>
-										Choose new image
-									</Button>
-								</>
-							) : (
-								<>
-									<FormControl isInvalid={search === ""}>
-										<FormLabel>Search for image</FormLabel>
-										<DebounceInput
-											element={Input}
-											debounceTimeout={1000}
-											onChange={(e) =>
-												setSearch(e.target.value)
-											}
-											value={search}
-										/>
-									</FormControl>
-
-									{searchResults.map((album) => (
-										<div
-											key={album.id}
-											className="flex items-center space-x-4">
-											<img
-												src={album.image}
-												alt={album.name}
-												className="w-16 h-16 rounded-lg"
-											/>
-											<p>{album.name}</p>
-											<Spacer />
-											<Button
-												onClick={() =>
-													useImageBySearch(
-														album.image,
-													)
-												}>
-												Use
-											</Button>
-										</div>
-									))}
-								</>
-							)}
 
 							<NoSSR>
 								<FormControl

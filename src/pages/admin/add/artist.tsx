@@ -66,19 +66,6 @@ export default function Artist() {
 
 	useEffect(() => {
 		if (search.length > 2) {
-			fetch(`/api/searchArtist?q=${search}`)
-				.then(async (response) => {
-					const data = await response.json()
-					setSearchResults(data.artists)
-				})
-				.catch((error) => {
-					toast({
-						status: "error",
-						title: "An error happened",
-						description: error.message,
-					})
-				})
-
 			useAPI("/search", {
 				params: {
 					q: search,
@@ -92,82 +79,12 @@ export default function Artist() {
 		}
 	}, [search])
 
-	async function addArtistBySearch(id: any) {
-		const result: any = await fetch(`/api/addArtist?id=${id}`, {
-			headers: {
-				authorization: `${getCookie("access_token")}`,
-			},
-		}).then((response) => response.json())
-
-		if (result._id) {
-			toast({
-				status: "success",
-				title: "Artist added successfully",
-			})
-		} else {
-			toast({
-				status: "error",
-				title: "An error happened",
-				description: result?.message,
-			})
-		}
-	}
-
 	return (
 		<Tabs variant="enclosed">
 			<TabList>
-				<Tab>Search after artist</Tab>
 				<Tab>Create custom one</Tab>
 			</TabList>
 			<TabPanels>
-				<TabPanel>
-					<h1>Add new artist by searching</h1>
-
-					<section className="space-y-4 max-w-2xl mt-4">
-						<DebounceInput
-							element={Input}
-							debounceTimeout={1000}
-							onChange={(e) => setSearch(e.target.value)}
-						/>
-
-						<h2>Existing Artists</h2>
-						{existingArtists.map((artist) => (
-							<div
-								key={artist._id}
-								className="flex items-center space-x-4">
-								<img
-									src={getFilePath("artist", artist.cover)}
-									alt={artist.name}
-									className="w-16 h-16 rounded-lg object-cover"
-								/>
-								<p>{artist.name}</p>
-							</div>
-						))}
-
-						<h2>Search Results</h2>
-						{searchResults.map((artist) => (
-							<div
-								key={artist.id}
-								className="flex items-center space-x-4">
-								<img
-									src={artist.image}
-									alt={artist.name}
-									className="w-16 h-16 rounded-lg object-cover"
-								/>
-								<a href={artist.href} target="_blank">
-									{artist.name}
-								</a>
-								<Spacer />
-								<Button
-									onClick={() =>
-										addArtistBySearch(artist.id)
-									}>
-									Add
-								</Button>
-							</div>
-						))}
-					</section>
-				</TabPanel>
 				<TabPanel>
 					<h1>Add new artist</h1>
 
